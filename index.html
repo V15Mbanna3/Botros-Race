@@ -70,7 +70,7 @@
         .tab-item { background-color: var(--bg-secondary); padding: 1.5rem 1rem; border-radius: 1rem; text-align: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease; }
         .tab-item .tab-icon { font-size: 2rem; margin-bottom: 0.5rem; line-height: 1; }
         .list-container .list-item { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secondary); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.5rem; }
-        .list-container .list-item .item-name { font-weight: 700; font-size: 1rem; }
+        .list-container .list-item .item-name { font-weight: 700; font-size: 1rem; flex-grow: 1; text-align: right; margin-right: 1rem; }
         .list-container .list-item .item-name .teleopti-id-display { font-size: 0.8rem; color: var(--text-secondary); margin-right: 0.5rem; }
         .list-container .list-item .item-value { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); }
         .list-container .list-item .item-rank { font-weight: 900; font-size: 1.1rem; color: var(--accent-cyan); margin-left: 1rem; }
@@ -166,8 +166,7 @@
         const db = getFirestore(app);
         
         // --- INTERNAL QUESTION BANK ---
-        // !!! ملاحظة هامة: يجب عليك إضافة المزيد من الأسئلة هنا لتظهر في المباريات !!!
-        const QUESTION_BANK = [
+                const QUESTION_BANK = [
          {
             "id": 1,
             "question": "حسب الإرشادات العامة، ماذا يجب على الموظف التأكد منه أولاً إذا توقف أوردر تجديد مبكر للعميل 'Abnormal'؟",
@@ -514,7 +513,11 @@
                 if(index === 2) item.style.borderColor = '#cd7f32';
                 const highestMedal = getHighestMedal(player);
                 const medalDisplay = highestMedal ? ` ${highestMedal}` : '';
-                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span></div><span class="item-value">${player.score || 0} نقطة</span>`;
+                item.innerHTML = `
+                    <span class="item-value">${player.score || 0} نقطة</span>
+                    <span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span>
+                    <span class="item-rank">${index + 1}</span>
+                `;
                 allElements.leaderboardList.appendChild(item);
             });
         }
@@ -825,6 +828,7 @@
                     if (!freshLobbyDoc.exists() || freshLobbyDoc.data().status !== 'waiting') {
                         throw "Lobby not in waiting state";
                     }
+                    // يمكنك التحكم في عدد أسئلة المباراة من هنا
                     const questionCount = 30;
                     const gameQuestions = getQuestionsForLevel(questionCount);
                     transaction.update(lobbyRef, { questions: gameQuestions, status: 'countdown', countdown: 3 });
@@ -1174,7 +1178,11 @@
                 const item = document.createElement('div');
                 item.className = 'list-item';
                 const medalDisplay = player.medal ? ` ${player.medal}` : '';
-                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name}${medalDisplay}</span></div><span class="item-value">${player.score} نقطة</span>`;
+                item.innerHTML = `
+                    <span class="item-value">${player.score} نقطة</span>
+                    <span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span>
+                    <span class="item-rank">${index + 1}</span>
+                `;
                 allElements.resultsList.appendChild(item);
             });
         }
