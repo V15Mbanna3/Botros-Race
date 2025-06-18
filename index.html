@@ -166,7 +166,7 @@
         const db = getFirestore(app);
         
         // --- INTERNAL QUESTION BANK ---
-         const QUESTION_BANK = [
+        const QUESTION_BANK = [
          {
             "id": 1,
             "question": "حسب الإرشادات العامة، ماذا يجب على الموظف التأكد منه أولاً إذا توقف أوردر تجديد مبكر للعميل 'Abnormal'؟",
@@ -317,7 +317,6 @@
         let questionTimer = null;
         let musicPlayer = null;
         let isMuted = true;
-        let massiveLobbyTimerInterval = null;
         let singlePlayerState = {
             currentTier: null,
             currentLevel: null,
@@ -512,16 +511,29 @@
                 if(index === 0) item.style.borderColor = 'gold';
                 if(index === 1) item.style.borderColor = 'silver';
                 if(index === 2) item.style.borderColor = '#cd7f32';
-                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name} <span class="teleopti-id-display">(${player.teleoptiId})</span></span></div><span class="item-value">${player.score || 0} نقطة</span>`;
+                const highestMedal = getHighestMedal(player);
+                const medalDisplay = highestMedal ? ` ${highestMedal}` : '';
+                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span></div><span class="item-value">${player.score || 0} نقطة</span>`;
                 allElements.leaderboardList.appendChild(item);
             });
         }
         
-        // --- GAME LOGIC ---
+        // --- GAME LOGIC & HELPERS ---
         function getQuestionsForLevel(count) {
             if (QUESTION_BANK.length === 0) return [];
             const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, Math.min(count, QUESTION_BANK.length));
+        }
+
+        function getHighestMedal(playerProfile) {
+            if (!playerProfile || !playerProfile.awards || !Array.isArray(playerProfile.awards)) return '';
+            const allMedalsInOrder = SINGLE_PLAYER_CONFIG.tiers.map(t => t.medal).reverse(); 
+            for (const medal of allMedalsInOrder) {
+                if (playerProfile.awards.includes(medal)) {
+                    return medal;
+                }
+            }
+            return '';
         }
 
         // --- SINGLE PLAYER LOGIC ---
@@ -703,17 +715,18 @@
             const lobbyCode = Math.random().toString(36).substring(2, 6).toUpperCase();
             const lobbyRef = doc(db, "lobbies", lobbyCode);
             
+            const highestMedal = getHighestMedal(currentPlayerProfile);
             const newLobby = {
                 lobbyCode, type, hostUid: currentUser.uid, createdAt: serverTimestamp(),
                 status: "waiting",
-                players: [{ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0 }],
+                players: [{ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0, medal: highestMedal }],
                 currentQuestionIndex: -1, answers: {}
             };
             await setDoc(lobbyRef, newLobby);
             joinLobby(lobbyCode);
         }
 
-        function joinLobby(code, fromLink = false) {
+        function joinLobby(code) {
             if (!currentUser || !currentPlayerProfile) return showAlert("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
             const lobbyCode = code.toUpperCase();
             const lobbyRef = doc(db, "lobbies", lobbyCode);
@@ -744,8 +757,9 @@
                 }
                 
                 if (!playerInLobby) {
+                    const highestMedal = getHighestMedal(currentPlayerProfile);
                     await updateDoc(lobbyRef, {
-                        players: arrayUnion({ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0 })
+                        players: arrayUnion({ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0, medal: highestMedal })
                     });
                 } else {
                     switch (lobbyData.status) {
@@ -773,13 +787,14 @@
             lobbyData.players.forEach(player => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                item.innerHTML = `<span class="item-name">${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;
+                const medalDisplay = player.medal ? ` ${player.medal}` : '';
+                item.innerHTML = `<span class="item-name">${player.name}${medalDisplay} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;
                 allElements.lobbyPlayersList.appendChild(item);
             });
 
             if (isHost) {
                 allElements.startGameBtn.style.display = 'block';
-                const canStart = lobbyData.type === '1v1' ? lobbyData.players.length === 2 : lobbyData.players.length >= 4;
+                const canStart = lobbyData.type === '1v1' ? lobbyData.players.length === 2 : lobbyData.players.length >= 2;
                 allElements.startGameBtn.disabled = !canStart;
             } else {
                 allElements.startGameBtn.style.display = 'none';
@@ -788,7 +803,7 @@
             if (lobbyData.status === 'countdown') {
                 allElements.lobbyStatus.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
             } else if (lobbyData.status === 'waiting') {
-                 allElements.lobbyStatus.textContent = lobbyData.type === 'massive' ? 'في انتظار 4 لاعبين على الأقل...' : 'في انتظار اللاعب الثاني...';
+                 allElements.lobbyStatus.textContent = lobbyData.type === 'massive' ? 'في انتظار لاعبين على الأقل...' : 'في انتظار اللاعب الثاني...';
             }
         }
 
@@ -849,7 +864,11 @@
             if (!question) { return; }
             
             if(lobbyData.type === '1v1') {
-                allElements.matchHeader.innerHTML = `<span class="name">${lobbyData.players[0]?.name || ''}</span> ضد <span class="name">${lobbyData.players[1]?.name || '؟؟؟'}</span>`;
+                const player1 = lobbyData.players[0];
+                const player2 = lobbyData.players[1];
+                const p1Medal = player1?.medal ? ` ${player1.medal}` : '';
+                const p2Medal = player2?.medal ? ` ${player2.medal}` : '';
+                allElements.matchHeader.innerHTML = `<span class="name">${player1?.name || ''}${p1Medal}</span> ضد <span class="name">${player2?.name || '؟؟؟'}${p2Medal}</span>`;
             } else {
                 allElements.matchHeader.textContent = `منافسة حاشدة - ${lobbyData.players.length} لاعبين`;
             }
@@ -1134,9 +1153,9 @@
                 }
             } else {
                  if (sortedPlayers.length > 0 && (sortedPlayers.length === 1 || sortedPlayers[0].score > sortedPlayers[1].score)) {
-                     resultsHTML = `<h2 class="winner-name">الفائز هو: ${sortedPlayers[0].name}</h2>`;
+                      resultsHTML = `<h2 class="winner-name">الفائز هو: ${sortedPlayers[0].name}</h2>`;
                  } else {
-                     resultsHTML = `<h2>انتهت المباراة بالتعادل!</h2>`;
+                      resultsHTML = `<h2>انتهت المباراة بالتعادل!</h2>`;
                  }
             }
             allElements.resultsContainer.innerHTML = resultsHTML;
@@ -1145,7 +1164,8 @@
             sortedPlayers.forEach((player, index) => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name}</span></div><span class="item-value">${player.score} نقطة</span>`;
+                const medalDisplay = player.medal ? ` ${player.medal}` : '';
+                item.innerHTML = `<div><span class="item-rank">${index + 1}</span><span class="item-name">${player.name}${medalDisplay}</span></div><span class="item-value">${player.score} نقطة</span>`;
                 allElements.resultsList.appendChild(item);
             });
         }
@@ -1153,67 +1173,70 @@
         async function surrender() {
             if (!currentLobbyId || !currentUser) return;
             const lobbyRef = doc(db, "lobbies", currentLobbyId);
+
             try {
-                const lobbyDoc = await getDoc(lobbyRef);
-                if (!lobbyDoc.exists()) return;
-                const lobbyData = lobbyDoc.data();
+                await runTransaction(db, async (transaction) => {
+                    const lobbyDoc = await transaction.get(lobbyRef);
+                    if (!lobbyDoc.exists()) throw "Lobby does not exist!";
+                    
+                    const lobbyData = lobbyDoc.data();
 
-                if (lobbyData.type === '1v1' && lobbyData.players.length === 2) {
-                    const winner = lobbyData.players.find(p => p.uid !== currentUser.uid);
-                    if (winner) {
-                        const winnerRef = doc(db, "players", winner.teleoptiId);
-                        await updateDoc(winnerRef, {
-                            score: increment(30),
-                            awards: arrayUnion("Botros Race Cup 🏆")
-                        });
+                    if (lobbyData.status !== 'in-progress') return;
+
+                    let finalPlayers = [...lobbyData.players];
+
+                    if (lobbyData.type === '1v1' && lobbyData.players.length === 2) {
+                        const winner = lobbyData.players.find(p => p.uid !== currentUser.uid);
+                        const winnerIndex = finalPlayers.findIndex(p => p.uid === winner.uid);
+
+                        if (winner && winnerIndex !== -1) {
+                            const winnerRef = doc(db, "players", winner.teleoptiId);
+
+                            transaction.update(winnerRef, {
+                                score: increment(30),
+                                awards: arrayUnion("Botros Race Cup 🏆") 
+                            });
+
+                            finalPlayers[winnerIndex].score += 30;
+                        }
                     }
-                }
-                
-                await updateDoc(lobbyRef, {
-                    surrendered: { uid: currentUser.uid, teleoptiId: currentPlayerProfile.teleoptiId },
-                    status: 'finished'
-                });
 
+                    transaction.update(lobbyRef, {
+                        surrendered: { uid: currentUser.uid, teleoptiId: currentPlayerProfile.teleoptiId },
+                        status: 'finished',
+                        players: finalPlayers
+                    });
+                });
             } catch (error) {
-                console.error("Surrender failed:", error);
+                console.error("Surrender transaction failed:", error);
             }
         }
 
-        // --- EVENT LISTENERS & INITIALIZATION (REFACTORED WITH EVENT DELEGATION) ---
+        // --- EVENT LISTENERS & INITIALIZATION ---
         function setupEventListeners() {
-            // Static elements can have direct listeners
             document.getElementById('mute-btn')?.addEventListener('click', toggleMusic);
-
-            // Delegated listener for all dynamic elements
             document.body.addEventListener('click', async (e) => {
                 const target = e.target;
                 const closest = (selector) => target.closest(selector);
 
-                // Modal Close
                 if (closest('#modal-close-btn')) {
                     allElements.modal.classList.remove('visible');
                 }
-                // Back Button
                 else if (closest('.back-btn')) {
                     const parentScreen = closest('.screen-container');
                     if (!parentScreen) return;
-
                     clearTimeout(questionTimer);
-                    
                     if (parentScreen.id === 'online-lobby-screen') return leaveLobby();
                     if (parentScreen.id === 'game-over-screen') {
                         if (unsubscribeLobby) unsubscribeLobby();
                         currentLobbyId = null;
                     }
                     if(parentScreen.id === 'level-select-screen') return displayTiers();
-
                     updateMainMenu();
                     showScreen('main-menu-screen');
                 }
-                // Auth
                 else if (closest('#login-btn')) handleLogin();
                 else if (closest('#logout-btn')) handleLogout();
-                // Main Menu Tabs
                 else if (closest('#single-player-tab')) { if (currentPlayerProfile) displayTiers(); }
                 else if (closest('#online-tab')) showScreen('online-menu-screen');
                 else if (closest('#leaderboard-tab')) {
@@ -1247,16 +1270,13 @@
                     }
                     showScreen('awards-screen');
                 }
-                // Online Menu
                 else if (closest('#create-1v1-lobby-btn')) createLobby('1v1');
                 else if (closest('#create-massive-lobby-btn')) createLobby('massive');
                 else if (closest('#join-lobby-btn')) showScreen('join-lobby-screen');
-                // Join Lobby
                 else if (closest('#submit-join-lobby-btn')) {
                     const code = allElements.lobbyCodeInput.value.trim();
                     if(code) joinLobby(code); else showAlert("خطأ", "الرجاء إدخال كود المنافسة.");
                 }
-                // Online Lobby
                 else if (closest('#share-whatsapp-btn')) {
                     if (!currentLobbyId) return;
                     const text = `انضم لمنافستي في Botros Race! استخدم الكود ${currentLobbyId} أو اضغط على الرابط:\n${window.location.origin}${window.location.pathname}?lobby=${currentLobbyId}`;
@@ -1267,7 +1287,6 @@
                     navigator.clipboard.writeText(currentLobbyId).then(() => showAlert('تم النسخ', 'تم نسخ كود الغرفة بنجاح!'));
                 }
                 else if (closest('#start-game-btn')) startGame();
-                // Match
                 else if (closest('#surrender-btn')) surrender();
             });
         }
