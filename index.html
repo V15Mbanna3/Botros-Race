@@ -10,41 +10,18 @@
     
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: rgba(30, 41, 59, 0.75);
-            --bg-tertiary: rgba(51, 65, 85, 0.75);
-            --bg-locked: rgba(71, 85, 105, 0.75);
-            --accent-cyan: #06b6d4;
-            --accent-green: #22c55e;
-            --accent-red: #ef4444;
-            --accent-yellow: #facc15;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
+            --bg-primary: #0f172a; --bg-secondary: rgba(30, 41, 59, 0.75); --bg-tertiary: rgba(51, 65, 85, 0.75); --bg-locked: rgba(71, 85, 105, 0.75);
+            --accent-cyan: #06b6d4; --accent-green: #22c55e; --accent-red: #ef4444; --accent-yellow: #facc15; --text-primary: #f8fafc; --text-secondary: #94a3b8;
         }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-image: url('https://v15mbanna3.github.io/my-sounds/Botros%20race.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-primary);
-            margin: 0;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
+        body { font-family: 'Cairo', sans-serif; background-image: url('https://v15mbanna3.github.io/my-sounds/Botros%20race.png'); background-size: cover; background-position: center; background-attachment: fixed; color: var(--text-primary); margin: 0; padding: 1rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; box-sizing: border-box; }
         main { width: 100%; max-width: 900px; }
-
         .screen-container { width: 100%; padding: 1.5rem; border: 1px solid rgba(51, 65, 85, 0.5); border-radius: 1.5rem; background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); box-sizing: border-box; display: none; position: relative; overflow: hidden; }
         .screen-container.active { display: block; }
         .screen-title { font-size: 2rem; font-weight: 900; text-align: center; margin-top: 0; margin-bottom: 2rem; color: var(--accent-cyan); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         .screen-subtitle { text-align: center; color: var(--text-secondary); font-size: 1rem; margin-top: -1.5rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .input-field { width: 100%; padding: 0.75rem 1rem; background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 0.75rem; font-size: 1rem; color: var(--text-primary); box-sizing: border-box; margin-bottom: 1rem; text-align: right; }
+        .input-group { margin-bottom: 1rem; position: relative; }
+        .input-field { width: 100%; padding: 0.75rem 1rem; background-color: var(--bg-secondary); border: 2px solid var(--bg-tertiary); border-radius: 0.75rem; font-size: 1rem; color: var(--text-primary); box-sizing: border-box; text-align: right; transition: border-color 0.3s; }
+        .input-field:focus { border-color: var(--accent-cyan); outline: none; }
         .btn { width: 100%; padding: 1rem; border-radius: 0.75rem; font-size: 1.125rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .btn:disabled { background-color: var(--bg-locked); color: var(--text-secondary); cursor: not-allowed; }
         .btn-primary { background-color: var(--accent-cyan); color: white; }
@@ -54,82 +31,69 @@
         .btn-whatsapp { background-color: #25D366; color: white; }
         .btn-whatsapp:hover { background-color: #1DA851; }
         .back-btn { display: inline-block; margin: 2rem auto 0; width: auto; padding: 0.5rem 1rem; font-size: 1rem; }
-        #mute-btn { position: fixed; top: 1.5rem; right: 1.5rem; width: 50px; height: 50px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: white; font-size: 1.5rem; border: 1px solid var(--bg-tertiary); cursor: pointer; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }
-        #mute-btn:hover { background-color: rgba(255, 255, 255, 0.2); }
+        #mute-btn { position: fixed; top: 1.5rem; right: 1.5rem; width: 50px; height: 50px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); color: white; font-size: 1.5rem; border: 1px solid var(--bg-tertiary); cursor: pointer; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         #registration-screen .form-container, #join-lobby-screen .form-container { max-width: 400px; margin: auto; text-align: center; }
-        .remember-me-container { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; color: var(--text-secondary); }
-        #remember-me-checkbox { width: 1rem; height: 1rem; accent-color: var(--accent-cyan); }
         #main-menu-screen .welcome-container { position: relative; }
         #main-menu-screen .welcome-message { font-size: 1.75rem; font-weight: 900; text-align: center; margin-bottom: 0.5rem; }
+        #main-menu-screen .player-title-medal { font-size: 1.5rem; vertical-align: middle; }
         #main-menu-screen .welcome-message .name { color: var(--accent-cyan); }
-        #main-menu-screen .welcome-message .teleopti-id-display { font-size: 1rem; color: var(--text-secondary); font-weight: 400; }
-        #main-menu-screen .medals-display { text-align: center; font-size: 1.5rem; margin-bottom: 2rem; min-height: 30px;}
+        #main-menu-screen .medals-display { text-align: center; font-size: 1.5rem; margin-bottom: 2rem; min-height: 30px; }
         #logout-btn { position: absolute; top: 0; left: 0; background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; font-size: 0.8rem; }
-        #logout-btn:hover { color: var(--accent-red); }
         .tabs-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .tab-item { background-color: var(--bg-secondary); padding: 1.5rem 1rem; border-radius: 1rem; text-align: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease; }
         .tab-item .tab-icon { font-size: 2rem; margin-bottom: 0.5rem; line-height: 1; }
         .list-container .list-item { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-secondary); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.5rem; }
-        .list-container .list-item .item-name { font-weight: 700; font-size: 1rem; flex-grow: 1; text-align: right; margin-right: 1rem; }
-        .list-container .list-item .item-name .teleopti-id-display { font-size: 0.8rem; color: var(--text-secondary); margin-right: 0.5rem; }
-        .list-container .list-item .item-value { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); }
-        .list-container .list-item .item-rank { font-weight: 900; font-size: 1.1rem; color: var(--accent-cyan); margin-left: 1rem; }
-        
-        /* Single Player Styles */
-        .tiers-grid, .levels-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        .card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--bg-tertiary); transition: all 0.2s; }
-        .card:not(.locked) { cursor: pointer; }
-        .card:not(.locked):hover { border-color: var(--accent-cyan); transform: scale(1.02); }
-        .card.locked { background-color: var(--bg-locked); color: var(--text-secondary); cursor: not-allowed; }
-        .card-title { font-size: 1.25rem; font-weight: 900; margin: 0 0 0.5rem 0; }
-        .card.locked .card-title { color: var(--text-secondary); }
-        .card-details { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;}
-        .progress-bar-container { background-color: var(--bg-tertiary); border-radius: 99px; height: 10px; overflow: hidden; margin-top: 1rem; }
-        .progress-bar { background-color: var(--accent-green); height: 100%; width: 0%; transition: width 0.5s; }
-        .level-card.completed { border-color: var(--accent-green); background-color: rgba(34, 197, 94, 0.1); }
-
-
-        #online-menu-screen .button-group { display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 2rem auto;}
-        #online-lobby-screen .lobby-code-container { padding: 1rem; background-color: var(--bg-primary); border-radius: 0.75rem; text-align: center; margin-bottom: 1rem; }
-        #online-lobby-screen .lobby-code { font-size: 2rem; font-weight: 700; letter-spacing: 0.2em; text-align: center; color: var(--accent-cyan); margin-bottom: 0.5rem; user-select: all; cursor: pointer; }
-        #online-lobby-screen .lobby-code-label { font-size: 0.9rem; color: var(--text-secondary); }
-        #online-lobby-screen .lobby-status { font-size: 1.25rem; font-weight: 700; color: var(--accent-yellow); margin-top: 1rem; text-align: center; min-height: 2rem; }
-        #online-lobby-screen .players-list .list-item { justify-content: center; }
-
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .modal.visible { opacity: 1; pointer-events: auto; }
-        .modal-content { background-color: var(--bg-primary); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--bg-tertiary); max-width: 90%; width: 400px; }
-        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); margin-top: 0; margin-bottom: 1rem; }
-        .modal-body { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-secondary); }
-        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
-
+        .list-container .list-item .item-info { display: flex; align-items: center; gap: 0.75rem; flex-grow: 1; }
+        .list-container .list-item .player-title-medal { font-size: 1.5rem; }
+        .list-container .list-item .item-name-details { display: flex; flex-direction: column; align-items: flex-start; }
+        .list-container .list-item .item-name { font-weight: 700; font-size: 1.1rem; }
+        .list-container .list-item .item-rank-name { font-size: 0.85rem; color: var(--text-secondary); }
+        .list-container .list-item .item-value { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); margin-right: auto; }
+        .list-container .list-item .item-rank { font-weight: 900; font-size: 1.2rem; color: var(--accent-cyan); }
+        .list-container .winner-1 { border: 2px solid gold; }
+        .list-container .winner-2 { border: 2px solid silver; }
+        .list-container .winner-3 { border: 2px solid #cd7f32; }
+        #single-player-menu-screen .card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--bg-tertiary); transition: all 0.2s; }
+        #single-player-menu-screen .card:not(.locked) { cursor: pointer; }
+        #single-player-menu-screen .card:not(.locked):hover { border-color: var(--accent-cyan); transform: scale(1.02); }
+        #single-player-menu-screen .card.locked { background-color: var(--bg-locked); color: var(--text-secondary); cursor: not-allowed; }
+        #single-player-menu-screen .card-title { font-size: 1.25rem; font-weight: 900; margin: 0 0 0.5rem 0; }
+        #single-player-menu-screen .card.locked .card-title { color: var(--text-secondary); }
+        #single-player-menu-screen .card-details { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;}
+        #level-select-screen .levels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; }
+        #level-select-screen .level-card { background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 1rem; border: 2px solid var(--bg-tertiary); transition: all 0.2s; text-align: center; }
+        #level-select-screen .level-card:not(.locked) { cursor: pointer; }
+        #level-select-screen .level-card:not(.locked):hover { border-color: var(--accent-cyan); transform: scale(1.05); }
+        #level-select-screen .level-title { font-size: 1.1rem; font-weight: 900; margin: 0; }
+        #level-select-screen .level-card.locked { background-color: var(--bg-locked); color: var(--text-secondary); }
+        #level-select-screen .level-card.completed { border-color: var(--accent-green); background-color: rgba(34, 197, 94, 0.2); }
         #match-screen { text-align: center; }
-        #match-header { font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; }
-        #match-header .name { color: var(--text-primary); }
-        #question-counter { font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; }
-        #timer-container { width: 100%; background-color: var(--bg-tertiary); border-radius: 5px; margin-bottom: 1.5rem; }
-        #timer-bar { width: 100%; height: 10px; background-color: var(--accent-red); border-radius: 5px; transition: width 1s linear; }
-        #question-text { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; min-height: 100px; }
-        #options-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-        .option-btn.correct { background-color: var(--accent-green) !important; color: white !important; transform: scale(1.05); }
-        .option-btn.wrong { background-color: var(--accent-red) !important; color: white !important; }
-        .option-btn.disabled { opacity: 0.6; pointer-events: none; }
-        #explanation-box { background-color: rgba(250, 204, 21, 0.1); border: 1px solid var(--accent-yellow); color: var(--text-primary); border-radius: 0.75rem; padding: 1rem; margin-top: 1.5rem; font-size: 1rem; display: none; }
-        #explanation-box.visible { display: block; }
-        #surrender-banner { display: none; padding: 0.75rem; background-color: var(--accent-red); color: white; text-align: center; font-weight: 700; border-radius: 0.5rem; margin-bottom: 1rem; }
-        #game-over-screen .winner-name { color: var(--accent-green); font-size: 2rem; font-weight: 900; }
-        #game-over-screen .results-list { margin-top: 2rem; }
-
+        #match-screen .match-header { font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; }
+        #match-screen .match-header .player-title-medal { font-size: 1.3rem; }
+        #match-screen .question-counter { font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        #match-screen .timer-container { width: 100%; background-color: var(--bg-tertiary); border-radius: 5px; margin-bottom: 1.5rem; }
+        #match-screen .timer-bar { width: 100%; height: 10px; background-color: var(--accent-red); border-radius: 5px; transition: width 1s linear; }
+        #match-screen .question-text { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; min-height: 100px; }
+        #match-screen .options-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        #match-screen .option-btn.correct { background-color: var(--accent-green) !important; color: white !important; transform: scale(1.05); }
+        #match-screen .option-btn.wrong { background-color: var(--accent-red) !important; color: white !important; }
+        #match-screen .option-btn.disabled { opacity: 0.6; pointer-events: none; }
+        #online-lobby-screen .lobby-code { font-size: 2rem; font-weight: 700; letter-spacing: 0.2em; text-align: center; color: var(--accent-cyan); margin-bottom: 0.5rem; user-select: all; cursor: pointer; }
+        #podium-screen .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 1rem; height: 300px; text-align: center; }
+        #podium-screen .podium-stand { background-color: var(--bg-tertiary); border-radius: 1rem 1rem 0 0; padding: 1rem; width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        #podium-screen .stand-2 { height: 200px; background-color: #7b8e9e; }
+        #podium-screen .stand-1 { height: 250px; background-color: #c9b037; }
+        #podium-screen .stand-3 { height: 150px; background-color: #a0522d; }
+        #podium-screen .podium-rank { font-size: 3rem; font-weight: 900; }
+        #podium-screen .podium-name { font-size: 1.1rem; font-weight: 700; word-wrap: break-word; }
+        #podium-screen .podium-score { font-size: 1rem; color: var(--text-secondary); }
         @media (min-width: 768px) {
-            .tiers-grid, .levels-grid { grid-template-columns: 1fr 1fr; }
-            #options-grid { grid-template-columns: 1fr 1fr; }
-            #question-text { font-size: 2rem; }
+            #match-screen .options-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
     <button id="mute-btn">🔇</button>
-
     <main>
         <div id="loading-screen" class="screen-container active"><h1 class="screen-title">...جار التحميل</h1></div>
         <div id="registration-screen" class="screen-container"></div>
@@ -142,31 +106,132 @@
         <div id="single-player-menu-screen" class="screen-container"></div>
         <div id="level-select-screen" class="screen-container"></div>
         <div id="match-screen" class="screen-container"></div>
-        <div id="game-over-screen" class="screen-container"></div>
+        <div id="podium-screen" class="screen-container"></div>
     </main>
-    <div id="modal" class="modal"></div>
+
+    <div id="templates" style="display:none;">
+        <div id="registration-screen-template">
+             <div class="form-container">
+                <h1 class="screen-title" style="margin-bottom: 1rem; font-size: 4rem;">🦅</h1>
+                <h2 class="screen-title" style="font-size: 1.5rem; margin-top: 0; margin-bottom: 2rem;">Botros Race</h2>
+                <div class="input-group">
+                    <input id="name-input" type="text" class="input-field" placeholder="الاسم الكامل">
+                </div>
+                <div class="input-group">
+                    <input id="teleopti-id-input" type="tel" pattern="[0-9]*" class="input-field" placeholder="Teleopti ID">
+                </div>
+                <button id="login-btn" class="btn btn-primary">تسجيل الدخول</button>
+            </div>
+        </div>
+        <div id="main-menu-screen-template">
+            <div class="welcome-container">
+                <h1 id="welcome-message" class="welcome-message"></h1>
+                <button id="logout-btn">خروج</button>
+            </div>
+            <div id="medals-display" class="medals-display"></div>
+            <div class="tabs-container">
+                <div id="single-player-tab" class="tab-item"><div class="tab-icon">👤</div><div>طور اللعب الفردي</div></div>
+                <div id="online-tab" class="tab-item"><div class="tab-icon">👥</div><div>اللعب الجماعي</div></div>
+                <div id="leaderboard-tab" class="tab-item"><div class="tab-icon">🏆</div><div>Leaderboard</div></div>
+                <div id="awards-tab" class="tab-item"><div class="tab-icon">🎁</div><div>الكؤوس والمكافآت</div></div>
+            </div>
+        </div>
+        <div id="online-menu-screen-template">
+             <h1 class="screen-title">ساحات المنافسة المباشرة</h1>
+             <div class="button-group" style="max-width: 400px; margin: auto;">
+                 <button id="create-1v1-lobby-btn" class="btn btn-primary">⚔️ إنشاء مواجهة 1 ضد 1</button>
+                 <button id="create-massive-lobby-btn" class="btn btn-primary">🏟️ إنشاء منافسة حاشدة</button>
+                 <button id="join-lobby-btn" class="btn btn-secondary">🚪 الانضمام بكود</button>
+                 <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
+             </div>
+        </div>
+        <div id="join-lobby-screen-template">
+           <div class="form-container">
+             <h1 class="screen-title">الانضمام لمنافسة</h1>
+             <p class="screen-subtitle">أدخل كود المنافسة للانضمام إلى زملائك.</p>
+             <input id="lobby-code-input" type="text" class="input-field" placeholder="كود المنافسة" style="text-align: center; text-transform: uppercase;">
+             <button id="submit-join-lobby-btn" class="btn btn-primary">انضم الآن</button>
+             <button class="btn btn-secondary back-btn">العودة</button>
+           </div>
+        </div>
+        <div id="online-lobby-screen-template">
+            <h1 id="lobby-title" class="screen-title">غرفة الانتظار</h1>
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin:0;">شارك هذا الكود أو الرابط</p>
+                <div id="lobby-code-display" class="lobby-code" title="اضغط للنسخ"></div>
+                <button id="share-whatsapp-btn" class="btn btn-whatsapp">شارك عبر واتساب</button>
+            </div>
+            <h2 class="screen-subtitle" style="margin-top: 2rem;">اللاعبون المتواجدون</h2>
+            <div id="lobby-players-list" class="list-container"></div>
+            <div id="lobby-status" style="text-align:center; min-height: 1.5rem; margin: 1rem 0; color: var(--accent-yellow);"></div>
+            <button id="start-game-btn" class="btn btn-primary" disabled>ابدأ المباراة (للمضيف فقط)</button>
+            <button class="btn btn-secondary back-btn">الخروج من الغرفة</button>
+        </div>
+        <div id="leaderboard-screen-template">
+            <h1 class="screen-title">لوحة الصدارة</h1>
+            <div id="leaderboard-list" class="list-container"></div>
+            <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
+        </div>
+        <div id="awards-screen-template">
+            <h1 class="screen-title">الكؤوس والمكافآت</h1>
+            <div id="awards-list" class="list-container"></div>
+            <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
+        </div>
+        <div id="single-player-menu-screen-template">
+            <h1 class="screen-title">طور اللعب الفردي</h1>
+            <p class="screen-subtitle">أكمل المستويات لتفتح تحديات أصعب وتحصل على ألقاب وميداليات.</p>
+            <div id="tiers-container" style="display: grid; grid-template-columns: 1fr; gap: 1rem;"></div>
+            <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
+        </div>
+        <div id="level-select-screen-template">
+            <h1 id="level-select-title" class="screen-title"></h1>
+            <div id="levels-grid" class="levels-grid"></div>
+            <button class="btn btn-secondary back-btn" data-target="single-player-menu-screen">العودة للمراحل</button>
+        </div>
+        <div id="match-screen-template">
+            <h2 class="match-header" id="match-header"></h2>
+            <p class="question-counter" id="question-counter"></p>
+            <div class="timer-container"><div class="timer-bar" id="timer-bar"></div></div>
+            <h3 class="question-text" id="question-text"></h3>
+            <div class="options-grid" id="options-grid"></div>
+            <button id="surrender-btn" class="btn btn-danger" style="margin-top: 2rem; display:none;">استسلام</button>
+        </div>
+        <div id="podium-screen-template">
+             <h1 class="screen-title">منصة التتويج</h1>
+            <div id="podium-container" class="podium-container"></div>
+            <button class="btn btn-primary back-btn">العودة للقائمة الرئيسية</button>
+        </div>
+    </div>
     
-    <script type="module">
+       <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, query, where, orderBy, limit, serverTimestamp, updateDoc, arrayUnion, runTransaction, getDocs, writeBatch, increment } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, serverTimestamp, updateDoc, arrayUnion, runTransaction, getDocs, writeBatch, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAvGDEbWA3UumCa0P4AfFUVv6xxwL5Porc",
-            authDomain: "nc1-eagles-race.firebaseapp.com",
-            databaseURL: "https://nc1-eagles-race-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "nc1-eagles-race",
-            storageBucket: "nc1-eagles-race.appspot.com",
-            messagingSenderId: "772415266484",
-            appId: "1:772415266484:web:5813cb3355f7298ade81e1"
-        };
-
+    const firebaseConfig = {
+  apiKey: "AIzaSyAvGDEbWA3UumCa0P4AfFUVv6xxwL5Porc",
+  authDomain: "nc1-eagles-race.firebaseapp.com",
+  databaseURL: "https://nc1-eagles-race-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nc1-eagles-race",
+  storageBucket: "nc1-eagles-race.firebasestorage.app",
+  messagingSenderId: "772415266484",
+  appId: "1:772415266484:web:5813cb3355f7298ade81e1"
+};
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // --- Game Config ---
+        const TIERS_CONFIG = [
+            { id: 'tier-1', name: 'ايجنت عادي', levels: 3, questionsPerLevel: 3, timePerQuestion: 30, medal: '🥉' },
+            { id: 'tier-2', name: 'ايجنت جامد', levels: 3, questionsPerLevel: 4, timePerQuestion: 25, medal: '🥈' },
+            { id: 'tier-3', name: 'ايجنت كوالتي', levels: 4, questionsPerLevel: 5, timePerQuestion: 20, medal: '🥇' },
+            { id: 'tier-4', name: 'ايجنت سوبر فايزر', levels: 4, questionsPerLevel: 6, timePerQuestion: 15, medal: '🏆' },
+            { id: 'tier-5', name: 'ايجنت بطرس', levels: 5, questionsPerLevel: 7, timePerQuestion: 10, medal: '💎' },
+        ];
         
-        // --- INTERNAL QUESTION BANK ---
-                const QUESTION_BANK = [
+        // NOTE: correct_answer is a 0-based index (0 for first option, 1 for second, etc.)
+         const OFFLINE_QUESTION_BANK = [
          {
             "id": 1,
             "question": "حسب الإرشادات العامة، ماذا يجب على الموظف التأكد منه أولاً إذا توقف أوردر تجديد مبكر للعميل 'Abnormal'؟",
@@ -307,1119 +372,1123 @@
              { "id": 449, "question": "عميل يتصل للاستفسار عن سبب عدم عمل الإنترنت، وبعد الفحص تبين أن المشكلة هي 'Wrong Card/Port'. ماذا تعني هذه المشكلة للعميل؟", "options": { "1": "أن عليه تغيير بطاقته البنكية.", "2": "أن هناك خطأ في توصيلات الكابلات الخاصة به داخل المنزل.", "3": "أن هناك خطأ في بياناته على النظام لا تتطابق مع التوصيل الفعلي في الكبينة، ويتطلب زيارة فني.", "4": "أن الراوتر الخاص به لا يدعم الخدمة." }, "correct_answer": "3", "explanation": "يجب تبسيط المعلومة الفنية للعميل. أفضل شرح هو أن هناك عدم تطابق بين الإعدادات في النظام المركزي والتوصيل المادي لخطه، وأن فنيًا سيقوم بإصلاح هذا الخلل." },
              { "id": 450, "question": "ما هي أهمية نظام CRM (إدارة علاقات العملاء) لموظف خدمة العملاء؟", "options": { "1": "هو نظام لتسجيل الحضور والانصراف.", "2": "يوفر سجلًا تاريخيًا كاملاً لتفاعلات العميل، مما يسمح بتقديم خدمة شخصية ومتسقة.", "3": "هو محرك البحث المستخدم للوصول إلى الإنترنت.", "4": "هو نظام لإرسال رسائل البريد الإلكتروني الداخلية فقط." }, "correct_answer": "2", "explanation": "يُمكّن نظام CRM الموظف من رؤية جميع طلبات العميل السابقة، وشكاويه، والملاحظات المسجلة، مما يساعده على فهم سياق المشكلة الحالية بسرعة وتقديم حل أفضل دون الحاجة لتكرار الأسئلة." }
                      ];
-        
-        // --- GLOBAL STATE & CONFIG ---
+        const ONLINE_QUESTION_BANK = [
+          {
+        "id": 1,
+        "question": "إذا اشتكى عميل من انقطاع الخدمة لمدة يومين وطلب تعويضًا ماليًا فوريًا أثناء المكالمة، ما هو الإجراء الصحيح للموظف؟",
+        "options": {
+            "1": "إضافة خصم 20 جنيهًا مباشرة على حسابه.",
+            "2": "الاعتذار للعميل، والتأكد من وجود شكوى فنية مفتوحة ومتابعتها، وإبلاغه أن التعويض يُقيّم بعد حل المشكلة.",
+            "3": "رفض طلب التعويض لأن الشركة غير مسؤولة.",
+            "4": "تحويل المكالمة مباشرة لقائد الفريق."
+        },
+        "correct_answer": "2",
+        "explanation": "لا يملك الموظف صلاحية إضافة تعويضات مالية مباشرة عن انقطاع الخدمة. الإجراء الصحيح هو متابعة حل المشكلة الفنية أولًا، ثم يتم تقييم التعويض لاحقًا وفقًا لسياسات الشركة."
+    },
+    {
+        "id": 2,
+        "question": "متى يجب على الموظف تصعيد طلب تعويض إلى قائد الفريق (Team Leader)؟",
+        "options": {
+            "1": "في كل مرة يطلب فيها العميل تعويضًا.",
+            "2": "فقط إذا كان طلب العميل منطقيًا ولكنه يتجاوز الإجراءات والسياسات المعتادة.",
+            "3": "إذا كانت المشكلة تتعلق بسرعة الإنترنت.",
+            "4": "لا يتم التصعيد أبدًا، ويتم التعامل مع كل الطلبات مباشرة."
+        },
+        "correct_answer": "2",
+        "explanation": "يتم اللجوء إلى قائد الفريق للحصول على موافقة استثنائية في الحالات التي لا تغطيها الإجراءات القياسية، وتتطلب قرارًا إداريًا أعلى."
+    },
+    {
+        "id": 3,
+        "question": "عميل يشتكي من خطأ في الفاتورة ويريد تعويضًا عن وقته ومجهوده، ما هو أول ما يجب على الموظف فعله؟",
+        "options": {
+            "1": "تقديم خصم فوري كتعويض.",
+            "2": "التحقق من الخطأ في الفاتورة والعمل على تصحيحه أولاً.",
+            "3": "إبلاغه بأن الشركة لا تعوض عن وقت العملاء.",
+            "4": "إنشاء طلب لقائد الفريق فورًا."
+        },
+        "correct_answer": "2",
+        "explanation": "الأولوية القصوى هي حل المشكلة الأصلية للعميل. قبل مناقشة أي تعويضات، يجب التحقق من صحة الشكوى وتصحيح أي خطأ موجود في الفاتورة."
+    },
+    {
+        "id": 4,
+        "question": "هل يمتلك موظف خدمة العملاء صلاحية إضافة 'باقة إضافية مجانية' كتعويض للعميل؟",
+        "options": {
+            "1": "نعم، يمكنه إضافة أي باقة يريدها.",
+            "2": "لا، إضافة أي خدمات مجانية يجب أن تتم من خلال عروض معتمدة أو بعد موافقة خاصة.",
+            "3": "نعم، ولكن فقط باقة 5 جيجا.",
+            "4": "نعم، إذا كانت المشكلة بسبب الشركة."
+        },
+        "correct_answer": "2",
+        "explanation": "لا يمكن للموظفين إضافة خدمات أو باقات مجانية بشكل يدوي. يجب أن تكون هذه التعويضات جزءًا من حملة أو عرض معتمد له شروطه وإجراءاته الخاصة في النظام."
+    },
+    {
+        "id": 5,
+        "question": "إذا أصر العميل على الحصول على تعويض فوري ورفض اتباع الإجراءات العادية، ما هو التصرف المناسب؟",
+        "options": {
+            "1": "إنهاء المكالمة.",
+            "2": "شرح الإجراءات المتبعة بهدوء وتوضيح سبب أهميتها، وفي حالة الإصرار الشديد يمكن استشارة المشرف.",
+            "3": "الموافقة على طلبه لتجنب المشاكل.",
+            "4": "إيقاف خدمة العميل."
+        },
+        "correct_answer": "2",
+        "explanation": "يجب على الموظف الحفاظ على هدوئه وشرح العملية المتبعة. التصعيد للمشرف يكون خيارًا متاحًا للتعامل مع الحالات الصعبة وإصرار العملاء."
+    },
+    {
+        "id": 6,
+        "question": "ما هو نوع الطلب الذي يجب على الموظف إنشاؤه لتصحيح خطأ في شحن الرصيد؟",
+        "options": {
+            "1": "طلب تعويض (Compensation Request).",
+            "2": "طلب 'شحن بالخطأ' (Recharge by mistake).",
+            "3": "طلب لرئيس الفريق (Request to TL).",
+            "4": "تذكرة فنية (Technical Ticket)."
+        },
+        "correct_answer": "2",
+        "explanation": "يوجد إجراء ونوع طلب مخصص لمعالجة أخطاء الشحن، وهو ليس 'تعويضًا' بالمعنى الحرفي بل 'تصحيح' لعملية مالية."
+    },
+    {
+        "id": 7,
+        "question": "في حالة وجود مشكلة عامة في الشبكة (Outage) تؤثر على عدد كبير من العملاء، كيف يتم التعامل مع طلبات التعويض؟",
+        "options": {
+            "1": "يتم تعويض كل عميل يتصل على حدة.",
+            "2": "لا يتم تقديم أي تعويضات في حالات المشاكل العامة.",
+            "3": "غالبًا ما تقرر الشركة سياسة تعويض عامة يتم تطبيقها بعد حل المشكلة.",
+            "4": "يجب على كل عميل زيارة الفرع لطلب تعويض."
+        },
+        "correct_answer": "3",
+        "explanation": "في حالات الانقطاعات الكبيرة، عادة ما يتم اتخاذ قرار مركزي بشأن التعويضات لتطبيقه بشكل موحد على جميع العملاء المتأثرين."
+    },
+    {
+        "id": 8,
+        "question": "ما هي الأداة الأساسية التي يجب على الموظف استخدامها لتوثيق شكوى العميل وطلبه للتعويض؟",
+        "options": {
+            "1": "برنامج البريد الإلكتروني.",
+            "2": "مستند وورد شخصي.",
+            "3": "نظام إدارة علاقات العملاء (CRM).",
+            "4": "تطبيق واتساب."
+        },
+        "correct_answer": "3",
+        "explanation": "يجب توثيق جميع تفاعلات العملاء، بما في ذلك الشكاوى وطلبات التعويض، في نظام CRM لضمان المتابعة الصحيحة وإمكانية المراجعة."
+    },
+    {
+        "id": 9,
+        "question": "إذا كانت المشكلة الفنية بسبب أسلاك العميل الداخلية، هل يستحق العميل تعويضًا من الشركة؟",
+        "options": {
+            "1": "نعم، دائمًا.",
+            "2": "لا، لأن المشكلة تقع ضمن مسؤولية العميل.",
+            "3": "نعم، ولكن نصف القيمة فقط.",
+            "4": "فقط إذا كان عميلاً قديمًا."
+        },
+        "correct_answer": "2",
+        "explanation": "الشركة مسؤولة عن الشبكة حتى نقطة الدخول إلى منزل العميل. أي مشاكل في التوصيلات الداخلية تعتبر من مسؤولية العميل."
+    },
+    {
+        "id": 10,
+        "question": "لماذا لا يجب على الموظف أن 'يعد' العميل بتعويض معين قبل التحقق والموافقة؟",
+        "options": {
+            "1": "لأن العميل قد ينسى.",
+            "2": "لتجنب وضع توقعات قد لا تتحقق، مما يزيد من عدم رضا العميل لاحقًا.",
+            "3": "لأن جميع الوعود يتم تسجيلها ومراقبتها.",
+            "4": "لأن هذا قد يستغرق وقتًا طويلاً."
+        },
+        "correct_answer": "2",
+        "explanation": "تقديم وعود غير مؤكدة قد يؤدي إلى تفاقم المشكلة إذا لم يتمكن النظام أو السياسات من تحقيق هذا الوعد."
+    },
+    {
+        "id": 11,
+        "question": "إذا طلب العميل تعويضًا عن تجربة خدمة عملاء سيئة، ما هو التصرف الأنسب؟",
+        "options": {
+            "1": "رفض الطلب لأن التعويضات فنية فقط.",
+            "2": "الاعتذار بصدق، وتوثيق الشكوى ضد الموظف المعني، وتصعيد الحالة للمشرف لتقييمها.",
+            "3": "إعطاء العميل خصمًا فوريًا.",
+            "4": "إبلاغه بأن جميع المكالمات مسجلة."
+        },
+        "correct_answer": "2",
+        "explanation": "يجب التعامل مع الشكاوى المتعلقة بالخدمة بجدية. الإجراء الصحيح هو الاعتذار، التوثيق، والتصعيد للمراجعة واتخاذ الإجراء المناسب."
+    },
+    {
+        "id": 12,
+        "question": "ما هو البديل الذي يمكن للموظف تقديمه إذا كان التعويض المالي غير متاح؟",
+        "options": {
+            "1": "لا يوجد بدائل.",
+            "2": "وعد العميل بتعويض مستقبلي.",
+            "3": "التركيز على حل المشكلة بشكل جذري وتقديم اعتذار صادق وشرح الإجراءات المتخذة.",
+            "4": "تقديم بيانات المشرف للعميل."
+        },
+        "correct_answer": "3",
+        "explanation": "في كثير من الحالات، يكون العميل راضيًا إذا شعر بالاهتمام وأن مشكلته الحقيقية قد تم حلها بشكل نهائي."
+    },
+    {
+        "id": 13,
+        "question": "هل يتم توثيق طلب قائد الفريق (TL) للتعويض في نظام CRM؟",
+        "options": {
+            "1": "لا، يتم شفهيًا فقط.",
+            "2": "نعم، يجب إنشاء طلب أو تدوين ملاحظة مفصلة على حساب العميل لتوثيق الطلب والموافقة.",
+            "3": "فقط إذا كانت قيمة التعويض كبيرة.",
+            "4": "يتم توثيقه في نظام منفصل."
+        },
+        "correct_answer": "2",
+        "explanation": "جميع الإجراءات الاستثنائية والموافقات يجب أن تكون موثقة لضمان الشفافية وإمكانية المراجعة والتدقيق."
+    },
+    {
+        "id": 14,
+        "question": "إذا لم يتوفر للموظف صلاحية إضافة تعويض، فهل هذا يعني أنه لا يمكن تعويض العميل أبدًا؟",
+        "options": {
+            "1": "نعم، هذا يعني أن التعويض مستحيل.",
+            "2": "لا، هذا يعني أن هناك قناة تصعيد (مثل قائد الفريق) يمكنها مراجعة الحالة والموافقة على التعويض.",
+            "3": "نعم، إلا إذا قام العميل بزيارة الفرع.",
+            "4": "لا، يمكن للموظف تجاوز صلاحياته في هذه الحالة."
+        },
+        "correct_answer": "2",
+        "explanation": "وجود مستويات مختلفة من الصلاحيات هو أمر طبيعي في المؤسسات، والغرض منه هو ضمان أن القرارات الاستثنائية يتم اتخاذها من قبل المستوى الإداري المناسب."
+    },
+    {
+        "id": 15,
+        "question": "ما هو المعيار الأساسي الذي يحدد إمكانية تقديم تعويض للعميل؟",
+        "options": {
+            "1": "مدى ارتفاع صوت العميل.",
+            "2": "أن تكون المشكلة مثبتة ومن مسؤولية الشركة.",
+            "3": "عدد المرات التي اتصل بها العميل.",
+            "4": "نوع باقة العميل."
+        },
+        "correct_answer": "2",
+        "explanation": "الأساس المنطقي لأي تعويض هو وجود خطأ أو تقصير مثبت من جانب الشركة أثر على خدمة العميل."
+    },
+    {
+        "id": 16,
+        "question": "ماذا يحدث للسعة المتبقية من باقة الإنترنت عند القيام بـ'تجديد مبكر'؟",
+        "options": {
+            "1": "تُضاف إلى الباقة الجديدة.",
+            "2": "تُرحل للشهر القادم.",
+            "3": "يتم فقدانها ولا يتم ترحيلها.",
+            "4": "تُستبدل بدقائق مجانية."
+        },
+        "correct_answer": "3",
+        "explanation": "التجديد المبكر ينهي دورة الباقة الحالية فورًا ويبدأ دورة جديدة، وبالتالي لا يتم نقل أي سعة متبقية من الدورة المنتهية."
+    },
+    {
+        "id": 17,
+        "question": "ما هي أول خطوة تشخيصية فنية عند فشل طلب 'تجديد مبكر'؟",
+        "options": {
+            "1": "فحص رصيد العميل.",
+            "2": "التحقق من أن ملف الخدمة الصوتية (FV Profile) نشط.",
+            "3": "إعادة تشغيل الراوتر.",
+            "4": "التحقق من سرعة الخط."
+        },
+        "correct_answer": "2",
+        "explanation": "هذه هي الخطوة الأولى الموثقة، لأن عدم نشاط ملف الخدمة الصوتية هو سبب فني شائع لتوقف مثل هذه الطلبات في النظام."
+    },
+    {
+        "id": 18,
+        "question": "هل يمكن للعميل إجراء تجديد مبكر على باقة مختلفة عن باقته الحالية؟",
+        "options": {
+            "1": "لا، يجب أن يكون التجديد على نفس الباقة.",
+            "2": "نعم، ويعتبر هذا بمثابة طلب تغيير باقة وتجديد في نفس الوقت.",
+            "3": "نعم، ولكن فقط إذا كانت الباقة الجديدة أقل سعرًا.",
+            "4": "لا، إلا من خلال زيارة الفرع."
+        },
+        "correct_answer": "2",
+        "explanation": "يمكن للعميل اختيار أي باقة متاحة عند التجديد المبكر، وسيتم تطبيق شروط وأسعار الباقة الجديدة فورًا."
+    },
+    {
+        "id": 19,
+        "question": "متى تبدأ دورة الصلاحية الجديدة للباقة بعد التجديد المبكر؟",
+        "options": {
+            "1": "بعد 24 ساعة.",
+            "2": "في بداية الشهر التالي.",
+            "3": "فورًا من لحظة نجاح عملية التجديد.",
+            "4": "في تاريخ التجديد الأصلي."
+        },
+        "correct_answer": "3",
+        "explanation": "التجديد المبكر ينشئ دورة فوترة جديدة تبدأ صلاحيتها (30 يومًا) مباشرة من لحظة التنفيذ الناجح."
+    },
+    {
+        "id": 20,
+        "question": "ماذا تعني رسالة الخطأ 'Abnormal' عند متابعة طلب تجديد مبكر؟",
+        "options": {
+            "1": "أن رصيد العميل غير كافٍ.",
+            "2": "أن الطلب عالق في النظام بسبب مشكلة فنية.",
+            "3": "أن الباقة المطلوبة لم تعد متاحة.",
+            "4": "أن العميل أدخل بيانات خاطئة."
+        },
+        "correct_answer": "2",
+        "explanation": "يستخدم هذا المصطلح للإشارة إلى أن الطلب لم يكتمل بشكل طبيعي وتوقف في مرحلة ما من مراحل التنفيذ في أنظمة الشركة."
+    },
+    {
+        "id": 21,
+        "question": "هل يمكن للعميل إلغاء طلب تجديد مبكر بعد تنفيذه بنجاح واستلامه للسعة الجديدة؟",
+        "options": {
+            "1": "نعم، خلال ساعة واحدة.",
+            "2": "لا، بمجرد نجاح العملية لا يمكن التراجع عنها.",
+            "3": "نعم، ولكن مع خصم 50% من الرسوم.",
+            "4": "نعم، إذا لم يستخدم أكثر من 1 جيجا."
+        },
+        "correct_answer": "2",
+        "explanation": "عملية التجديد المبكر هي عملية نهائية وفورية (irreversible)، حيث يتم استهلاك الرصيد وبدء دورة جديدة على الفور."
+    },
+    {
+        "id": 22,
+        "question": "ما هو الشرط الأساسي في الباقة الأساسية لتتمكن من استخدام الباقات الإضافية؟",
+        "options": {
+            "1": "أن تكون باقة فايبر.",
+            "2": "أن تكون نشطة (Active).",
+            "3": "أن يكون قد تم استهلاكها بالكامل.",
+            "4": "أن تكون ذات سرعة منخفضة."
+        },
+        "correct_answer": "2",
+        "explanation": "لا يمكن للنظام إضافة أو استخدام أي خدمات على باقة غير نشطة (سواء كانت موقوفة أو منتهية الصلاحية)."
+    },
+    {
+        "id": 23,
+        "question": "ماذا يشمل المبلغ الذي يجب أن يكون متوفرًا في رصيد العميل لإتمام التجديد المبكر؟",
+        "options": {
+            "1": "قيمة الباقة الأساسية فقط.",
+            "2": "قيمة الباقة الأساسية بالإضافة إلى ضريبة القيمة المضافة.",
+            "3": "قيمة أي مديونيات سابقة فقط.",
+            "4": "قيمة الباقة بالإضافة إلى رسوم التجديد المبكر."
+        },
+        "correct_answer": "2",
+        "explanation": "لنجاح العملية، يجب أن يغطي الرصيد التكلفة الإجمالية للباقة الجديدة بعد إضافة كافة الضرائب والرسوم المستحقة."
+    },
+    {
+        "id": 24,
+        "question": "هل يؤثر التجديد المبكر على تاريخ استحقاق فاتورة الخط الأرضي؟",
+        "options": {
+            "1": "نعم، تتغير فاتورة الخط الأرضي أيضًا.",
+            "2": "لا، التجديد المبكر يؤثر فقط على دورة باقة الإنترنت.",
+            "3": "فقط إذا تم في أول الشهر.",
+            "4": "فقط إذا تم تغيير الباقة."
+        },
+        "correct_answer": "2",
+        "explanation": "التجديد المبكر هو إجراء خاص بباقة الإنترنت المدفوعة مقدمًا ولا علاقة له بدورة الفوترة الربع سنوية الخاصة بالخط الأرضي."
+    },
+    {
+        "id": 25,
+        "question": "ما هو السبب الرئيسي الذي يدفع العميل لعمل تجديد مبكر؟",
+        "options": {
+            "1": "للحصول على خصم.",
+            "2": "لتغيير رقم هاتفه.",
+            "3": "لاستعادة سرعة الإنترنت الكاملة بعد انتهائها قبل موعد التجديد.",
+            "4": "للحصول على باقة إضافية مجانية."
+        },
+        "correct_answer": "3",
+        "explanation": "الهدف الأساسي من هذه الميزة هو تمكين العميل من التغلب على مشكلة انخفاض السرعة (throttling) بعد انتهاء السعة، عن طريق بدء باقة جديدة على الفور."
+    },
+    {
+        "id": 26,
+        "question": "إذا كان طلب التجديد المبكر 'Abnormal' وملف FV نشط، ما هو الدليل الذي يجب على الموظف الرجوع إليه؟",
+        "options": {
+            "1": "دليل باقات الإنترنت.",
+            "2": "دليل 'Abnormal orders' في قاعدة المعرفة.",
+            "3": "دليل عروض الشركة.",
+            "4": "دليل الدعم الفني للراوترات."
+        },
+        "correct_answer": "2",
+        "explanation": "بعد استبعاد السبب الأولي، يجب على الموظف الرجوع إلى دليل الإجراءات المخصص لحل هذا النوع من المشاكل الموثقة واتباع الخطوات."
+    },
+    {
+        "id": 27,
+        "question": "إذا قام العميل بالتجديد المبكر على باقة أعلى سعرًا، ماذا يحدث؟",
+        "options": {
+            "1": "يتم تطبيق التغيير من الشهر التالي.",
+            "2": "يتم خصم سعر الباقة الجديدة الأعلى فورًا.",
+            "3": "يفشل الطلب لأن تغيير الباقة له إجراء منفصل.",
+            "4": "يحصل على خصم لكونها أول مرة."
+        },
+        "correct_answer": "2",
+        "explanation": "التجديد المبكر يمكن أن يتضمن تغييرًا للباقة، وسيتم خصم التكلفة الكاملة للباقة الجديدة المختارة من رصيد العميل."
+    },
+    {
+        "id": 28,
+        "question": "إذا فشل التجديد المبكر بسبب عدم كفاية الرصيد، ما هي الرسالة التي يتلقاها العميل عادةً؟",
+        "options": {
+            "1": "رسالة تفيد بوجود مشكلة فنية.",
+            "2": "رسالة تطلب منه شحن رصيد كافٍ والمحاولة مرة أخرى.",
+            "3": "رسالة تفيد بإيقاف الخدمة.",
+            "4": "لا يتلقى أي رسالة."
+        },
+        "correct_answer": "2",
+        "explanation": "في معظم الأنظمة، تكون رسائل الخطأ واضحة ومباشرة لتوجيه العميل للإجراء الصحيح المطلوب منه."
+    },
+    {
+        "id": 29,
+        "question": "هل يمكن جدولة طلب تجديد مبكر ليتم تنفيذه في تاريخ مستقبلي؟",
+        "options": {
+            "1": "نعم، يمكن جدولته لأي يوم.",
+            "2": "لا، التجديد المبكر هو عملية فورية تتم في نفس لحظة الطلب.",
+            "3": "نعم، ولكن فقط من خلال الفرع.",
+            "4": "فقط إذا كانت الباقة الحالية لم تنته بعد."
+        },
+        "correct_answer": "2",
+        "explanation": "طبيعة خدمة التجديد المبكر أنها حل فوري لمشكلة انتهاء السعة، لذا فهي تنفذ لحظيًا ولا يمكن جدولتها."
+    },
+    {
+        "id": 30,
+        "question": "ماذا يجب على الموظف التأكد منه قبل أن يقترح على العميل التجديد المبكر؟",
+        "options": {
+            "1": "أن العميل لديه نفس نوع الراوتر.",
+            "2": "أن العميل يفهم أن السعة المتبقية من باقته الحالية سيتم فقدانها.",
+            "3": "أن العميل مشترك في الخدمة منذ أكثر من عام.",
+            "4": "أن العميل لم يشتك من قبل."
+        },
+        "correct_answer": "2",
+        "explanation": "من المهم جدًا إدارة توقعات العميل وشرح جميع جوانب العملية له، وأهمها هو أن أي بيانات متبقية من الباقة الحالية لن يتم ترحيلها."
+    },
+    {
+        "id": 31,
+        "question": "حسب إحدى القواعد، إذا حصل العميل على تعويض 'WE Mobile Line Adjustment' بسبب عطل عام، ثم حدث عطل عام آخر في نفس اليوم، فما هو الإجراء الصحيح؟",
+        "options": {
+            "1": "يتم تعويض العميل مرة أخرى.",
+            "2": "لا يتم تعويض العميل مرة أخرى في نفس اليوم.",
+            "3": "يتم الانتظار حتى حل العطل.",
+            "4": "يتم تعويض العميل بـ 5 جيجا لمدة 3 أيام."
+        },
+        "correct_answer": "1",
+        "explanation": "القاعدة المذكورة تنص على أنه في حالة تكرار العطل العام في نفس اليوم، يتم تعويض العميل مرة أخرى."
+    },
+    {
+        "id": 32,
+        "question": "وفقًا لقاعدة أخرى، إذا حصل العميل على تعويض 'WE Mobile Line Adjustment' وظهر عطل عام آخر بنفس اليوم، فما هو الإجراء؟",
+        "options": {
+            "1": "يتم مضاعفة التعويض.",
+            "2": "لن يتم عرض تعويض 'WE Mobile Line Adjustment' مرة أخرى.",
+            "3": "يتم تحويله للدعم الفني المتقدم.",
+            "4": "يتم إنشاء طلب خاص لقائد الفريق."
+        },
+        "correct_answer": "2",
+        "explanation": "هناك قاعدة أخرى مناقضة تنص على أنه لن يتم عرض التعويض مرة أخرى في حالة تكرار العطل بنفس اليوم. (ملاحظة: وجود القاعدتين قد يعتمد على سيناريوهات مختلفة)."
+    },
+    {
+        "id": 33,
+        "question": "هل يتم إضافة تعويض 'WE Mobile Adjustment' في حالة مشكلة 'Port Time Out' إذا لم يظهر عطل عام (Outage) على نظام CST 360؟",
+        "options": {
+            "1": "لا، يجب انتظار ظهور العطل العام أولاً.",
+            "2": "نعم، يتم إضافة التعويض في هذه الحالة.",
+            "3": "لا، يتم إنشاء تذكرة فنية فقط.",
+            "4": "فقط إذا كان الخط فايبر."
+        },
+        "correct_answer": "2",
+        "explanation": "القاعدة تنص على أنه يتم إضافة التعويض المخصص لحالات 'Port Time Out' حتى لو لم يتم الإعلان عن عطل عام على نظام CST 360."
+    },
+    {
+        "id": 34,
+        "question": "عند تصعيد شكوى 'Physical Instability'، ما هو حجم ومدة تعويض WE Mobile الذي يُعرض على العميل؟",
+        "options": {
+            "1": "2 جيجا لمدة 3 أيام",
+            "2": "3 جيجا لمدة يومين",
+            "3": "5 جيجا لمدة 3 أيام",
+            "4": "لا يتم تعويض العميل."
+        },
+        "correct_answer": "3",
+        "explanation": "الإجراء المتبع في حالات تصعيد عدم استقرار الخدمة من النوع 'Physical' هو تعويض العميل بـ 5 جيجابايت صالحة لمدة 3 أيام."
+    },
+    {
+        "id": 35,
+        "question": "إذا تم تصعيد شكوى 'Instability' وكانت نتيجة فحص أداة ASSIA هي 'Technician Dispatch'، ما هو التعويض الصحيح؟",
+        "options": {
+            "1": "5 جيجا لمدة 3 أيام.",
+            "2": "3 جيجا لمدة يومين.",
+            "3": "لا يتم تقديم تعويض.",
+            "4": "خصم من الفاتورة."
+        },
+        "correct_answer": "2",
+        "explanation": "في حالات عدم الاستقرار التي تعطي فيها أداة ASSIA نتائج محددة (مثل Technician Dispatch أو Out of Service)، يكون التعويض المخصص هو 3 جيجابايت لمدة يومين."
+    },
+    {
+        "id": 36,
+        "question": "ما هو التعويض المخصص لعميل 'Student Line' الذي يواجه مشكلة 'Port Time Out'؟",
+        "options": {
+            "1": "3 جيجا لمدة يومين.",
+            "2": "5 جيجا لمدة 3 أيام.",
+            "3": "لا يتم تعويض هذا النوع من الخطوط.",
+            "4": "الانتظار حتى حل المشكلة."
+        },
+        "correct_answer": "2",
+        "explanation": "هناك تعويض محدد لعملاء 'Student Line' في هذه الحالة الخاصة، وهو 5 جيجابايت صالحة لمدة 3 أيام."
+    },
+    {
+        "id": 37,
+        "question": "إذا كان العميل يملك خط WE Mobile ورفض التعويض المقترح، ما هو مسار طلب الخدمة (SR) الصحيح لتوثيق الحالة؟",
+        "options": {
+            "1": "Customer accept the compensation",
+            "2": "Customer refuse the compensation",
+            "3": "Customer don't have WE line",
+            "4": "Not eligible"
+        },
+        "correct_answer": "2",
+        "explanation": "يجب اختيار المسار 'FBB Non Tech Billing Adjustment-Inquiry-WE Line -Customer refuse the compensation' لتوثيق رفض العميل للتعويض بدقة في النظام."
+    },
+    {
+        "id": 38,
+        "question": "عندما يتم تصعيد شكوى 'Data and Voice Down' ويظهر تحديث 'Major Fault' على نظام ADF/TTS، كيف يتم تصنيف الحالة؟",
+        "options": {
+            "1": "Data Down Case",
+            "2": "Voice Down Case",
+            "3": "Outage Case (حالة عطل عام)",
+            "4": "Individual Case (حالة فردية)"
+        },
+        "correct_answer": "3",
+        "explanation": "ظهور تحديث 'Major Fault' من هذه الأنظمة يعني أن المشكلة جماعية وتؤثر على منطقة واسعة، وبالتالي يتم التعامل معها كحالة عطل عام."
+    },
+    {
+        "id": 39,
+        "question": "إذا قام العميل بالتجديد بنفسه ولكن السرعة لم ترتفع إلا بعد أن قام الموظف بعمل 'ريستارت للبورت'، ما هو طلب الخدمة (SR) الصحيح الذي يجب إنشاؤه؟",
+        "options": {
+            "1": "Early renewal done after restart port",
+            "2": "Early renewal done after full verification",
+            "3": "Early renewal done by cst side - after restart port",
+            "4": "Non tech complaint - billing - early renewal done"
+        },
+        "correct_answer": "3",
+        "explanation": "يتم اختيار هذا التصنيف لأنه يوضح أن العميل بدأ عملية التجديد بنفسه، وكان تدخل الموظف مقتصرًا على عمل 'ريستارت للبورت' فقط لحل المشكلة."
+    },
+    {
+        "id": 40,
+        "question": "هل يمكن لموظف الفرع إجراء تجديد مبكر لعميل دفع قيمة الباقة كاملة ولكن لا يحمل بطاقة الرقم القومي؟",
+        "options": {
+            "1": "صحيح (True)",
+            "2": "خطأ (False)"
+        },
+        "correct_answer": "1",
+        "explanation": "الإجابة 'صحيح' لأن عملية دفع المبلغ بالكامل في الفرع تعتبر معاملة مالية مكتملة قد لا تتطلب نفس إجراءات التحقق الصارمة الخاصة بالعمليات التي تتم على الحساب دون دفع."
+    },
+    {
+        "id": 41,
+        "question": "في أي حالة يحصل العميل على هدية الـ 5 جيجا بايت من تطبيق My WE؟",
+        "options": {
+            "1": "عند فتح التطبيق أكثر من مرة في اليوم.",
+            "2": "عند فتح التطبيق لأول مرة فقط بعد تثبيته.",
+            "3": "عند كل عملية تجديد للباقة من التطبيق.",
+            "4": "عند دفع الفاتورة من التطبيق."
+        },
+        "correct_answer": "2",
+        "explanation": "هذه الهدية هي عرض ترحيبي مخصص للمستخدمين الجدد للتطبيق، ويتم منحها مرة واحدة فقط عند تسجيل الدخول لأول مرة."
+    },
+    {
+        "id": 42,
+        "question": "عند التجديد عبر الرسالة الصوتية (IVR) من رقم مختلف، هل يطلب النظام إدخال آخر 3 أرقام من الرقم المسجل في العقد للتحقق؟",
+        "options": {
+            "1": "صحيح (True)",
+            "2": "خطأ (False)"
+        },
+        "correct_answer": "2",
+        "explanation": "الإجابة 'خطأ' لأن الإجراء الصحيح للتحقق في هذه الحالة هو طلب إدخال آخر 4 أرقام من رقم الموبايل المسجل في العقد."
+    },
+    {
+        "id": 43,
+        "question": "عندما يتحول طلب التجديد إلى الحالة 'Abnormal' على النظام، ما هي الخطوات التي يجب اتباعها بالترتيب؟",
+        "options": {
+            "1": "التأكد من أن الخط الأرضي active.",
+            "2": "عمل order re-dispatch.",
+            "3": "عمل تذكرة 'abnormal TT' في حالة عدم الحل.",
+            "4": "جميع ما سبق."
+        },
+        "correct_answer": "4",
+        "explanation": "الإجابة هي 'جميع ما سبق' لأنها تمثل الإجراءات المتكاملة والمتسلسلة لحل مشكلة توقف الطلبات في النظام."
+    }
+]
+
+        // --- Global State ---
         let allElements = {};
         let currentUser = null;
         let currentPlayerProfile = null;
-        let currentLobbyId = null;
-        let unsubscribeLobby = null;
-        let questionTimer = null;
+        let currentLobbyUnsubscribe = null;
+        let matchTimer = null;
         let musicPlayer = null;
         let isMuted = true;
-        let singlePlayerState = {
-            currentTier: null,
-            currentLevel: null,
-            questions: [],
-            currentQuestionIndex: 0,
-            answers: []
-        };
+        let currentMatchState = null;
 
-        const SINGLE_PLAYER_CONFIG = {
-            tiers: [
-                { id: 'tier-1', name: 'مستوي الايجنت العادي', levels: 3, questionsPerLevel: 5, timePerQuestion: 30, medal: '🎖️ عادي' },
-                { id: 'tier-2', name: 'مستوي الايجنت الجامد', levels: 3, questionsPerLevel: 5, timePerQuestion: 25, medal: '🎖️ جامد' },
-                { id: 'tier-3', name: 'مستوي الايجنت الكوالتي', levels: 6, questionsPerLevel: 10, timePerQuestion: 20, medal: '🎖️ كوالتي' },
-                { id: 'tier-4', name: 'مستوي الايجنت السوبر فايزر', levels: 6, questionsPerLevel: 20, timePerQuestion: 15, medal: '🎖️ سوبرفايزر' },
-                { id: 'tier-5', name: 'مستوي الايجنت البطرس', levels: 6, questionsPerLevel: 40, timePerQuestion: 10, medal: '🎖️ بطرس' },
-            ]
-        };
-        
-        // --- CORE UI FUNCTIONS ---
-        function showScreen(screenId) {
+        // --- Core UI & Logic ---
+        const showScreen = (screenId) => {
             document.querySelectorAll('.screen-container').forEach(s => s.classList.remove('active'));
-            const screen = document.getElementById(screenId);
-            if (screen) screen.classList.add('active');
-        }
+            document.getElementById(screenId)?.classList.add('active');
+        };
 
-        function showAlert(title, message) {
-            allElements.modalTitle.textContent = title;
-            allElements.modalBody.textContent = message;
-            allElements.modal.classList.add('visible');
-        }
-
-        function mapElements() {
-            allElements = {};
-            document.querySelectorAll('[id]').forEach(el => {
-                if (el.id && typeof el.id === 'string') {
-                    const camelCaseId = el.id.replace(/-([a-z])/g, (_, g1) => g1.toUpperCase());
-                    allElements[camelCaseId] = el;
-                }
-            });
-        }
+        const getHighestTierInfo = (playerProfile) => {
+            if (!playerProfile || !playerProfile.highestTierId) return null;
+            const tier = TIERS_CONFIG.find(t => t.id === playerProfile.highestTierId);
+            return tier ? { medal: tier.medal, name: tier.name } : null;
+        };
         
-        function injectTemplates() {
-            const screenIds = [
-                'registration-screen', 'main-menu-screen', 'online-menu-screen', 'join-lobby-screen',
-                'online-lobby-screen', 'leaderboard-screen', 'awards-screen', 'match-screen',
-                'game-over-screen', 'modal', 'single-player-menu-screen', 'level-select-screen'
-            ];
-            screenIds.forEach(id => {
-                const container = document.getElementById(id);
-                const template = document.getElementById(`${id}-template`);
-                if (container && template) container.innerHTML = template.innerHTML;
-            });
-        }
-
-        function toggleMusic() {
-            if (!musicPlayer) {
-                musicPlayer = new Audio('https://v15mbanna3.github.io/my-sounds/Gna7%20felsama.mp3');
-                musicPlayer.loop = true;
-            }
-            isMuted = !isMuted;
-            if (isMuted) {
-                musicPlayer.pause();
-                allElements.muteBtn.textContent = '🔇';
-            } else {
-                musicPlayer.play().catch(() => { isMuted = true; allElements.muteBtn.textContent = '🔇'; });
-                allElements.muteBtn.textContent = '🔊';
-            }
-        }
-        
-        // --- AUTH & PROFILE ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                const teleoptiId = localStorage.getItem('triviaTeleoptiId');
-                if (teleoptiId) {
-                    await loadPlayerProfile(teleoptiId);
-                    updateMainMenu();
-                    showScreen('main-menu-screen');
-                } else {
-                    showScreen('registration-screen');
-                }
-            } else {
-                const teleoptiId = localStorage.getItem('triviaTeleoptiId');
-                if (teleoptiId) {
-                    const name = localStorage.getItem('triviaName');
-                    setTimeout(() => {
-                        if(allElements.nameInput) allElements.nameInput.value = name || '';
-                        if(allElements.teleoptiIdInput) allElements.teleoptiIdInput.value = teleoptiId || '';
-                    }, 0);
-                    showScreen('registration-screen');
-                } else {
-                    showScreen('registration-screen');
-                }
-            }
-            if (allElements.loadingScreen) {
-                allElements.loadingScreen.classList.remove('active');
-            }
-        });
-        
-        async function handleLogin() {
+        const handleLogin = async () => {
             const name = allElements.nameInput.value.trim();
             const teleoptiId = allElements.teleoptiIdInput.value.trim();
-            const rememberMe = allElements.rememberMeCheckbox.checked;
-
-            if (!name || !teleoptiId) return showAlert("خطأ", "الرجاء إدخال الاسم و Teleopti ID.");
-            if (!/^\d+$/.test(teleoptiId)) return showAlert("خطأ", "Teleopti ID يجب أن يحتوي على أرقام فقط.");
-
+            if (!name || !/^\d+$/.test(teleoptiId)) return alert("الرجاء إدخال بيانات صحيحة.");
+            
+            allElements.loginBtn.disabled = true;
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
-                currentUser = auth.currentUser;
-                
+                const user = auth.currentUser;
                 const playerRef = doc(db, "players", teleoptiId);
                 const playerDoc = await getDoc(playerRef);
 
-                if (playerDoc.exists()) {
-                    currentPlayerProfile = { ...playerDoc.data(), teleoptiId };
-                    if(currentPlayerProfile.name !== name || currentPlayerProfile.uid !== currentUser.uid) {
-                        await setDoc(playerRef, { name, uid: currentUser.uid }, { merge: true });
-                        currentPlayerProfile.name = name;
-                        currentPlayerProfile.uid = currentUser.uid;
-                    }
-                } else {
-                    currentPlayerProfile = { name, teleoptiId, uid: currentUser.uid, score: 0, awards: [], singlePlayerProgress: {} };
-                    await setDoc(playerRef, currentPlayerProfile);
-                }
+                const playerData = {
+                    name,
+                    teleoptiId,
+                    uid: user.uid,
+                    score: playerDoc.exists() ? playerDoc.data().score : 0,
+                    singlePlayerProgress: playerDoc.exists() ? playerDoc.data().singlePlayerProgress || {} : {},
+                    highestTierId: playerDoc.exists() ? playerDoc.data().highestTierId || null : null,
+                    awards: playerDoc.exists() ? playerDoc.data().awards || [] : [],
+                };
+                await setDoc(playerRef, playerData, { merge: true });
 
-                if (rememberMe) {
-                    localStorage.setItem('triviaTeleoptiId', teleoptiId);
-                    localStorage.setItem('triviaName', name);
-                } else {
-                    localStorage.removeItem('triviaTeleoptiId');
-                    localStorage.removeItem('triviaName');
-                }
-                
-                if (!currentPlayerProfile.singlePlayerProgress) currentPlayerProfile.singlePlayerProgress = {};
-
-                updateMainMenu();
-                showScreen('main-menu-screen');
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const lobbyToJoin = urlParams.get('lobby');
-                if (lobbyToJoin && currentPlayerProfile) {
-                    history.replaceState(null, '', window.location.pathname); 
-                    joinLobby(lobbyToJoin, true);
-                }
-
+                localStorage.setItem('botros-race-teleoptiId', teleoptiId);
+                await loadProfileAndStart(teleoptiId);
             } catch (error) {
-                console.error("Login failed:", error);
-                showAlert("فشل تسجيل الدخول", "حدث خطأ ما. يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى.");
-            }
-        }
-        
-        async function loadPlayerProfile(teleoptiId) {
-             const playerRef = doc(db, "players", teleoptiId);
-             const playerDoc = await getDoc(playerRef);
-             if (playerDoc.exists()) {
-                 currentPlayerProfile = { ...playerDoc.data(), teleoptiId };
-                 if (!currentPlayerProfile.singlePlayerProgress) currentPlayerProfile.singlePlayerProgress = {};
-             } else {
-                 handleLogout();
-             }
-        }
-
-        async function handleLogout() {
-            try {
-                if (auth.currentUser) await signOut(auth);
-            } catch (error) {
-                console.error("Logout failed:", error);
+                console.error("Login Error:", error);
+                alert("فشل تسجيل الدخول.");
             } finally {
-                currentUser = null;
-                currentPlayerProfile = null;
-                localStorage.clear();
-                if(allElements.nameInput) allElements.nameInput.value = '';
-                if(allElements.teleoptiIdInput) allElements.teleoptiIdInput.value = '';
-                showScreen('registration-screen');
+                if(allElements.loginBtn) allElements.loginBtn.disabled = false;
             }
-        }
+        };
         
-        // --- UI UPDATES ---
-        function updateMainMenu() {
-            if (!currentPlayerProfile) return;
-            allElements.welcomeMessage.innerHTML = `أهلاً بك, <span class="name">${currentPlayerProfile.name}</span> <span class="teleopti-id-display">(${currentPlayerProfile.teleoptiId})</span>`;
-            const awards = (currentPlayerProfile.awards || []).join(' ');
-            allElements.medalsDisplay.textContent = awards;
-        }
-
-        function populateLeaderboard(players) {
-            allElements.leaderboardList.innerHTML = '';
-            players.forEach((player, index) => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                if(index === 0) item.style.borderColor = 'gold';
-                if(index === 1) item.style.borderColor = 'silver';
-                if(index === 2) item.style.borderColor = '#cd7f32';
-                const highestMedal = getHighestMedal(player);
-                const medalDisplay = highestMedal ? ` ${highestMedal}` : '';
-                item.innerHTML = `
-                    <span class="item-value">${player.score || 0} نقطة</span>
-                    <span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span>
-                    <span class="item-rank">${index + 1}</span>
-                `;
-                allElements.leaderboardList.appendChild(item);
-            });
-        }
-        
-        // --- GAME LOGIC & HELPERS ---
-        function getQuestionsForLevel(count) {
-            if (QUESTION_BANK.length === 0) return [];
-            const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, Math.min(count, QUESTION_BANK.length));
-        }
-
-        function getHighestMedal(playerProfile) {
-            if (!playerProfile || !playerProfile.awards || !Array.isArray(playerProfile.awards)) return '';
-            const allMedalsInOrder = SINGLE_PLAYER_CONFIG.tiers.map(t => t.medal).reverse(); 
-            for (const medal of allMedalsInOrder) {
-                if (playerProfile.awards.includes(medal)) {
-                    return medal;
+        const loadProfileAndStart = async (teleoptiId) => {
+            try {
+                const playerDoc = await getDoc(doc(db, "players", teleoptiId));
+                if (playerDoc.exists()) {
+                    currentPlayerProfile = { id: playerDoc.id, ...playerDoc.data() };
+                    updateMainMenu();
+                    showScreen('main-menu-screen');
+                } else {
+                    handleLogout();
                 }
+            } catch (error) {
+                console.error("Profile Load Error:", error);
+                handleLogout();
             }
-            return '';
-        }
+        };
+        
+        const handleLogout = async () => {
+            if(currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
+            if (auth.currentUser) await signOut(auth).catch(console.error);
+            localStorage.removeItem('botros-race-teleoptiId');
+            currentPlayerProfile = null;
+            currentUser = null;
+            if(allElements.nameInput) allElements.nameInput.value = '';
+            if(allElements.teleoptiIdInput) allElements.teleoptiIdInput.value = '';
+            showScreen('registration-screen');
+        };
+        
+        const updateMainMenu = () => {
+            if (!currentPlayerProfile) return;
+            const tierInfo = getHighestTierInfo(currentPlayerProfile);
+            const titleMedal = tierInfo ? tierInfo.medal : '';
+            
+            allElements.welcomeMessage.innerHTML = '';
+            
+            const text1 = document.createTextNode('أهلاً بك, ');
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'player-title-medal';
+            titleSpan.textContent = titleMedal;
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'name';
+            nameSpan.textContent = ` ${currentPlayerProfile.name}`;
 
-        // --- SINGLE PLAYER LOGIC ---
-        function displayTiers() {
-            const grid = allElements.tiersGrid;
-            grid.innerHTML = '';
+            allElements.welcomeMessage.append(text1, titleSpan, nameSpan);
+            allElements.medalsDisplay.textContent = (currentPlayerProfile.awards || []).join(' ');
+        };
+
+        const displaySinglePlayerMenu = () => {
+            const container = allElements.tiersContainer;
+            container.innerHTML = '';
             let lastTierCompleted = true;
-            SINGLE_PLAYER_CONFIG.tiers.forEach((tier, index) => {
-                const completedLevels = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.length || 0;
+            TIERS_CONFIG.forEach((tier, index) => {
+                const completedLevelsInTier = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.length || 0;
+                const isTierCompleted = completedLevelsInTier >= tier.levels;
                 const isLocked = index > 0 && !lastTierCompleted;
-                const progressPercent = (completedLevels / tier.levels) * 100;
-
-                const card = document.createElement('div');
-                card.className = `card ${isLocked ? 'locked' : ''}`;
-                card.innerHTML = `
-                    <h3 class="card-title">${isLocked ? '🔒 ' : ''}${tier.name}</h3>
-                    <p class="card-details">المستويات: ${tier.levels} | الأسئلة لكل مستوى: ${tier.questionsPerLevel}</p>
-                    <p class="card-details">الوقت للسؤال: ${tier.timePerQuestion} ثانية</p>
-                    <div class="progress-bar-container"><div class="progress-bar" style="width: ${progressPercent}%"></div></div>`;
-                if (!isLocked) card.onclick = () => displayLevels(tier);
-                grid.appendChild(card);
                 
-                if (progressPercent < 100) lastTierCompleted = false;
+                const card = document.createElement('div');
+                card.className = `card ${isLocked ? 'locked' : ''} ${isTierCompleted ? 'completed' : ''}`;
+                card.innerHTML = `<h3 class="card-title">${isLocked ? '🔒 ' : ''}${tier.name} ${tier.medal}</h3><p class="card-details">مكتمل: ${completedLevelsInTier}/${tier.levels}</p>`;
+                if (!isLocked) card.addEventListener('click', () => displayLevelsForTier(tier));
+                container.appendChild(card);
+                if (!isTierCompleted) lastTierCompleted = false;
             });
             showScreen('single-player-menu-screen');
-        }
+        };
 
-        function displayLevels(tier) {
-            singlePlayerState.currentTier = tier;
+        const displayLevelsForTier = (tier) => {
             allElements.levelSelectTitle.textContent = tier.name;
             const grid = allElements.levelsGrid;
             grid.innerHTML = '';
-            const completedInTier = currentPlayerProfile.singlePlayerProgress?.[tier.id] || [];
-
-            for (let i = 0; i < tier.levels; i++) {
-                const isCompleted = completedInTier.includes(i);
+            let canUnlockNext = true;
+            for (let i = 1; i <= tier.levels; i++) {
+                const levelIndex = i - 1;
                 const card = document.createElement('div');
-                card.className = `card level-card ${isCompleted ? 'completed' : ''}`;
-                card.innerHTML = `<h3 class="card-title">المستوى ${i + 1}</h3> ${isCompleted ? '<p class="card-details">✅ مكتمل</p>' : ''}`;
-                card.onclick = () => startSinglePlayerLevel(tier, i);
+                card.className = 'level-card';
+                card.innerHTML = `<h4 class="level-title">المستوى ${i}</h4>`;
+                const isCompleted = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.includes(levelIndex);
+
+                if (isCompleted) card.classList.add('completed');
+                if (canUnlockNext) {
+                    card.addEventListener('click', () => startSinglePlayerMatch(tier, levelIndex));
+                    if (!isCompleted) canUnlockNext = false;
+                } else {
+                    card.classList.add('locked');
+                    card.innerHTML += '<span>🔒</span>';
+                }
                 grid.appendChild(card);
             }
             showScreen('level-select-screen');
-        }
+        };
 
-        function startSinglePlayerLevel(tier, levelIndex) {
-            singlePlayerState = { currentTier: tier, currentLevel: levelIndex, questions: getQuestionsForLevel(tier.questionsPerLevel), currentQuestionIndex: 0, answers: [] };
-            displaySinglePlayerQuestion();
-        }
-        
-        function displaySinglePlayerQuestion() {
+        const startSinglePlayerMatch = (tier, levelIndex) => {
+            const questions = [...OFFLINE_QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, tier.questionsPerLevel);
+            currentMatchState = { type: 'single', tier, levelIndex, questions, currentQuestionIndex: 0, score: 0 };
             showScreen('match-screen');
-            const { currentTier, currentQuestionIndex, questions } = singlePlayerState;
-            const question = questions[currentQuestionIndex];
+            displayMatchQuestion();
+        };
 
-            allElements.matchHeader.textContent = `${currentTier.name} - المستوى ${singlePlayerState.currentLevel + 1}`;
-            allElements.questionCounter.textContent = `السؤال ${currentQuestionIndex + 1} / ${questions.length}`;
-            allElements.questionText.innerHTML = question.question || "السؤال غير متوفر"; 
-            allElements.explanationBox.classList.remove('visible');
-            if (allElements.surrenderBtn) allElements.surrenderBtn.style.display = 'none';
-            if (allElements.matchBackBtn) allElements.matchBackBtn.style.display = 'inline-block';
+        const finishSinglePlayerLevel = async () => {
+            if (!currentMatchState) return;
+            const { tier, levelIndex, score } = currentMatchState;
+            const playerRef = doc(db, "players", currentPlayerProfile.id);
 
-            allElements.optionsGrid.innerHTML = '';
-            const optionsArray = Object.values(question.options);
-            optionsArray.forEach((option, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-secondary option-btn';
-                btn.textContent = option;
-                btn.onclick = () => handleSinglePlayerAnswer(i);
-                allElements.optionsGrid.appendChild(btn);
+            await updateDoc(playerRef, {
+                score: increment(score),
+                [`singlePlayerProgress.${tier.id}`]: arrayUnion(levelIndex)
             });
-            
-            const timeLimit = currentTier.timePerQuestion * 1000;
-            requestAnimationFrame(() => {
-                allElements.timerBar.style.transition = 'none';
-                allElements.timerBar.style.width = '100%';
-                setTimeout(() => {
-                    allElements.timerBar.style.transition = `width ${timeLimit / 1000}s linear`;
-                    allElements.timerBar.style.width = '0%';
-                }, 50);
-            });
-            
-            clearTimeout(questionTimer);
-            questionTimer = setTimeout(() => handleSinglePlayerAnswer(null), timeLimit);
-        }
 
-        function handleSinglePlayerAnswer(selectedIndex) {
-            clearTimeout(questionTimer);
-            const { questions, currentQuestionIndex } = singlePlayerState;
-            const question = questions[currentQuestionIndex];
-            
-            const optionsArray = Object.values(question.options);
-            const correctAnswerValue = question.options[question.correct_answer];
-            const correctAnswerIndex = optionsArray.indexOf(correctAnswerValue);
-            
-            const isCorrect = selectedIndex === correctAnswerIndex;
-            singlePlayerState.answers.push(isCorrect);
+            const freshProfileDoc = await getDoc(playerRef);
+            currentPlayerProfile = { id: freshProfileDoc.id, ...freshProfileDoc.data() };
 
-            document.querySelectorAll('.option-btn').forEach((btn, i) => {
-                btn.classList.add('disabled');
-                btn.onclick = null;
-                if (i === correctAnswerIndex) {
-                    btn.classList.add('correct');
-                    btn.innerHTML += ' ✅';
-                }
-            });
-            
-            let nextQuestionDelay = 3000;
-
-            if (!isCorrect) {
-                if (selectedIndex !== null) {
-                    const wrongBtn = document.querySelectorAll('.option-btn')[selectedIndex];
-                    if (wrongBtn) {
-                        wrongBtn.classList.add('wrong');
-                        wrongBtn.innerHTML += ' ❌';
-                    }
-                }
-                if (question.explanation) {
-                    allElements.explanationBox.textContent = `التفسير: ${question.explanation}`;
-                    allElements.explanationBox.classList.add('visible');
-                    nextQuestionDelay = 5000;
+            const completedInTier = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.length || 0;
+            if (completedInTier >= tier.levels) {
+                const currentTierIndex = TIERS_CONFIG.findIndex(t => t.id === currentPlayerProfile.highestTierId);
+                const newTierIndex = TIERS_CONFIG.findIndex(t => t.id === tier.id);
+                if (currentPlayerProfile.highestTierId === null || newTierIndex > currentTierIndex) {
+                    await updateDoc(playerRef, { highestTierId: tier.id });
+                    currentPlayerProfile.highestTierId = tier.id;
+                    alert(`تهانينا! لقد أتقنت ${tier.name} وحصلت على لقب ${tier.medal}`);
                 }
             }
+            displayLevelsForTier(tier);
+        };
 
-            setTimeout(() => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    singlePlayerState.currentQuestionIndex++;
-                    displaySinglePlayerQuestion();
-                } else {
-                    finishSinglePlayerLevel();
-                }
-            }, nextQuestionDelay);
-        }
-
-        async function finishSinglePlayerLevel() {
-            const allCorrect = singlePlayerState.answers.every(a => a === true);
-            if (!allCorrect) {
-                showAlert("المحاولة مرة أخرى", "لم تتمكن من الإجابة على جميع الأسئلة بشكل صحيح. حاول مرة أخرى!");
-                return displayLevels(singlePlayerState.currentTier);
-            }
-
-            const { id: tierId, medal } = singlePlayerState.currentTier;
-            const levelIndex = singlePlayerState.currentLevel;
-            const playerRef = doc(db, "players", currentPlayerProfile.teleoptiId);
-
-            if (!currentPlayerProfile.singlePlayerProgress[tierId]?.includes(levelIndex)) {
-                await updateDoc(playerRef, { 
-                    score: increment(10),
-                    [`singlePlayerProgress.${tierId}`]: arrayUnion(levelIndex) 
-                });
-                
-                if (!currentPlayerProfile.singlePlayerProgress[tierId]) currentPlayerProfile.singlePlayerProgress[tierId] = [];
-                currentPlayerProfile.singlePlayerProgress[tierId].push(levelIndex);
-                if (!currentPlayerProfile.score) currentPlayerProfile.score = 0;
-                currentPlayerProfile.score += 10;
-            }
-
-            showAlert("مستوى مكتمل!", "أحسنت! لقد أكملت هذا المستوى بنجاح وحصلت على 10 نقاط.");
-            
-            const completedInTier = currentPlayerProfile.singlePlayerProgress[tierId] || [];
-            if (completedInTier.length === singlePlayerState.currentTier.levels) {
-                if (!currentPlayerProfile.awards.includes(medal)) {
-                    await updateDoc(playerRef, { 
-                        awards: arrayUnion(medal),
-                        score: increment(30)
-                    });
-                    currentPlayerProfile.awards.push(medal);
-                    currentPlayerProfile.score += 30;
-                    showAlert("مستوى مكتمل!", `لقد أكملت ${singlePlayerState.currentTier.name} وحصلت على ${medal} و 30 نقطة إضافية!`);
-                    updateMainMenu();
-                }
-            }
-            displayTiers();
-        }
-        
-        // --- ONLINE MULTIPLAYER LOGIC ---
-        async function createLobby(type) {
-            if (!currentUser || !currentPlayerProfile) return showAlert("خطأ", "يجب تسجيل الدخول أولاً.");
+        const createLobby = async (type) => {
+            if (!currentPlayerProfile) return;
             const lobbyCode = Math.random().toString(36).substring(2, 6).toUpperCase();
             const lobbyRef = doc(db, "lobbies", lobbyCode);
-            
-            const highestMedal = getHighestMedal(currentPlayerProfile);
-            const newLobby = {
-                lobbyCode, type, hostUid: currentUser.uid, createdAt: serverTimestamp(),
-                status: "waiting",
-                players: [{ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0, medal: highestMedal }],
-                currentQuestionIndex: -1, answers: {}
+            const tierInfo = getHighestTierInfo(currentPlayerProfile);
+            const hostData = { 
+                id: currentPlayerProfile.id, 
+                name: currentPlayerProfile.name, 
+                title: tierInfo ? tierInfo.name : 'لاعب جديد',
+                medal: tierInfo ? tierInfo.medal : '',
+                score: 0, 
+                teleoptiId: currentPlayerProfile.id 
             };
-            await setDoc(lobbyRef, newLobby);
+            await setDoc(lobbyRef, { type, hostId: currentPlayerProfile.id, players: [hostData], status: 'waiting', createdAt: serverTimestamp() });
             joinLobby(lobbyCode);
-        }
+        };
 
-        function joinLobby(code) {
-            if (!currentUser || !currentPlayerProfile) return showAlert("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
-            const lobbyCode = code.toUpperCase();
+        const joinLobby = async (lobbyCode) => {
+            if (!currentPlayerProfile) return;
+            lobbyCode = lobbyCode.toUpperCase();
             const lobbyRef = doc(db, "lobbies", lobbyCode);
-            
-            if (unsubscribeLobby) unsubscribeLobby();
-
-            unsubscribeLobby = onSnapshot(lobbyRef, async (docSnap) => {
-                if (!docSnap.exists()) {
-                    showAlert("خطأ", "الغرفة غير موجودة أو تم إغلاقها.");
-                    if(unsubscribeLobby) unsubscribeLobby();
-                    unsubscribeLobby = null;
-                    return showScreen('online-menu-screen');
-                }
-
-                const lobbyData = docSnap.data();
-                const playerInLobby = lobbyData.players.find(p => p.uid === currentUser.uid);
-
-                if (lobbyData.status !== 'waiting' && !playerInLobby) {
-                    showAlert("مغلق", "هذه المنافسة قد بدأت بالفعل أو انتهت.");
-                    if(unsubscribeLobby) unsubscribeLobby();
-                    return showScreen('online-menu-screen');
-                }
-                
-                if(lobbyData.type === '1v1' && lobbyData.players.length >= 2 && !playerInLobby) {
-                    showAlert("ممتلئة", "هذه المواجهة ممتلئة بالفعل.");
-                     if(unsubscribeLobby) unsubscribeLobby();
-                    return showScreen('online-menu-screen');
-                }
-                
-                if (!playerInLobby) {
-                    const highestMedal = getHighestMedal(currentPlayerProfile);
-                    await updateDoc(lobbyRef, {
-                        players: arrayUnion({ uid: currentUser.uid, name: currentPlayerProfile.name, teleoptiId: currentPlayerProfile.teleoptiId, score: 0, medal: highestMedal })
-                    });
-                } else {
-                    switch (lobbyData.status) {
-                        case 'waiting': case 'countdown': updateLobbyScreen(lobbyData); showScreen('online-lobby-screen'); break;
-                        case 'in-progress': runGame(lobbyData); break;
-                        case 'finished': displayGameOver(lobbyData); break;
-                    }
-                }
-            }, (error) => {
-                console.error("Lobby snapshot error:", error);
-                showAlert("خطأ بالاتصال", "فقد الاتصال بغرفة اللعب.");
-                leaveLobby();
-            });
-        }
-        
-        function updateLobbyScreen(lobbyData) {
-            if (!lobbyData || !currentUser) return;
-            currentLobbyId = lobbyData.lobbyCode;
-            const isHost = lobbyData.hostUid === currentUser.uid;
-            
-            allElements.lobbyTitle.textContent = lobbyData.type === '1v1' ? 'ردهة المواجهة (1 ضد 1)' : 'ردهة المنافسة الحاشدة';
-            allElements.lobbyCodeDisplay.textContent = lobbyData.lobbyCode;
-            
-            allElements.lobbyPlayersList.innerHTML = '';
-            lobbyData.players.forEach(player => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                const medalDisplay = player.medal ? ` ${player.medal}` : '';
-                item.innerHTML = `<span class="item-name">${player.name}${medalDisplay} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;
-                allElements.lobbyPlayersList.appendChild(item);
-            });
-
-            if (isHost) {
-                allElements.startGameBtn.style.display = 'block';
-                const canStart = lobbyData.type === '1v1' ? lobbyData.players.length === 2 : lobbyData.players.length >= 2;
-                allElements.startGameBtn.disabled = !canStart;
-            } else {
-                allElements.startGameBtn.style.display = 'none';
-            }
-            
-            if (lobbyData.status === 'countdown') {
-                allElements.lobbyStatus.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
-            } else if (lobbyData.status === 'waiting') {
-                 allElements.lobbyStatus.textContent = lobbyData.type === 'massive' ? 'في انتظار لاعبين على الأقل...' : 'في انتظار اللاعب الثاني...';
-            }
-        }
-
-        async function leaveLobby() {
-            if (unsubscribeLobby) unsubscribeLobby();
-            unsubscribeLobby = null;
-            currentLobbyId = null;
-            showScreen('online-menu-screen');
-        }
-
-        async function startGame() {
-             if (!currentLobbyId) return;
-            const lobbyRef = doc(db, "lobbies", currentLobbyId);
-            
             try {
                 await runTransaction(db, async (transaction) => {
-                    const freshLobbyDoc = await transaction.get(lobbyRef);
-                    if (!freshLobbyDoc.exists() || freshLobbyDoc.data().status !== 'waiting') {
-                        throw "Lobby not in waiting state";
-                    }
-                    // يمكنك التحكم في عدد أسئلة المباراة من هنا
-                    const questionCount = 30;
-                    const gameQuestions = getQuestionsForLevel(questionCount);
-                    transaction.update(lobbyRef, { questions: gameQuestions, status: 'countdown', countdown: 3 });
+                    const docSnap = await transaction.get(lobbyRef);
+                    if (!docSnap.exists()) throw new Error("الردهة غير موجودة.");
+                    const lobbyData = docSnap.data();
+                    if(lobbyData.status !== 'waiting') throw new Error("المنافسة قد بدأت بالفعل.");
+                    if (lobbyData.players.some(p => p.id === currentPlayerProfile.id)) return;
+                    if(lobbyData.type === '1v1' && lobbyData.players.length >=2) throw new Error("هذه المواجهة ممتلئة.");
+                    
+                    const tierInfo = getHighestTierInfo(currentPlayerProfile);
+                    const playerData = { 
+                        id: currentPlayerProfile.id, 
+                        name: currentPlayerProfile.name, 
+                        title: tierInfo ? tierInfo.name : 'لاعب جديد',
+                        medal: tierInfo ? tierInfo.medal : '',
+                        score: 0,
+                        teleoptiId: currentPlayerProfile.id 
+                    };
+                    transaction.update(lobbyRef, { players: arrayUnion(playerData) });
                 });
 
-                let count = 3;
-                const countdownInterval = setInterval(async () => {
-                    count--;
-                    if (count > 0) {
-                        await updateDoc(lobbyRef, { countdown: count }).catch(err => clearInterval(countdownInterval));
-                    } else {
-                        clearInterval(countdownInterval);
-                        await updateDoc(lobbyRef, { status: 'in-progress', currentQuestionIndex: 0, questionStartTime: serverTimestamp() });
-                    }
-                }, 1000);
-
-            } catch (error) {
-                console.error("Failed to start game:", error);
-                showAlert("خطأ", "لا يمكن بدء اللعبة. قد يكون لاعب آخر بدأها بالفعل.");
+                if (currentLobbyUnsubscribe) currentLobbyUnsubscribe();
+                currentLobbyUnsubscribe = onSnapshot(lobbyRef, handleLobbyUpdate);
+            } catch (e) {
+                alert(e.message);
             }
-        }
+        };
         
-        function runGame(lobbyData) {
-            if (lobbyData.status === 'finished') {
-                displayGameOver(lobbyData);
+        const handleLobbyUpdate = (docSnap) => {
+            if (!docSnap.exists()) {
+                if(currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
+                alert("تم إغلاق الردهة.");
+                showScreen('online-menu-screen');
                 return;
             }
-            if (lobbyData.status === 'in-progress' && lobbyData.currentQuestionIndex >= 0) {
-                displayOnlineMatchScreen(lobbyData);
+            const lobby = { id: docSnap.id, ...docSnap.data() };
+            currentMatchState = lobby;
+            
+            if (lobby.status === 'waiting') {
+                updateLobbyScreen(lobby);
+                showScreen('online-lobby-screen');
+            } else if (lobby.status === 'in-progress') {
+                showScreen('match-screen');
+                displayMatchQuestion();
+            } else if (lobby.status === 'finished') {
+                displayPodiumScreen(lobby);
+                if (currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
             }
-        }
+        };
         
-        function displayOnlineMatchScreen(lobbyData) {
-            showScreen('match-screen');
-            const questionIndex = lobbyData.currentQuestionIndex;
-            const question = lobbyData.questions[questionIndex];
-            
-            if (!question) { return; }
-            
-            if(lobbyData.type === '1v1') {
-                const player1 = lobbyData.players[0];
-                const player2 = lobbyData.players[1];
-                const p1Score = player1?.score || 0;
-                const p2Score = player2?.score || 0;
-                const p1Medal = player1?.medal ? ` ${player1.medal}` : '';
-                const p2Medal = player2?.medal ? ` ${player2.medal}` : '';
-                const p1Name = player1?.name || 'لاعب ١';
-                const p2Name = player2?.name || 'لاعب ٢';
-
-                allElements.matchHeader.innerHTML = `
-                    <span class="name">(${p1Score}) ${p1Name}${p1Medal}</span> 
-                    <span style="color: var(--accent-yellow);">ضد</span> 
-                    <span class="name">${p2Name}${p2Medal} (${p2Score})</span>`;
-            } else {
-                allElements.matchHeader.textContent = `منافسة حاشدة - ${lobbyData.players.length} لاعبين`;
-            }
-
-            if (lobbyData.surrendered?.uid) {
-                const surrenderer = lobbyData.players.find(p => p.uid === lobbyData.surrendered.uid);
-                if(surrenderer) {
-                    allElements.surrenderBanner.textContent = `${surrenderer.name} (${surrenderer.teleoptiId}) انهزم يا مينز!`;
-                    allElements.surrenderBanner.style.display = 'block';
-                }
-            } else {
-                allElements.surrenderBanner.style.display = 'none';
-            }
-            
-            allElements.questionCounter.textContent = `السؤال ${questionIndex + 1} / ${lobbyData.questions.length}`;
-            allElements.questionText.innerHTML = question.question || "السؤال غير متوفر";
-            allElements.explanationBox.classList.remove('visible');
-            if (allElements.surrenderBtn) allElements.surrenderBtn.style.display = 'inline-block';
-            if (allElements.matchBackBtn) allElements.matchBackBtn.style.display = 'none';
-
-            allElements.optionsGrid.innerHTML = '';
-            const optionsArray = Object.values(question.options);
-            const myAnswer = lobbyData.answers?.[questionIndex]?.[currentUser?.uid];
-            const isRevealPhase = lobbyData.revealAnswerForIndex === questionIndex;
-
-            optionsArray.forEach((option, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-secondary option-btn';
-                btn.textContent = option;
-                
-                if (myAnswer || isRevealPhase) {
-                    btn.classList.add('disabled');
-                } else {
-                    btn.onclick = () => handleOnlineAnswer(questionIndex, i);
-                }
-                allElements.optionsGrid.appendChild(btn);
-            });
-            
-            if (isRevealPhase) {
-                showUniversalQuestionResult(lobbyData, questionIndex);
-            } else if (myAnswer) {
-                revealOnlineQuestionResult(lobbyData, questionIndex);
-            }
-            
-            const startTime = lobbyData.questionStartTime?.toMillis?.();
-            if (!startTime) return;
-
-            const questionDuration = 30000;
-            const elapsed = Date.now() - startTime;
-            
-            clearTimeout(questionTimer);
-            
-            if (lobbyData.hostUid === currentUser?.uid && !isRevealPhase) {
-                questionTimer = setTimeout(() => {
-                    getDoc(doc(db, 'lobbies', currentLobbyId)).then(lobbyDoc => {
-                        if(lobbyDoc.exists() && lobbyDoc.data().currentQuestionIndex === questionIndex) {
-                            advanceOnlineQuestion();
-                        }
-                    });
-                }, Math.max(0, questionDuration - elapsed));
-            }
-            
-            if (isRevealPhase) {
-                allElements.timerBar.style.width = '0%';
-            } else {
-                requestAnimationFrame(() => {
-                    allElements.timerBar.style.transition = 'none';
-                    allElements.timerBar.style.width = `${Math.max(0, 100 - (elapsed / questionDuration * 100))}%`;
-                    setTimeout(() => {
-                        allElements.timerBar.style.transition = `width ${ (questionDuration - elapsed) / 1000}s linear`;
-                        allElements.timerBar.style.width = '0%';
-                    }, 50);
-                });
-            }
-        }
-        
-        async function handleOnlineAnswer(questionIndex, optionIndex) {
-            if (!currentLobbyId || !currentUser) return;
-            const lobbyRef = doc(db, "lobbies", currentLobbyId);
-            const answerPath = `answers.${questionIndex}.${currentUser.uid}`;
-            
-            try {
-                const lobbyDoc = await getDoc(lobbyRef);
-                if (lobbyDoc.data()?.answers?.[questionIndex]?.[currentUser.uid]) {
-                    return;
-                }
-                await updateDoc(lobbyRef, {
-                    [answerPath]: { option: optionIndex, time: serverTimestamp() }
-                });
-            } catch(error) {
-                console.error("Failed to submit answer:", error);
-            }
-        }
-        
-        function revealOnlineQuestionResult(lobbyData, questionIndex) {
-            const question = lobbyData.questions[questionIndex];
-            const myAnswerObj = lobbyData.answers?.[questionIndex]?.[currentUser.uid];
-            if (!myAnswerObj) return;
-
-            const optionsArray = Object.values(question.options);
-            const correctAnswerValue = question.options[question.correct_answer];
-            const correctAnswerIndex = optionsArray.indexOf(correctAnswerValue);
-
-            document.querySelectorAll('.option-btn').forEach((btn, i) => {
-                btn.classList.add('disabled');
-                btn.onclick = null;
-                if (i === correctAnswerIndex) {
-                    btn.classList.add('correct');
-                } else if (i === myAnswerObj.option) {
-                    btn.classList.add('wrong');
-                }
-            });
-            
-            if (question.explanation) {
-                 allElements.explanationBox.textContent = `التفسير: ${question.explanation}`;
-                 allElements.explanationBox.classList.add('visible');
-            }
-        }
-        
-        function showUniversalQuestionResult(lobbyData, questionIndex) {
-            const question = lobbyData.questions[questionIndex];
-            if (!question) return;
-
-            const optionsArray = Object.values(question.options);
-            const correctAnswerValue = question.options[question.correct_answer];
-            const correctAnswerIndex = optionsArray.indexOf(correctAnswerValue);
-
-            document.querySelectorAll('.option-btn').forEach((btn, i) => {
-                btn.classList.add('disabled');
-                btn.onclick = null;
-                if (i === correctAnswerIndex) {
-                    btn.classList.add('correct');
-                    if (!btn.innerHTML.includes('✅')) {
-                        btn.innerHTML += ' ✅';
-                    }
-                }
-            });
-            
-            if (question.explanation) {
-                allElements.explanationBox.textContent = `التفسير: ${question.explanation}`;
-                allElements.explanationBox.classList.add('visible');
-            }
-        }
-
-        async function advanceOnlineQuestion() {
-            if (!currentLobbyId) return;
-            const lobbyRef = doc(db, "lobbies", currentLobbyId);
-
-            await runTransaction(db, async (transaction) => {
-                const lobbyDoc = await transaction.get(lobbyRef);
-                if (!lobbyDoc.exists()) return;
-
-                const lobbyData = lobbyDoc.data();
-                const oldIndex = lobbyData.currentQuestionIndex;
-
-                if (lobbyData.revealAnswerForIndex === oldIndex) {
-                    return;
-                }
-
-                let playersUpdate = scoreOnlineRound(lobbyData, oldIndex);
-                
-                transaction.update(lobbyRef, {
-                    players: playersUpdate,
-                    revealAnswerForIndex: oldIndex
-                });
-            }).then(() => {
-                setTimeout(() => {
-                    getDoc(lobbyRef).then(lobbyDoc => {
-                        if (!lobbyDoc.exists()) return;
-                        const currentLobbyData = lobbyDoc.data();
-
-                        if (currentLobbyData.status !== 'in-progress') return;
-                        
-                        const questionIndex = currentLobbyData.currentQuestionIndex;
-
-                        if (questionIndex >= currentLobbyData.questions.length - 1) {
-                            updateDoc(lobbyRef, { status: 'finished' }); 
-                            finalizeOnlineGameAwards(currentLobbyData, currentLobbyData.players);
-                        } else {
-                            updateDoc(lobbyRef, {
-                                currentQuestionIndex: questionIndex + 1,
-                                questionStartTime: serverTimestamp(),
-                                revealAnswerForIndex: null
-                            });
-                        }
-                    });
-                }, 5000);
-            }).catch(error => {
-                console.error("Transaction to advance question failed:", error);
-            });
-        }
-        
-        function scoreOnlineRound(lobbyData, questionIndex) {
-            if(questionIndex < 0) return lobbyData.players;
-
-            const question = lobbyData.questions[questionIndex];
-            const answers = lobbyData.answers?.[questionIndex] || {};
-            let players = JSON.parse(JSON.stringify(lobbyData.players)); 
-            
-            const optionsArray = Object.values(question.options);
-            const correctAnswerValue = question.options[question.correct_answer];
-            const correctAnswerIndex = optionsArray.indexOf(correctAnswerValue);
-
-            let correctResponders = [];
-            Object.keys(answers).forEach(uid => {
-                if (answers[uid].option === correctAnswerIndex) {
-                    const time = answers[uid].time?.toMillis();
-                    if (time) {
-                        correctResponders.push({ uid, time });
-                    }
-                }
-            });
-
-            correctResponders.sort((a,b) => a.time - b.time);
-
-            if (correctResponders.length > 0) {
-                const winnerUid = correctResponders[0].uid;
-                const player = players.find(p => p.uid === winnerUid);
-                if(player) player.score += 1;
-            }
-            
-            return players;
-        }
-        
-        async function finalizeOnlineGameAwards(lobbyData, finalPlayers) {
-             const batch = writeBatch(db);
-             const sortedPlayers = [...finalPlayers].sort((a,b) => b.score - a.score);
-
-             if (lobbyData.type === '1v1' && sortedPlayers.length > 0) {
-                 if(sortedPlayers.length < 2 || sortedPlayers[0].score > sortedPlayers[1].score) {
-                     const winner = sortedPlayers[0];
-                     if(winner) {
-                         const winnerRef = doc(db, "players", winner.teleoptiId);
-                         batch.update(winnerRef, { 
-                             score: increment(30), 
-                             awards: arrayUnion("Botros Race Cup 🏆") 
-                         });
-                     }
-                 }
-             } else if (lobbyData.type === 'massive') {
-                 if (sortedPlayers.length > 0 && sortedPlayers[0].score > 0) {
-                     const topScore = sortedPlayers[0].score;
-                     const firstPlace = sortedPlayers.filter(p => p.score === topScore);
-                     firstPlace.forEach(p => {
-                         const playerRef = doc(db, "players", p.teleoptiId);
-                         batch.update(playerRef, { score: increment(100), awards: arrayUnion("Botros Race 4 Vs 4 Golden 🥇") });
-                     });
-                     
-                     const secondScore = sortedPlayers.find(p => p.score < topScore)?.score;
-                     if (secondScore > 0) {
-                         const secondPlace = sortedPlayers.filter(p => p.score === secondScore);
-                         secondPlace.forEach(p => {
-                             const playerRef = doc(db, "players", p.teleoptiId);
-                             batch.update(playerRef, { score: increment(50), awards: arrayUnion("Botros Race 4 VS 4 Silver 🥈") });
-                         });
-                     }
-                 }
-             }
-             try {
-                 await batch.commit();
-             } catch(error) {
-                 console.error("Failed to commit final awards:", error);
-             }
-        }
-
-        function displayGameOver(lobbyData) {
-            if (unsubscribeLobby) unsubscribeLobby();
-            unsubscribeLobby = null;
-            currentLobbyId = null;
-
-            showScreen('game-over-screen');
-            const sortedPlayers = [...lobbyData.players].sort((a,b) => b.score - a.score);
-            let resultsHTML = '';
-
-            if (lobbyData.surrendered?.uid) {
-                const winner = sortedPlayers.find(p => p.uid !== lobbyData.surrendered.uid);
-                const loser = sortedPlayers.find(p => p.uid === lobbyData.surrendered.uid);
-                if (winner && loser) {
-                    resultsHTML = `<h2 class="winner-name">${winner.name} هو الفائز!</h2> <p>${loser.name} استسلم.</p>`;
-                } else {
-                     resultsHTML = `<h2>انتهت المباراة بالاستسلام</h2>`;
-                }
-            } else {
-                 if (sortedPlayers.length > 0 && (sortedPlayers.length === 1 || sortedPlayers[0].score > sortedPlayers[1].score)) {
-                      resultsHTML = `<h2 class="winner-name">الفائز هو: ${sortedPlayers[0].name}</h2>`;
-                 } else {
-                      resultsHTML = `<h2>انتهت المباراة بالتعادل!</h2>`;
-                 }
-            }
-            allElements.resultsContainer.innerHTML = resultsHTML;
-            
-            allElements.resultsList.innerHTML = '';
-            sortedPlayers.forEach((player, index) => {
+        const updateLobbyScreen = (lobby) => {
+            allElements.lobbyTitle.textContent = lobby.type === '1v1' ? 'ردهة 1 ضد 1' : 'ردهة المنافسة الحاشدة';
+            allElements.lobbyCodeDisplay.textContent = lobby.id;
+            const playersList = allElements.lobbyPlayersList;
+            playersList.innerHTML = '';
+            lobby.players.forEach(p => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                const medalDisplay = player.medal ? ` ${player.medal}` : '';
-                item.innerHTML = `
-                    <span class="item-value">${player.score} نقطة</span>
-                    <span class="item-name">${player.name}${medalDisplay} <span class="teleopti-id-display">(${player.teleoptiId})</span></span>
-                    <span class="item-rank">${index + 1}</span>
-                `;
-                allElements.resultsList.appendChild(item);
+                item.style.justifyContent = 'center';
+
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'item-name-container';
+                
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'player-title-medal';
+                titleSpan.textContent = p.medal;
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'item-name';
+                nameSpan.textContent = ` ${p.name} ${lobby.hostId === p.id ? '👑' : ''}`;
+
+                nameContainer.append(titleSpan, nameSpan);
+                item.appendChild(nameContainer);
+                playersList.appendChild(item);
             });
-        }
+            const startBtn = allElements.startGameBtn;
+            startBtn.style.display = lobby.hostId === currentPlayerProfile.id ? 'flex' : 'none';
+            const canStart = lobby.type === '1v1' ? lobby.players.length === 2 : lobby.players.length >= 2;
+            startBtn.disabled = !canStart;
+        };
+
+        const startGame = async () => {
+            if (!currentMatchState || currentMatchState.hostId !== currentPlayerProfile.id) return;
+            const questionCount = currentMatchState.type === '1v1' ? 5 : 10;
+            const questions = [...ONLINE_QUESTION_BANK].sort(() => 0.5 - Math.random()).slice(0, questionCount);
+            await updateDoc(doc(db, "lobbies", currentMatchState.id), { status: 'in-progress', questions, currentQuestionIndex: 0, answers: {} });
+        };
         
-        async function surrender() {
-            if (!currentLobbyId || !currentUser) return;
-            const lobbyRef = doc(db, "lobbies", currentLobbyId);
+        const advanceOnlineQuestion = async () => {
+            if (!currentMatchState || currentMatchState.hostId !== currentPlayerProfile.id) return;
+            const lobbyRef = doc(db, "lobbies", currentMatchState.id);
+            const nextIndex = currentMatchState.currentQuestionIndex + 1;
 
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const lobbyDoc = await transaction.get(lobbyRef);
-                    if (!lobbyDoc.exists()) throw "Lobby does not exist!";
-                    
-                    const lobbyData = lobbyDoc.data();
-
-                    if (lobbyData.status !== 'in-progress') return;
-
-                    let finalPlayers = [...lobbyData.players];
-
-                    if (lobbyData.type === '1v1' && lobbyData.players.length === 2) {
-                        const winner = lobbyData.players.find(p => p.uid !== currentUser.uid);
-                        const winnerIndex = finalPlayers.findIndex(p => p.uid === winner.uid);
-
-                        if (winner && winnerIndex !== -1) {
-                            const winnerRef = doc(db, "players", winner.teleoptiId);
-
-                            transaction.update(winnerRef, {
-                                score: increment(30),
-                                awards: arrayUnion("Botros Race Cup 🏆") 
-                            });
-
-                            finalPlayers[winnerIndex].score += 30;
+            if (nextIndex >= currentMatchState.questions.length) {
+                const batch = writeBatch(db);
+                const players = currentMatchState.players.sort((a,b) => b.score - a.score);
+                if(currentMatchState.type === '1v1') {
+                    if (players.length > 0 && (players.length === 1 || players[0].score > players[1].score) ) {
+                        batch.update(doc(db, "players", players[0].id), { score: increment(30), awards: arrayUnion("Botros Race Cup 🏆") });
+                    }
+                } else {
+                     const ranks = {}; let rank = 1;
+                     for(let i=0; i < players.length; i++){
+                        if(i > 0 && players[i].score < players[i-1].score) rank = i + 1;
+                        if (rank <= 3) {
+                            if (!ranks[rank]) ranks[rank] = [];
+                            ranks[rank].push(players[i]);
                         }
-                    }
-
-                    transaction.update(lobbyRef, {
-                        surrendered: { uid: currentUser.uid, teleoptiId: currentPlayerProfile.teleoptiId },
-                        status: 'finished',
-                        players: finalPlayers
-                    });
-                });
-            } catch (error) {
-                console.error("Surrender transaction failed:", error);
+                     }
+                    if(ranks[1]) ranks[1].forEach(p => batch.update(doc(db, "players", p.id), { score: increment(150), awards: arrayUnion("🥇") }));
+                    if(ranks[2]) ranks[2].forEach(p => batch.update(doc(db, "players", p.id), { score: increment(100), awards: arrayUnion("🥈") }));
+                    if(ranks[3]) ranks[3].forEach(p => batch.update(doc(db, "players", p.id), { score: increment(50), awards: arrayUnion("🥉") }));
+                }
+                await batch.commit();
+                await updateDoc(lobbyRef, { status: 'finished' });
+            } else {
+                await updateDoc(lobbyRef, { currentQuestionIndex: nextIndex });
             }
-        }
-
-        // --- EVENT LISTENERS & INITIALIZATION ---
-        function setupEventListeners() {
-            document.getElementById('mute-btn')?.addEventListener('click', toggleMusic);
-            document.body.addEventListener('click', async (e) => {
-                const target = e.target;
-                const closest = (selector) => target.closest(selector);
-
-                if (closest('#modal-close-btn')) {
-                    allElements.modal.classList.remove('visible');
-                }
-                else if (closest('.back-btn')) {
-                    const parentScreen = closest('.screen-container');
-                    if (!parentScreen) return;
-                    clearTimeout(questionTimer);
-                    if (parentScreen.id === 'online-lobby-screen') return leaveLobby();
-                    if (parentScreen.id === 'game-over-screen') {
-                        if (unsubscribeLobby) unsubscribeLobby();
-                        currentLobbyId = null;
-                    }
-                    if(parentScreen.id === 'level-select-screen') return displayTiers();
-                    updateMainMenu();
-                    showScreen('main-menu-screen');
-                }
-                else if (closest('#login-btn')) handleLogin();
-                else if (closest('#logout-btn')) handleLogout();
-                else if (closest('#single-player-tab')) { if (currentPlayerProfile) displayTiers(); }
-                else if (closest('#online-tab')) showScreen('online-menu-screen');
-                else if (closest('#leaderboard-tab')) {
-                    showScreen('leaderboard-screen');
-                    allElements.leaderboardList.innerHTML = `<p>جار تحميل لوحة الصدارة...</p>`;
-                    try {
-                        const q = query(collection(db, "players"), orderBy("score", "desc"), limit(50));
-                        const snapshot = await getDocs(q);
-                        const players = snapshot.docs.map(doc => ({ ...doc.data(), teleoptiId: doc.id }));
-                        populateLeaderboard(players);
-                    } catch(error) {
-                        allElements.leaderboardList.innerHTML = `<p>فشل تحميل لوحة الصدارة.</p>`;
-                    }
-                }
-                else if (closest('#awards-tab')) {
-                    if (!currentPlayerProfile) return;
-                    await loadPlayerProfile(currentPlayerProfile.teleoptiId);
-                    
-                    allElements.awardsList.innerHTML = '';
-                    const awards = currentPlayerProfile.awards || [];
-                    if (awards.length === 0) {
-                        allElements.awardsList.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">لم تحصل على أي كؤوس بعد. العب لتربح!</p>`;
-                    } else {
-                        awards.forEach(award => {
-                            const item = document.createElement('div');
-                            item.className = 'list-item';
-                            item.style.justifyContent = 'center';
-                            item.innerHTML = `<span class="item-name">${award}</span>`;
-                            allElements.awardsList.appendChild(item);
-                        });
-                    }
-                    showScreen('awards-screen');
-                }
-                else if (closest('#create-1v1-lobby-btn')) createLobby('1v1');
-                else if (closest('#create-massive-lobby-btn')) createLobby('massive');
-                else if (closest('#join-lobby-btn')) showScreen('join-lobby-screen');
-                else if (closest('#submit-join-lobby-btn')) {
-                    const code = allElements.lobbyCodeInput.value.trim();
-                    if(code) joinLobby(code); else showAlert("خطأ", "الرجاء إدخال كود المنافسة.");
-                }
-                else if (closest('#share-whatsapp-btn')) {
-                    if (!currentLobbyId) return;
-                    const text = `انضم لمنافستي في Botros Race! استخدم الكود ${currentLobbyId} أو اضغط على الرابط:\n${window.location.origin}${window.location.pathname}?lobby=${currentLobbyId}`;
-                    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-                }
-                else if (closest('#lobby-code-display')) {
-                    if (!currentLobbyId) return;
-                    navigator.clipboard.writeText(currentLobbyId).then(() => showAlert('تم النسخ', 'تم نسخ كود الغرفة بنجاح!'));
-                }
-                else if (closest('#start-game-btn')) startGame();
-                else if (closest('#surrender-btn')) surrender();
-            });
-        }
+        };
         
-        document.addEventListener('DOMContentLoaded', async () => {
-            injectTemplates();
-            mapElements();
-            setupEventListeners();
-        });
-    </script>
+        const displayPodiumScreen = (lobby) => {
+            showScreen('podium-screen');
+            const sorted = lobby.players.sort((a,b) => b.score - a.score);
+            const podiumContainer = allElements.podiumContainer;
+            podiumContainer.innerHTML = '';
+            
+            const ranks = {}; let rankCounter = 1;
+            for(let i=0; i < sorted.length; i++){
+               if(i > 0 && sorted[i].score < sorted[i-1].score) rankCounter = i + 1;
+               if (rankCounter <= 3) {
+                   if (!ranks[rankCounter]) ranks[rankCounter] = [];
+                   ranks[rankCounter].push(sorted[i]);
+               }
+            }
+            
+            const podiumOrder = [2, 1, 3];
+            podiumOrder.forEach(rank => {
+                const standDiv = document.createElement('div');
+                standDiv.className = `podium-stand stand-${rank}`;
+                if (ranks[rank]) {
+                    const rankMedal = {1: '🥇', 2: '🥈', 3: '🥉'};
+                    standDiv.innerHTML += `<div class="podium-rank">${lobby.type === 'massive' ? rankMedal[rank] : '🏆'}</div>`;
+                    ranks[rank].forEach(p => {
+                       const titleName = p.title || 'لاعب جديد';
+                       standDiv.innerHTML += `<div class="podium-name">${titleName} - ${p.name}</div><div class="podium-score">${p.score} نقطة</div>`;
+                    });
+                }
+                podiumContainer.appendChild(standDiv);
+            });
+        };
+        
+        const displayMatchQuestion = () => {
+            if (!currentMatchState) return;
+            const { type, questions, currentQuestionIndex, tier, players, answers } = currentMatchState;
+            const question = questions?.[currentQuestionIndex];
+            if (!question) return;
 
-    <template id="registration-screen-template">
-        <div class="form-container">
-            <h1 class="screen-title">NC 1 Eagles <br> Botros Race</h1>
-            <input id="name-input" type="text" class="input-field" placeholder="الاسم الكامل">
-            <input id="teleopti-id-input" type="tel" pattern="[0-9]*" class="input-field" placeholder="Teleopti ID (أرقام فقط)">
-            <div class="remember-me-container">
-                <input type="checkbox" id="remember-me-checkbox" checked>
-                <label for="remember-me-checkbox">تذكرني</label>
-            </div>
-            <button id="login-btn" class="btn btn-primary">دخول</button>
-        </div>
-    </template>
-    <template id="main-menu-screen-template">
-        <div class="welcome-container">
-            <h1 id="welcome-message" class="welcome-message"></h1>
-            <button id="logout-btn">خروج</button>
-        </div>
-        <div id="medals-display" class="medals-display"></div>
-        <div class="tabs-container">
-            <div id="single-player-tab" class="tab-item"><div class="tab-icon">👤</div><div>طور اللعب الفردي</div></div>
-            <div id="online-tab" class="tab-item"><div class="tab-icon">👥</div><div>اللعب الجماعي</div></div>
-            <div id="leaderboard-tab" class="tab-item"><div class="tab-icon">🏆</div><div>Leaderboard</div></div>
-            <div id="awards-tab" class="tab-item"><div class="tab-icon">🎁</div><div>الكؤوس والمكافآت</div></div>
-        </div>
-    </template>
-     <template id="online-menu-screen-template">
-        <h1 class="screen-title">ساحات المنافسة المباشرة</h1>
-        <div class="button-group">
-            <button id="create-1v1-lobby-btn" class="btn btn-primary">⚔️ مواجهة 1 ضد 1</button>
-            <button id="create-massive-lobby-btn" class="btn btn-primary">🏟️ إنشاء منافسة حاشدة</button>
-            <button id="join-lobby-btn" class="btn btn-secondary">🚪 الانضمام بكود</button>
-            <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
-        </div>
-    </template>
-    <template id="join-lobby-screen-template">
-         <div class="form-container">
-            <h1 class="screen-title">الانضمام لمنافسة</h1>
-            <p class="screen-subtitle">أدخل كود المنافسة للانضمام إلى زملائك.</p>
-            <input id="lobby-code-input" type="text" class="input-field" placeholder="كود المنافسة" style="text-align: center; text-transform: uppercase;">
-            <button id="submit-join-lobby-btn" class="btn btn-primary">انضم الآن</button>
-            <button class="btn btn-secondary back-btn">العودة</button>
-         </div>
-    </template>
-    <template id="online-lobby-screen-template">
-        <h1 id="lobby-title" class="screen-title">غرفة الانتظار</h1>
-        <div class="lobby-code-container">
-            <div class="lobby-code-label">شارك هذا الكود أو الرابط مع زملائك</div>
-            <div id="lobby-code-display" class="lobby-code" title="اضغط للنسخ"></div>
-            <button id="share-whatsapp-btn" class="btn btn-whatsapp">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99 0-3.903-.52-5.586-1.456l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.651 4.383 1.873 6.161l-1.057 3.875 3.98-1.048z"></path></svg>
-                شارك عبر واتساب
-            </button>
-        </div>
-        <h2 class="screen-subtitle" style="margin-top: 2rem;">اللاعبون المتواجدون</h2>
-        <div id="lobby-players-list" class="list-container"></div>
-        <div id="lobby-status" class="lobby-status">في انتظار اللاعبين...</div>
-        <button id="start-game-btn" class="btn btn-primary" style="margin-top: 1.5rem;" disabled>ابدأ المباراة (للمضيف فقط)</button>
-        <button class="btn btn-secondary back-btn">الخروج من الغرفة</button>
-    </template>
-    <template id="leaderboard-screen-template">
-        <h1 class="screen-title">لوحة الصدارة</h1>
-        <div id="leaderboard-list" class="list-container"></div>
-        <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
-    </template>
-    <template id="awards-screen-template">
-        <h1 class="screen-title">الكؤوس والمكافآت</h1>
-        <div id="awards-list" class="list-container" style="max-height: 400px; overflow-y: auto;"></div>
-        <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
-    </template>
-    <template id="match-screen-template">
-        <div id="surrender-banner"></div>
-        <h2 id="match-header"></h2>
-        <p id="question-counter"></p>
-        <div id="timer-container"><div id="timer-bar"></div></div>
-        <h3 id="question-text"></h3>
-        <div id="options-grid"></div>
-        <div id="explanation-box"></div>
-        <button id="surrender-btn" class="btn btn-secondary" style="background-color: var(--accent-red); margin-top: 2rem;">استسلام</button>
-        <button id="match-back-btn" class="btn btn-secondary back-btn" style="display: none;">العودة للقائمة الرئيسية</button>
-    </template>
-    <template id="game-over-screen-template">
-        <h1 class="screen-title">انتهت المباراة!</h1>
-        <div id="results-container"></div>
-        <div id="results-list" class="list-container" style="margin-top: 2rem;"></div>
-        <button class="btn btn-primary back-btn">العودة للقائمة الرئيسية</button>
-    </template>
-     <template id="modal-template">
-        <div class="modal-content">
-            <h2 id="modal-title" class="modal-title"></h2>
-            <p id="modal-body" class="modal-body"></p>
-            <div class="modal-actions">
-                <button id="modal-close-btn" class="btn btn-primary">حسنًا</button>
-            </div>
-        </div>
-    </template>
-     <template id="single-player-menu-screen-template">
-        <h1 class="screen-title">طور اللعب الفردي</h1>
-        <p class="screen-subtitle">أكمل المستويات لتفتح تحديات أصعب وتحصل على ميداليات.</p>
-        <div id="tiers-grid" class="tiers-grid"></div>
-        <button class="btn btn-secondary back-btn">العودة للقائمة الرئيسية</button>
-    </template>
-    <template id="level-select-screen-template">
-        <h1 id="level-select-title" class="screen-title"></h1>
-        <div id="levels-grid" class="levels-grid"></div>
-        <button class="btn btn-secondary back-btn">العودة للمستويات</button>
-    </template>
+            const time = type === 'single' ? tier.timePerQuestion : 20;
+            if(type === 'online') {
+                const p1 = players[0]; 
+                const p2 = players[1];
+                let headerContent = `منافسة حاشدة: ${players.length} لاعبين`;
+                if(players.length === 2 && p1 && p2) {
+                    allElements.matchHeader.innerHTML = '';
+                    const p1Medal = document.createElement('span'); p1Medal.className = 'player-title-medal'; p1Medal.textContent = p1.title;
+                    const p1Name = document.createTextNode(` ${p1.name} `);
+                    const vs = document.createElement('span'); vs.style.color = 'var(--accent-yellow)'; vs.textContent = 'vs';
+                    const p2Medal = document.createElement('span'); p2Medal.className = 'player-title-medal'; p2Medal.textContent = p2.title;
+                    const p2Name = document.createTextNode(` ${p2.name}`);
+                    allElements.matchHeader.append(p1Medal, p1Name, vs, p2Medal, p2Name);
+                } else {
+                    allElements.matchHeader.textContent = headerContent;
+                }
+            } else {
+                 allElements.matchHeader.textContent = `${tier.name} - المستوى ${currentMatchState.levelIndex + 1}`;
+            }
+
+            allElements.questionCounter.textContent = `السؤال ${currentQuestionIndex + 1} / ${questions.length}`;
+            allElements.questionText.textContent = question.question;
+            const optionsGrid = allElements.optionsGrid;
+            optionsGrid.innerHTML = '';
+            allElements.surrenderBtn.style.display = type === 'online' ? 'flex' : 'none';
+            
+            const myAnswer = type === 'online' ? answers?.[`q${currentQuestionIndex}`]?.[currentPlayerProfile.id] : null;
+            
+            (question.options || []).forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-secondary option-btn';
+                btn.textContent = opt;
+                if (type === 'online' && myAnswer) {
+                    btn.disabled = true;
+                    if(index === question.correct_answer) btn.classList.add('correct');
+                    if(index === myAnswer.option && !myAnswer.correct) btn.classList.add('wrong');
+                } else {
+                    btn.onclick = () => handleAnswer(index);
+                }
+                optionsGrid.appendChild(btn);
+            });
+
+            const timerBar = allElements.timerBar;
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            setTimeout(() => { timerBar.style.transition = `width ${time}s linear`; timerBar.style.width = '0%'; }, 100);
+            
+            if(matchTimer) clearTimeout(matchTimer);
+            if(type === 'single') {
+                matchTimer = setTimeout(() => handleAnswer(null), time * 1000);
+            } else if (currentPlayerProfile?.id === currentMatchState?.hostId) {
+                const timeoutDuration = time * 1000 + 3000;
+                matchTimer = setTimeout(advanceOnlineQuestion, timeoutDuration);
+            }
+        };
+
+        const handleAnswer = async (optionIndex) => {
+            if (!currentMatchState) return;
+            const { type, questions, currentQuestionIndex } = currentMatchState;
+            const question = questions[currentQuestionIndex];
+            const isCorrect = question.correct_answer === optionIndex;
+            
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            
+            if (type === 'single') {
+                if(matchTimer) clearTimeout(matchTimer);
+                if(isCorrect) {
+                    if(optionIndex !== null) document.querySelectorAll('.option-btn')[optionIndex].classList.add('correct');
+                    currentMatchState.score += 10;
+                } else {
+                     if (optionIndex !== null) document.querySelectorAll('.option-btn')[optionIndex].classList.add('wrong');
+                     document.querySelectorAll('.option-btn')[question.correct_answer].classList.add('correct');
+                }
+                
+                setTimeout(async () => {
+                    const nextIndex = currentQuestionIndex + 1;
+                    if(nextIndex >= questions.length) {
+                        if(currentMatchState.score > 0) await finishSinglePlayerLevel();
+                        else {
+                            alert("يجب أن تجيب على سؤال واحد صحيح على الأقل لاجتياز المستوى.");
+                            displayLevelsForTier(currentMatchState.tier);
+                        }
+                    } else {
+                        currentMatchState.currentQuestionIndex = nextIndex;
+                        displayMatchQuestion();
+                    }
+                }, 2000);
+
+            } else { // Online
+                 const lobbyRef = doc(db, "lobbies", currentMatchState.id);
+                 const lobbyDoc = await getDoc(lobbyRef);
+                 const lobbyData = lobbyDoc.data();
+                 const playerIndex = lobbyData.players.findIndex(p => p.id === currentPlayerProfile.id);
+
+                 if (playerIndex !== -1 && !lobbyData.answers?.[`q${currentQuestionIndex}`]?.[currentPlayerProfile.id]) {
+                     const updatedPlayers = [...lobbyData.players];
+                     if(isCorrect) updatedPlayers[playerIndex].score += 10;
+                     await updateDoc(lobbyRef, {
+                         [`answers.q${currentQuestionIndex}.${currentPlayerProfile.id}`]: { option: optionIndex, correct: isCorrect },
+                         players: updatedPlayers
+                     });
+                 }
+            }
+        };
+        
+        const initializeAppLogic = () => {
+            document.querySelectorAll('[id]').forEach(el => {
+                const camelCaseId = el.id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+                allElements[camelCaseId] = el;
+            });
+
+            allElements.muteBtn.addEventListener('click', () => {
+                 if (!musicPlayer) {
+                    musicPlayer = new Audio('https://v15mbanna3.github.io/my-sounds/Gna7%20felsama.mp3');
+                    musicPlayer.loop = true;
+                }
+                isMuted = !isMuted;
+                if (isMuted) {
+                    musicPlayer.pause();
+                    allElements.muteBtn.textContent = '🔇';
+                } else {
+                    musicPlayer.play().catch(() => { isMuted = true; allElements.muteBtn.textContent = '🔇'; });
+                    allElements.muteBtn.textContent = '🔊';
+                }
+            });
+
+            document.body.addEventListener('click', e => {
+                const targetId = e.target.closest('[id]')?.id;
+                
+                if(e.target.closest('.back-btn')) {
+                    const parentScreen = e.target.closest('.screen-container');
+                    const targetScreen = parentScreen?.querySelector('.back-btn')?.dataset.target || 'main-menu-screen';
+                    if (currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
+                    if (matchTimer) clearTimeout(matchTimer);
+                    if(targetScreen === 'single-player-menu-screen') return displaySinglePlayerMenu();
+                    
+                    updateMainMenu();
+                    showScreen(targetScreen);
+                    return;
+                }
+                
+                if(!targetId) return;
+
+                switch (targetId) {
+                    case 'login-btn': handleLogin(); break;
+                    case 'logout-btn': handleLogout(); break;
+                    case 'single-player-tab': displaySinglePlayerMenu(); break;
+                    case 'online-tab': showScreen('online-menu-screen'); break;
+                    case 'create-1v1-lobby-btn': createLobby('1v1'); break;
+                    case 'create-massive-lobby-btn': createLobby('massive'); break;
+                    case 'join-lobby-btn': showScreen('join-lobby-screen'); break;
+                    case 'submit-join-lobby-btn': joinLobby(allElements.lobbyCodeInput.value); break;
+                    case 'start-game-btn': startGame(); break;
+                    case 'share-whatsapp-btn': 
+                        if (currentMatchState) {
+                            const text = `انضم لمنافستي في Botros Race! استخدم الكود ${currentMatchState.id}`;
+                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+                        }
+                        break;
+                    case 'leaderboard-tab': 
+                        showScreen('leaderboard-screen');
+                        getDocs(query(collection(db, "players"), orderBy("score", "desc"), limit(50))).then(snap => {
+                            const players = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                            const list = allElements.leaderboardList;
+                            list.innerHTML = '';
+                            players.forEach((p, i) => {
+                                const item = document.createElement('div');
+                                item.className = `list-item ${i<3 ? 'winner-'+(i+1) : ''}`;
+                                
+                                const rankSpan = document.createElement('span');
+                                rankSpan.className = 'item-rank';
+                                rankSpan.textContent = i + 1;
+
+                                const infoDiv = document.createElement('div');
+                                infoDiv.className = 'item-info';
+
+                                const tierInfo = getHighestTierInfo(p);
+                                const medalSpan = document.createElement('span');
+                                medalSpan.className = 'player-title-medal';
+                                medalSpan.textContent = tierInfo ? tierInfo.medal : '';
+
+                                const nameDetailsDiv = document.createElement('div');
+                                nameDetailsDiv.className = 'item-name-details';
+
+                                const nameSpan = document.createElement('span');
+                                nameSpan.className = 'item-name';
+                                nameSpan.textContent = p.name;
+                                
+                                const rankNameSpan = document.createElement('span');
+                                rankNameSpan.className = 'item-rank-name';
+                                rankNameSpan.textContent = `${tierInfo ? tierInfo.name : 'لاعب جديد'} (${p.teleoptiId})`;
+
+                                nameDetailsDiv.append(nameSpan, rankNameSpan);
+                                infoDiv.append(rankSpan, medalSpan, nameDetailsDiv);
+                                
+                                const scoreSpan = document.createElement('span');
+                                scoreSpan.className = 'item-value';
+                                scoreSpan.textContent = `${p.score||0} نقطة`;
+
+                                item.append(infoDiv, scoreSpan);
+                                list.appendChild(item);
+                            });
+                        });
+                        break;
+                    case 'awards-tab':
+                         if (!currentPlayerProfile) return;
+                         allElements.awardsList.innerHTML = '';
+                         const awards = currentPlayerProfile.awards || [];
+                         if (awards.length === 0) {
+                             allElements.awardsList.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">لم تحصل على أي كؤوس بعد. العب لتربح!</p>`;
+                         } else {
+                             awards.forEach(award => {
+                                 const item = document.createElement('div');
+                                 item.className = 'list-item';
+                                 item.style.justifyContent = 'center';
+                                 const awardSpan = document.createElement('span');
+                                 awardSpan.className = 'item-name';
+                                 awardSpan.textContent = award;
+                                 item.appendChild(awardSpan);
+                                 allElements.awardsList.appendChild(item);
+                             });
+                         }
+                         showScreen('awards-screen');
+                        break;
+                }
+            });
+
+            onAuthStateChanged(auth, user => {
+                currentUser = user;
+                const rememberedId = localStorage.getItem('botros-race-teleoptiId');
+                if (user && rememberedId) {
+                    loadProfileAndStart(rememberedId);
+                } else {
+                    showScreen('registration-screen');
+                }
+                allElements.loadingScreen.classList.remove('active');
+            });
+        };
+        
+        document.querySelectorAll('#templates > div').forEach(template => {
+            const targetId = template.id.replace('-template', '');
+            const container = document.getElementById(targetId);
+            if (container) container.innerHTML = template.innerHTML;
+        });
+        document.getElementById('templates').remove();
+        initializeAppLogic();
+    </script>
 </body>
 </html>
