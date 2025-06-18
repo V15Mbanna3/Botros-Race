@@ -28,6 +28,7 @@
         .btn-primary:hover:not(:disabled) { background-color: #0891b2; }
         .btn-secondary { background-color: var(--bg-tertiary); color: var(--text-primary); }
         .btn-secondary:hover:not(:disabled) { background-color: rgba(71, 85, 105, 0.8); }
+        .btn-danger { background-color: var(--accent-red); color: white; }
         .btn-whatsapp { background-color: #25D366; color: white; }
         .btn-whatsapp:hover { background-color: #1DA851; }
         .back-btn { display: inline-block; margin: 2rem auto 0; width: auto; padding: 0.5rem 1rem; font-size: 1rem; }
@@ -48,7 +49,7 @@
         .list-container .list-item .item-name-details { display: flex; flex-direction: column; align-items: flex-start; }
         .list-container .list-item .item-name { font-weight: 700; font-size: 1.1rem; }
         .list-container .list-item .item-rank-name { font-size: 0.85rem; color: var(--text-secondary); }
-        .list-container .list-item .item-value { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); margin-right: auto; }
+        .list-container .list-item .item-value { font-weight: 700; font-size: 1rem; color: var(--accent-yellow); margin-left: auto; }
         .list-container .list-item .item-rank { font-weight: 900; font-size: 1.2rem; color: var(--accent-cyan); }
         .list-container .winner-1 { border: 2px solid gold; }
         .list-container .winner-2 { border: 2px solid silver; }
@@ -78,6 +79,7 @@
         #match-screen .option-btn.correct { background-color: var(--accent-green) !important; color: white !important; transform: scale(1.05); }
         #match-screen .option-btn.wrong { background-color: var(--accent-red) !important; color: white !important; }
         #match-screen .option-btn.disabled { opacity: 0.6; pointer-events: none; }
+        #match-screen .explanation-box { background-color: rgba(250, 204, 21, 0.1); border: 1px solid var(--accent-yellow); color: var(--text-primary); border-radius: 0.75rem; padding: 1rem; margin-top: 1.5rem; font-size: 1rem; display: none; }
         #online-lobby-screen .lobby-code { font-size: 2rem; font-weight: 700; letter-spacing: 0.2em; text-align: center; color: var(--accent-cyan); margin-bottom: 0.5rem; user-select: all; cursor: pointer; }
         #podium-screen .podium-container { display: flex; align-items: flex-end; justify-content: center; gap: 1rem; height: 300px; text-align: center; }
         #podium-screen .podium-stand { background-color: var(--bg-tertiary); border-radius: 1rem 1rem 0 0; padding: 1rem; width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -107,6 +109,7 @@
         <div id="level-select-screen" class="screen-container"></div>
         <div id="match-screen" class="screen-container"></div>
         <div id="podium-screen" class="screen-container"></div>
+        <div id="game-over-screen" class="screen-container"></div>
     </main>
 
     <div id="templates" style="display:none;">
@@ -194,7 +197,14 @@
             <div class="timer-container"><div class="timer-bar" id="timer-bar"></div></div>
             <h3 class="question-text" id="question-text"></h3>
             <div class="options-grid" id="options-grid"></div>
+            <div id="explanation-box"></div>
             <button id="surrender-btn" class="btn btn-danger" style="margin-top: 2rem; display:none;">استسلام</button>
+            <button class="btn btn-secondary back-btn" style="margin-top: 1rem;">العودة للقائمة</button>
+        </div>
+        <div id="game-over-screen-template">
+            <h1 class="screen-title">انتهت المباراة!</h1>
+            <div id="game-over-message" style="text-align: center; font-size: 1.5rem; margin-bottom: 2rem;"></div>
+            <button class="btn btn-primary back-btn">القائمة الرئيسية</button>
         </div>
         <div id="podium-screen-template">
              <h1 class="screen-title">منصة التتويج</h1>
@@ -203,12 +213,13 @@
         </div>
     </div>
     
-       <script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, serverTimestamp, updateDoc, arrayUnion, runTransaction, getDocs, writeBatch, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    const firebaseConfig = {
+        // *** CORRECTED FIREBASE CONFIG FOR FIRESTORE ***
+            const firebaseConfig = {
   apiKey: "AIzaSyAvGDEbWA3UumCa0P4AfFUVv6xxwL5Porc",
   authDomain: "nc1-eagles-race.firebaseapp.com",
   databaseURL: "https://nc1-eagles-race-default-rtdb.europe-west1.firebasedatabase.app",
@@ -230,8 +241,7 @@
             { id: 'tier-5', name: 'ايجنت بطرس', levels: 5, questionsPerLevel: 7, timePerQuestion: 10, medal: '💎' },
         ];
         
-        // NOTE: correct_answer is a 0-based index (0 for first option, 1 for second, etc.)
-         const OFFLINE_QUESTION_BANK = [
+        const OFFLINE_QUESTION_BANK = [
          {
             "id": 1,
             "question": "حسب الإرشادات العامة، ماذا يجب على الموظف التأكد منه أولاً إذا توقف أوردر تجديد مبكر للعميل 'Abnormal'؟",
@@ -885,7 +895,7 @@
         "correct_answer": "4",
         "explanation": "الإجابة هي 'جميع ما سبق' لأنها تمثل الإجراءات المتكاملة والمتسلسلة لحل مشكلة توقف الطلبات في النظام."
     }
-]
+];
 
         // --- Global State ---
         let allElements = {};
@@ -905,8 +915,7 @@
 
         const getHighestTierInfo = (playerProfile) => {
             if (!playerProfile || !playerProfile.highestTierId) return null;
-            const tier = TIERS_CONFIG.find(t => t.id === playerProfile.highestTierId);
-            return tier ? { medal: tier.medal, name: tier.name } : null;
+            return TIERS_CONFIG.find(t => t.id === playerProfile.highestTierId) || null;
         };
         
         const handleLogin = async () => {
@@ -921,17 +930,11 @@
                 const playerRef = doc(db, "players", teleoptiId);
                 const playerDoc = await getDoc(playerRef);
 
-                const playerData = {
-                    name,
-                    teleoptiId,
-                    uid: user.uid,
-                    score: playerDoc.exists() ? playerDoc.data().score : 0,
-                    singlePlayerProgress: playerDoc.exists() ? playerDoc.data().singlePlayerProgress || {} : {},
-                    highestTierId: playerDoc.exists() ? playerDoc.data().highestTierId || null : null,
-                    awards: playerDoc.exists() ? playerDoc.data().awards || [] : [],
-                };
-                await setDoc(playerRef, playerData, { merge: true });
-
+                if (playerDoc.exists()) {
+                    await updateDoc(playerRef, { name, uid: user.uid });
+                } else {
+                    await setDoc(playerRef, { name, teleoptiId, uid: user.uid, score: 0, singlePlayerProgress: {}, highestTierId: null, awards: [] });
+                }
                 localStorage.setItem('botros-race-teleoptiId', teleoptiId);
                 await loadProfileAndStart(teleoptiId);
             } catch (error) {
@@ -973,18 +976,15 @@
             if (!currentPlayerProfile) return;
             const tierInfo = getHighestTierInfo(currentPlayerProfile);
             const titleMedal = tierInfo ? tierInfo.medal : '';
+            const playerName = currentPlayerProfile.name || '';
             
             allElements.welcomeMessage.innerHTML = '';
             
-            const text1 = document.createTextNode('أهلاً بك, ');
-            const titleSpan = document.createElement('span');
-            titleSpan.className = 'player-title-medal';
-            titleSpan.textContent = titleMedal;
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'name';
-            nameSpan.textContent = ` ${currentPlayerProfile.name}`;
-
-            allElements.welcomeMessage.append(text1, titleSpan, nameSpan);
+            allElements.welcomeMessage.append(
+                document.createTextNode('أهلاً بك, '),
+                Object.assign(document.createElement('span'), { className: 'player-title-medal', textContent: titleMedal }),
+                Object.assign(document.createElement('span'), { className: 'name', textContent: ' ' + playerName })
+            );
             allElements.medalsDisplay.textContent = (currentPlayerProfile.awards || []).join(' ');
         };
 
@@ -998,8 +998,15 @@
                 const isLocked = index > 0 && !lastTierCompleted;
                 
                 const card = document.createElement('div');
-                card.className = `card ${isLocked ? 'locked' : ''} ${isTierCompleted ? 'completed' : ''}`;
-                card.innerHTML = `<h3 class="card-title">${isLocked ? '🔒 ' : ''}${tier.name} ${tier.medal}</h3><p class="card-details">مكتمل: ${completedLevelsInTier}/${tier.levels}</p>`;
+                card.className = "card " + (isLocked ? 'locked' : '') + " " + (isTierCompleted ? 'completed' : '');
+                const title = document.createElement('h3');
+                title.className = 'card-title';
+                title.textContent = (isLocked ? '🔒 ' : '') + tier.name + " " + tier.medal;
+                const details = document.createElement('p');
+                details.className = 'card-details';
+                details.textContent = "مكتمل: " + completedLevelsInTier + "/" + tier.levels;
+                card.append(title, details);
+
                 if (!isLocked) card.addEventListener('click', () => displayLevelsForTier(tier));
                 container.appendChild(card);
                 if (!isTierCompleted) lastTierCompleted = false;
@@ -1016,7 +1023,7 @@
                 const levelIndex = i - 1;
                 const card = document.createElement('div');
                 card.className = 'level-card';
-                card.innerHTML = `<h4 class="level-title">المستوى ${i}</h4>`;
+                card.innerHTML = '<h4 class="level-title">المستوى ' + i + '</h4>';
                 const isCompleted = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.includes(levelIndex);
 
                 if (isCompleted) card.classList.add('completed');
@@ -1051,17 +1058,27 @@
 
             const freshProfileDoc = await getDoc(playerRef);
             currentPlayerProfile = { id: freshProfileDoc.id, ...freshProfileDoc.data() };
-
+            
             const completedInTier = currentPlayerProfile.singlePlayerProgress?.[tier.id]?.length || 0;
-            if (completedInTier >= tier.levels) {
+            const tierIsNowComplete = completedInTier >= tier.levels;
+            let tierWasJustUnlocked = false;
+
+            if (tierIsNowComplete) {
                 const currentTierIndex = TIERS_CONFIG.findIndex(t => t.id === currentPlayerProfile.highestTierId);
                 const newTierIndex = TIERS_CONFIG.findIndex(t => t.id === tier.id);
                 if (currentPlayerProfile.highestTierId === null || newTierIndex > currentTierIndex) {
                     await updateDoc(playerRef, { highestTierId: tier.id });
                     currentPlayerProfile.highestTierId = tier.id;
-                    alert(`تهانينا! لقد أتقنت ${tier.name} وحصلت على لقب ${tier.medal}`);
+                    tierWasJustUnlocked = true;
                 }
             }
+            
+            if (tierWasJustUnlocked) {
+                alert("إنجاز خرافي! لقد أتقنت مرحلة \"" + tier.name + "\" بالكامل وحصلت على لقب " + tier.medal + "!");
+            } else {
+                alert("ألف مبروك! لقد عديت المستوى " + (levelIndex + 1) + " من مرحلة \"" + tier.name + "\".\n\nيلا عدي المستوى اللي بعده، أنت قدها! 💪");
+            }
+            
             displayLevelsForTier(tier);
         };
 
@@ -1131,7 +1148,8 @@
                 showScreen('match-screen');
                 displayMatchQuestion();
             } else if (lobby.status === 'finished') {
-                displayPodiumScreen(lobby);
+                if(lobby.type === 'massive') displayPodiumScreen(lobby);
+                else displayGameOver(lobby);
                 if (currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
             }
         };
@@ -1145,18 +1163,14 @@
                 const item = document.createElement('div');
                 item.className = 'list-item';
                 item.style.justifyContent = 'center';
-
                 const nameContainer = document.createElement('div');
                 nameContainer.className = 'item-name-container';
-                
                 const titleSpan = document.createElement('span');
                 titleSpan.className = 'player-title-medal';
                 titleSpan.textContent = p.medal;
-
                 const nameSpan = document.createElement('span');
                 nameSpan.className = 'item-name';
-                nameSpan.textContent = ` ${p.name} ${lobby.hostId === p.id ? '👑' : ''}`;
-
+                nameSpan.textContent = " " + p.name + " " + (lobby.hostId === p.id ? '👑' : '');
                 nameContainer.append(titleSpan, nameSpan);
                 item.appendChild(nameContainer);
                 playersList.appendChild(item);
@@ -1227,14 +1241,26 @@
                 standDiv.className = `podium-stand stand-${rank}`;
                 if (ranks[rank]) {
                     const rankMedal = {1: '🥇', 2: '🥈', 3: '🥉'};
-                    standDiv.innerHTML += `<div class="podium-rank">${lobby.type === 'massive' ? rankMedal[rank] : '🏆'}</div>`;
+                    standDiv.innerHTML += '<div class="podium-rank">' + (lobby.type === 'massive' ? rankMedal[rank] : '🏆') + '</div>';
                     ranks[rank].forEach(p => {
                        const titleName = p.title || 'لاعب جديد';
-                       standDiv.innerHTML += `<div class="podium-name">${titleName} - ${p.name}</div><div class="podium-score">${p.score} نقطة</div>`;
+                       standDiv.innerHTML += '<div class="podium-name">' + titleName + ' - ' + p.name + '</div><div class="podium-score">' + p.score + ' نقطة</div>';
                     });
                 }
                 podiumContainer.appendChild(standDiv);
             });
+        };
+
+        const displayGameOver = (lobby) => {
+            showScreen('game-over-screen');
+            const messageEl = allElements.gameOverMessage;
+            if(lobby.surrenderedBy) {
+                const winner = lobby.players.find(p => p.id !== lobby.surrenderedBy.id);
+                messageEl.textContent = winner ? "لقد فاز " + winner.name + " بسبب استسلام " + lobby.surrenderedBy.name + "!" : 'انتهت المباراة بالاستسلام.';
+            } else {
+                 const winner = lobby.players.sort((a,b) => b.score - a.score)[0];
+                 messageEl.textContent = "الفائز هو " + winner.name + "!";
+            }
         };
         
         const displayMatchQuestion = () => {
@@ -1247,40 +1273,44 @@
             if(type === 'online') {
                 const p1 = players[0]; 
                 const p2 = players[1];
-                let headerContent = `منافسة حاشدة: ${players.length} لاعبين`;
+                allElements.matchHeader.innerHTML = '';
                 if(players.length === 2 && p1 && p2) {
-                    allElements.matchHeader.innerHTML = '';
-                    const p1Medal = document.createElement('span'); p1Medal.className = 'player-title-medal'; p1Medal.textContent = p1.title;
-                    const p1Name = document.createTextNode(` ${p1.name} `);
-                    const vs = document.createElement('span'); vs.style.color = 'var(--accent-yellow)'; vs.textContent = 'vs';
-                    const p2Medal = document.createElement('span'); p2Medal.className = 'player-title-medal'; p2Medal.textContent = p2.title;
-                    const p2Name = document.createTextNode(` ${p2.name}`);
-                    allElements.matchHeader.append(p1Medal, p1Name, vs, p2Medal, p2Name);
+                    allElements.matchHeader.append(
+                        Object.assign(document.createElement('span'), { className: 'player-title-medal', textContent: p1.medal }),
+                        document.createTextNode(" " + p1.name + " "),
+                        Object.assign(document.createElement('span'), { textContent: 'vs', style: 'color: var(--accent-yellow);' }),
+                        document.createTextNode(" "),
+                        Object.assign(document.createElement('span'), { className: 'player-title-medal', textContent: p2.medal }),
+                        document.createTextNode(" " + p2.name)
+                    );
                 } else {
-                    allElements.matchHeader.textContent = headerContent;
+                    allElements.matchHeader.textContent = "منافسة حاشدة: " + players.length + " لاعبين";
                 }
             } else {
-                 allElements.matchHeader.textContent = `${tier.name} - المستوى ${currentMatchState.levelIndex + 1}`;
+                 allElements.matchHeader.textContent = tier.name + " - المستوى " + (currentMatchState.levelIndex + 1);
             }
 
-            allElements.questionCounter.textContent = `السؤال ${currentQuestionIndex + 1} / ${questions.length}`;
+            allElements.questionCounter.textContent = "السؤال " + (currentQuestionIndex + 1) + " / " + questions.length;
             allElements.questionText.textContent = question.question;
             const optionsGrid = allElements.optionsGrid;
             optionsGrid.innerHTML = '';
+            allElements.explanationBox.style.display = 'none';
             allElements.surrenderBtn.style.display = type === 'online' ? 'flex' : 'none';
             
             const myAnswer = type === 'online' ? answers?.[`q${currentQuestionIndex}`]?.[currentPlayerProfile.id] : null;
             
-            (question.options || []).forEach((opt, index) => {
+            Object.entries(question.options).forEach(([key, value]) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn btn-secondary option-btn';
-                btn.textContent = opt;
+                btn.textContent = value;
+                btn.dataset.key = key;
+
                 if (type === 'online' && myAnswer) {
                     btn.disabled = true;
-                    if(index === question.correct_answer) btn.classList.add('correct');
-                    if(index === myAnswer.option && !myAnswer.correct) btn.classList.add('wrong');
+                    if(key === question.correct_answer) btn.classList.add('correct');
+                    else if(key === myAnswer.optionKey) btn.classList.add('wrong');
                 } else {
-                    btn.onclick = () => handleAnswer(index);
+                    btn.onclick = () => handleAnswer(key);
                 }
                 optionsGrid.appendChild(btn);
             });
@@ -1288,40 +1318,46 @@
             const timerBar = allElements.timerBar;
             timerBar.style.transition = 'none';
             timerBar.style.width = '100%';
-            setTimeout(() => { timerBar.style.transition = `width ${time}s linear`; timerBar.style.width = '0%'; }, 100);
+            setTimeout(() => { timerBar.style.transition = "width " + time + "s linear"; timerBar.style.width = '0%'; }, 100);
             
             if(matchTimer) clearTimeout(matchTimer);
             if(type === 'single') {
                 matchTimer = setTimeout(() => handleAnswer(null), time * 1000);
             } else if (currentPlayerProfile?.id === currentMatchState?.hostId) {
-                const timeoutDuration = time * 1000 + 3000;
+                const timeoutDuration = time * 1000 + 5000;
                 matchTimer = setTimeout(advanceOnlineQuestion, timeoutDuration);
             }
         };
 
-        const handleAnswer = async (optionIndex) => {
+        const handleAnswer = async (optionKey) => {
             if (!currentMatchState) return;
             const { type, questions, currentQuestionIndex } = currentMatchState;
             const question = questions[currentQuestionIndex];
-            const isCorrect = question.correct_answer === optionIndex;
+            const isCorrect = question.correct_answer === optionKey;
             
             document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
             
             if (type === 'single') {
                 if(matchTimer) clearTimeout(matchTimer);
                 if(isCorrect) {
-                    if(optionIndex !== null) document.querySelectorAll('.option-btn')[optionIndex].classList.add('correct');
+                    if(optionKey !== null) document.querySelector('.option-btn[data-key="' + optionKey + '"]')?.classList.add('correct');
                     currentMatchState.score += 10;
                 } else {
-                     if (optionIndex !== null) document.querySelectorAll('.option-btn')[optionIndex].classList.add('wrong');
-                     document.querySelectorAll('.option-btn')[question.correct_answer].classList.add('correct');
+                     if (optionKey !== null) document.querySelector('.option-btn[data-key="' + optionKey + '"]')?.classList.add('wrong');
+                     document.querySelector('.option-btn[data-key="' + question.correct_answer + '"]')?.classList.add('correct');
                 }
                 
+                if (question.explanation) {
+                    allElements.explanationBox.textContent = "التفسير: " + question.explanation;
+                    allElements.explanationBox.style.display = 'block';
+                }
+
                 setTimeout(async () => {
                     const nextIndex = currentQuestionIndex + 1;
                     if(nextIndex >= questions.length) {
-                        if(currentMatchState.score > 0) await finishSinglePlayerLevel();
-                        else {
+                        if (isCorrect || currentMatchState.score > 0) {
+                            await finishSinglePlayerLevel();
+                        } else {
                             alert("يجب أن تجيب على سؤال واحد صحيح على الأقل لاجتياز المستوى.");
                             displayLevelsForTier(currentMatchState.tier);
                         }
@@ -1329,7 +1365,7 @@
                         currentMatchState.currentQuestionIndex = nextIndex;
                         displayMatchQuestion();
                     }
-                }, 2000);
+                }, question.explanation ? 5000 : 2000);
 
             } else { // Online
                  const lobbyRef = doc(db, "lobbies", currentMatchState.id);
@@ -1341,11 +1377,23 @@
                      const updatedPlayers = [...lobbyData.players];
                      if(isCorrect) updatedPlayers[playerIndex].score += 10;
                      await updateDoc(lobbyRef, {
-                         [`answers.q${currentQuestionIndex}.${currentPlayerProfile.id}`]: { option: optionIndex, correct: isCorrect },
+                         [`answers.q${currentQuestionIndex}.${currentPlayerProfile.id}`]: { optionKey: optionKey, correct: isCorrect },
                          players: updatedPlayers
                      });
                  }
             }
+        };
+
+        const surrender = async () => {
+            if (!currentMatchState || currentMatchState.type !== 'online' || !confirm("هل أنت متأكد أنك تريد الاستسلام؟")) return;
+            const lobbyRef = doc(db, "lobbies", currentMatchState.id);
+            if (currentMatchState.type === '1v1' && currentMatchState.players.length === 2) {
+                const winner = currentMatchState.players.find(p => p.id !== currentPlayerProfile.id);
+                if(winner) {
+                    await updateDoc(doc(db, "players", winner.id), { score: increment(30), awards: arrayUnion("Botros Race Cup 🏆") });
+                }
+            }
+            await updateDoc(lobbyRef, { status: 'finished', surrenderedBy: { id: currentPlayerProfile.id, name: currentPlayerProfile.name } });
         };
         
         const initializeAppLogic = () => {
@@ -1370,9 +1418,10 @@
             });
 
             document.body.addEventListener('click', e => {
-                const targetId = e.target.closest('[id]')?.id;
+                const target = e.target.closest('[id], .back-btn');
+                if (!target) return;
                 
-                if(e.target.closest('.back-btn')) {
+                if(target.classList.contains('back-btn')) {
                     const parentScreen = e.target.closest('.screen-container');
                     const targetScreen = parentScreen?.querySelector('.back-btn')?.dataset.target || 'main-menu-screen';
                     if (currentLobbyUnsubscribe) { currentLobbyUnsubscribe(); currentLobbyUnsubscribe = null; }
@@ -1384,11 +1433,10 @@
                     return;
                 }
                 
-                if(!targetId) return;
-
-                switch (targetId) {
+                switch (target.id) {
                     case 'login-btn': handleLogin(); break;
                     case 'logout-btn': handleLogout(); break;
+                    case 'surrender-btn': surrender(); break;
                     case 'single-player-tab': displaySinglePlayerMenu(); break;
                     case 'online-tab': showScreen('online-menu-screen'); break;
                     case 'create-1v1-lobby-btn': createLobby('1v1'); break;
@@ -1398,8 +1446,8 @@
                     case 'start-game-btn': startGame(); break;
                     case 'share-whatsapp-btn': 
                         if (currentMatchState) {
-                            const text = `انضم لمنافستي في Botros Race! استخدم الكود ${currentMatchState.id}`;
-                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+                            const text = "انضم لمنافستي في Botros Race! استخدم الكود " + currentMatchState.id;
+                            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(text), '_blank');
                         }
                         break;
                     case 'leaderboard-tab': 
@@ -1410,14 +1458,14 @@
                             list.innerHTML = '';
                             players.forEach((p, i) => {
                                 const item = document.createElement('div');
-                                item.className = `list-item ${i<3 ? 'winner-'+(i+1) : ''}`;
+                                item.className = 'list-item ' + (i<3 ? 'winner-'+(i+1) : '');
+                                
+                                const infoDiv = document.createElement('div');
+                                infoDiv.className = 'item-info';
                                 
                                 const rankSpan = document.createElement('span');
                                 rankSpan.className = 'item-rank';
                                 rankSpan.textContent = i + 1;
-
-                                const infoDiv = document.createElement('div');
-                                infoDiv.className = 'item-info';
 
                                 const tierInfo = getHighestTierInfo(p);
                                 const medalSpan = document.createElement('span');
@@ -1433,14 +1481,14 @@
                                 
                                 const rankNameSpan = document.createElement('span');
                                 rankNameSpan.className = 'item-rank-name';
-                                rankNameSpan.textContent = `${tierInfo ? tierInfo.name : 'لاعب جديد'} (${p.teleoptiId})`;
+                                rankNameSpan.textContent = (tierInfo ? tierInfo.name : 'لاعب جديد') + " (" + p.teleoptiId + ")";
 
                                 nameDetailsDiv.append(nameSpan, rankNameSpan);
                                 infoDiv.append(rankSpan, medalSpan, nameDetailsDiv);
                                 
                                 const scoreSpan = document.createElement('span');
                                 scoreSpan.className = 'item-value';
-                                scoreSpan.textContent = `${p.score||0} نقطة`;
+                                scoreSpan.textContent = (p.score||0) + " نقطة";
 
                                 item.append(infoDiv, scoreSpan);
                                 list.appendChild(item);
@@ -1452,7 +1500,7 @@
                          allElements.awardsList.innerHTML = '';
                          const awards = currentPlayerProfile.awards || [];
                          if (awards.length === 0) {
-                             allElements.awardsList.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">لم تحصل على أي كؤوس بعد. العب لتربح!</p>`;
+                             allElements.awardsList.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">لم تحصل على أي كؤوس بعد. العب لتربح!</p>';
                          } else {
                              awards.forEach(award => {
                                  const item = document.createElement('div');
