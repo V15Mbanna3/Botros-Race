@@ -104,7 +104,7 @@
         .modal-actions { display: flex; gap: 1rem; justify-content: center; }
 
         #match-screen { text-align: center; }
-        #match-header { font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; color: var(--accent-yellow); }
+        #match-header { font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; }
         #match-header .name { color: var(--text-primary); }
         #question-counter { font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; }
         #timer-container { width: 100%; background-color: var(--bg-tertiary); border-radius: 5px; margin-bottom: 1.5rem; }
@@ -166,6 +166,7 @@
         const db = getFirestore(app);
         
         // --- INTERNAL QUESTION BANK ---
+        // !!! ملاحظة هامة: يجب عليك إضافة المزيد من الأسئلة هنا لتظهر في المباريات !!!
         const QUESTION_BANK = [
          {
             "id": 1,
@@ -866,9 +867,17 @@
             if(lobbyData.type === '1v1') {
                 const player1 = lobbyData.players[0];
                 const player2 = lobbyData.players[1];
+                const p1Score = player1?.score || 0;
+                const p2Score = player2?.score || 0;
                 const p1Medal = player1?.medal ? ` ${player1.medal}` : '';
                 const p2Medal = player2?.medal ? ` ${player2.medal}` : '';
-                allElements.matchHeader.innerHTML = `<span class="name">${player1?.name || ''}${p1Medal}</span> ضد <span class="name">${player2?.name || '؟؟؟'}${p2Medal}</span>`;
+                const p1Name = player1?.name || 'لاعب ١';
+                const p2Name = player2?.name || 'لاعب ٢';
+
+                allElements.matchHeader.innerHTML = `
+                    <span class="name">(${p1Score}) ${p1Name}${p1Medal}</span> 
+                    <span style="color: var(--accent-yellow);">ضد</span> 
+                    <span class="name">${p2Name}${p2Medal} (${p2Score})</span>`;
             } else {
                 allElements.matchHeader.textContent = `منافسة حاشدة - ${lobbyData.players.length} لاعبين`;
             }
