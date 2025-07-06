@@ -86,8 +86,36 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); box-sizing: border-box;
             display: none; position: relative; overflow: hidden;
         }
+
+
         .screen-container.active { display: block; animation: fadeIn 0.6s ease-out; }
 
+/* ======================================= */
+/* ✨ NEW: Screen Background Images ✨ */
+/* ======================================= */
+
+/* إعدادات عامة للخلفيات */
+.screen-container {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-blend-mode: screen; 
+}
+
+/* خلفية القائمة الرئيسية واحتلال الجزر */
+#main-menu-screen, #island-conquest-screen {
+    background-image: url('https://raw.githubusercontent.com/V15Mbanna3/my-sounds/main/main.png');
+}
+
+/* خلفية من سيربح الفاكنسي */
+#vacancy-match-screen {
+    background-image: url('https://raw.githubusercontent.com/V15Mbanna3/my-sounds/main/vacancy.png');
+}
+
+/* خلفية المباريات الحرة (1ضد1، حاشدة) */
+#online-menu-screen, #online-lobby-screen, #match-screen {
+    background-image: url('https://raw.githubusercontent.com/V15Mbanna3/my-sounds/main/versus.png');
+}
         /* --- Typography --- */
         .screen-title {
             font-size: 2.25rem; font-weight: 900; text-align: center; margin-top: 0; margin-bottom: 2rem;
@@ -274,51 +302,41 @@
 
 /* ✨ --- Island Conquest Map (Final Bubble Version) --- ✨ */
 
-/* الحركة العائمة المحسّنة */
+/* ======================================= */
+/* ✨ NEW: Solid & Colorful Island Design ✨ */
+/* ======================================= */
+
+/* الحركة العائمة المحسّنة (موجودة من قبل) */
 @keyframes bobbing {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
   100% { transform: translateY(0px); }
 }
 
-/* حركة النبض للجزيرة المستهدفة */
-@keyframes pulse {
-  0% { box-shadow: 0 0 15px var(--accent-green); }
-  50% { box-shadow: 0 0 30px var(--accent-green), 0 0 40px var(--brand-glow); }
-  100% { box-shadow: 0 0 15px var(--accent-green); }
+/* حركة النبض الجديدة للإطار */
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.7); }
+    100% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
 }
 
-/* إعادة تصميم حاوية الخريطة */
-/* إعادة تصميم حاوية الخريطة */
+/* حاوية الخريطة (لا تغيير) */
 .map-container {
     position: relative;
     width: 100%;
     max-width: 800px;
     margin: 2rem auto;
     aspect-ratio: 16 / 9;
-    /* خلفية جديدة لإعطاء عمق وإحساس بالفضاء الرقمي */
     background-image: radial-gradient(rgba(0, 221, 255, 0.1) 1px, transparent 1px),
                       radial-gradient(rgba(0, 221, 255, 0.05) 1px, transparent 1px);
     background-size: 20px 20px, 40px 40px;
     background-position: 0 0, 20px 20px;
     background-color: transparent;
-    border-radius: 1.5rem; /* تطابق شكل الحاويات الأخرى */
-    border: 1px solid var(--border-glass); /* إضافة إطار زجاجي */
+    border-radius: 1.5rem;
+    border: 1px solid var(--border-glass);
     box-shadow: none;
 }
 
-/* ======================================= */
-/* ✨ NEW: Modern Island Design ✨ */
-/* ======================================= */
-
-/* حركة النبض الجديدة */
-@keyframes pulse-glow {
-  0% { box-shadow: 0 0 8px rgba(0, 221, 255, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(0, 221, 255, 1), 0 0 30px rgba(0, 221, 255, 0.7); }
-  100% { box-shadow: 0 0 8px rgba(0, 221, 255, 0.5); }
-}
-
-/* حاوية الجزيرة الرئيسية (للموقع والرسوم المتحركة) */
+/* حاوية الجزيرة الرئيسية */
 .island {
     position: absolute;
     display: flex;
@@ -331,41 +349,59 @@
 }
 
 .island:hover {
-    z-index: 11; /* تظهر فوق الجزر الأخرى عند اللمس */
-    transform: scale(1.05); /* تكبير طفيف للجزيرة بأكملها */
+    z-index: 11;
+    transform: scale(1.05);
 }
 
-/* تصميم الدائرة الرئيسية للأيقونة */
+/* تصميم الدائرة الرئيسية للأيقونة - النسخة الجديدة */
 .island-icon {
-    width: 70px; /* حجم ثابت للدائرة */
+    width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: var(--bg-glass);
-    border: 3px solid var(--border-glass); /* إطار افتراضي */
-    backdrop-filter: blur(5px);
+    border: 4px solid white; /* إطار أبيض سميك وواضح */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
-    color: var(--text-primary);
+    color: white; /* لون الأيقونة أبيض دائماً */
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    position: relative; /* لإضافة حلقة النبض */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    position: relative;
 }
 
-/* تأثيرات على الأيقونة عند اللمس */
 .island:hover .island-icon {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 20px var(--brand-glow);
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
 }
 
-/* تصميم النصوص تحت الأيقونة */
+/* كلاسات الألوان الجديدة */
+.island.owned-by-me .island-icon {
+    background-color: var(--accent-green); /* أخضر لفريقنا */
+    border-color: #c8ffda; /* إطار أخضر فاتح */
+}
+
+.island.owned-by-enemy .island-icon {
+    background-color: var(--accent-red); /* أحمر للعدو */
+    border-color: #ffc8c8; /* إطار أحمر فاتح */
+}
+
+.island.neutral .island-icon {
+    background-color: #576574; /* رمادي للجزر المحايدة */
+    border-color: #a3b3c8; /* إطار رمادي فاتح */
+}
+
+/* الجزيرة المستهدفة من فريقي */
+.island.targeted-by-my-team .island-icon {
+    animation: pulse-border 2s infinite;
+}
+
+/* تصميم نصوص الجزيرة */
 .island-name {
-    margin-top: 0.75rem; /* مسافة بين الدائرة والاسم */
+    margin-top: 0.75rem;
     font-weight: 700;
     font-size: 0.9rem;
     color: var(--text-primary);
-    text-shadow: 0 0 5px var(--bg-primary); /* ظل لتحسين القراءة */
+    text-shadow: 0 0 5px var(--bg-primary);
     line-height: 1.1;
 }
 
@@ -376,21 +412,25 @@
     text-shadow: 0 0 5px var(--bg-primary);
 }
 
-/* الجزيرة المستهدفة من فريقي */
-.island.targeted-by-my-team .island-icon {
-    /* تطبيق حركة النبض على الأيقونة مباشرة */
-    animation: pulse-glow 2s infinite;
-    border-color: var(--accent-green) !important; /* تأكيد لون الهدف */
+/* --- كود شريط الصحة الجديد --- */
+.island-hp-bar-container {
+    width: 60px;
+    height: 8px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 4px;
+    border: 1px solid #fff3;
+    margin-top: 5px;
+    overflow: hidden; /* مهم لإخفاء الزوايا */
 }
+.island-hp-bar {
+    height: 100%;
+    width: 100%; /* سيبدأ دائماً ممتلئاً */
+    border-radius: 3px;
+    background-color: var(--accent-green);
+    transition: width 0.5s ease;
+}
+/* --- نهاية كود شريط الصحة --- */
 
-/* تغيير لون الإطار حسب مالك الجزيرة (يعتمد على الكود JS الحالي) */
-/* هذه الألوان يتم تحديدها من خلال JavaScript ولا تحتاج لتغيير في الـ JS */
-.island-icon[style*="border-color: var(--accent-green)"] {
-    box-shadow: 0 0 15px var(--accent-green);
-}
-.island-icon[style*="border-color: var(--accent-red)"] {
-    box-shadow: 0 0 15px var(--accent-red);
-}
 /* --- Chat Styles --- */
 .chat-message {
     padding: 0.75rem 1rem;
@@ -432,6 +472,148 @@
     color: var(--text-primary);
 }
 
+/* ======================================= */
+/* ✨ NEW: Vacancy Mode Styles ✨ */
+/* ======================================= */
+
+.vacancy-game-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.vacancy-ladder-container {
+    flex: 1;
+    min-width: 220px;
+    max-width: 280px;
+    background-color: rgba(0,0,0,0.2);
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column-reverse; /* لعرض السلم من الأسفل للأعلى */
+    gap: 0.75rem;
+    height: 70vh;
+}
+
+.ladder-step {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--border-glass);
+    font-weight: 700;
+    transition: all 0.3s ease;
+    opacity: 0.5; /* الخطوات غير النشطة تكون باهتة */
+}
+
+.ladder-step.current-player {
+    opacity: 1;
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--accent-purple);
+}
+
+.ladder-step.other-player {
+    opacity: 0.9;
+    border-color: var(--accent-cyan);
+}
+
+.ladder-step .step-players {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ladder-step .player-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--accent-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 900;
+    border: 1px solid white;
+}
+
+.vacancy-main-content {
+    flex: 3;
+}
+
+.player-abilities-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.ability-btn {
+    width: 120px;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.ability-btn i {
+    font-size: 1.75rem;
+}
+
+/* ======================================= */
+/* ✨ NEW: Special Ability Animations ✨ */
+/* ======================================= */
+
+.animation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* مخفي بشكل افتراضي */
+    justify-content: center;
+    align-items: center;
+    z-index: 5000; /* للتأكد من أنه يظهر فوق كل شيء */
+    pointer-events: none; /* لمنع الضغط عليه */
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(4px);
+}
+
+.animation-overlay.show {
+    display: flex;
+}
+
+.ability-animation-icon {
+    font-size: 10rem; /* حجم كبير للأيقونة */
+    text-shadow: 0 0 30px white, 0 0 50px var(--brand-glow);
+    animation: play-ability-animation 1.5s ease-out forwards;
+}
+
+@keyframes play-ability-animation {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    90% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -469,7 +651,11 @@
          <div id="team-browser-screen" class="screen-container"></div>
          <div id="inbox-screen" class="screen-container"></div>
 <div id="island-attack-screen" class="screen-container"></div>
-
+<div id="vacancy-match-screen" class="screen-container"></div>
+<div id="swap-finder-screen" class="screen-container"></div>
+<div id="select-swap-type-screen" class="screen-container"></div>
+<div id="create-off-swap-screen" class="screen-container"></div>
+<div id="create-shift-swap-screen" class="screen-container"></div>
 
     </main>
 
@@ -492,24 +678,32 @@
     </template>
     
     <template id="main-menu-screen-template">
-        <div class="welcome-container">
-            <h1 id="welcome-message" class="welcome-message"></h1>
-            <div id="player-awards-display"></div>
+       <div class="welcome-container">
+    <div id="player-resources" style="text-align: center; margin-bottom: 1rem; font-weight: bold; font-size: 1.1rem;"></div>
+        <h1 id="welcome-message" class="welcome-message"></h1>
+    <div id="player-awards-display"></div>
+
             <div id="notifications-icon" data-action="show-inbox" style="position: absolute; top: -0.5rem; right: -0.5rem; cursor: pointer; font-size: 2rem; color: var(--text-secondary);">
     <i class='bx bxs-bell'></i>
     <span id="notifications-badge" style="position: absolute; top: 0; right: 0; background-color: var(--accent-red); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; display: none;">0</span>
 </div>
             <button data-action="logout" id="logout-btn" title="تسجيل الخروج"><i class='bx bx-exit'></i></button>
         </div>
-        <div class="tabs-container">
-            <div data-action="show-island-conquest" class="tab-item"><div class="tab-icon"><i class='bx bxs-map-alt'></i></div><div>احتلال الجزر</div></div>
-            <div data-action="show-single-player" class="tab-item"><div class="tab-icon"><i class='bx bxs-user'></i></div><div>اللعب الفردي</div></div>
-            <div data-action="show-online-menu" class="tab-item"><div class="tab-icon"><i class='bx bxs-group'></i></div><div>مباريات حرة</div></div>
-            <div data-action="show-team-hub" class="tab-item"><div class="tab-icon"><i class='bx bxs-shield-alt-2'></i></div><div>الفريق</div></div>
-            <div data-action="show-leaderboards" class="tab-item"><div class="tab-icon"><i class='bx bxs-trophy'></i></div><div>الصدارة</div></div>
-            <div data-action="show-achievements" class="tab-item"><div class="tab-icon"><i class='bx bxs-medal'></i></div><div>الإنجازات</div></div>
-            <div data-action="show-chat" class="tab-item"><div class="tab-icon"><i class='bx bxs-message-square-dots'></i></div><div>الدردشة العامة</div></div>
-        </div>
+ <div class="tabs-container">
+    <div data-action="show-swap-finder" class="tab-item" style="grid-column: 1 / -1; background: linear-gradient(45deg, var(--accent-yellow), var(--accent-green)); color: white; border-color: var(--accent-yellow);">
+        <div class="tab-icon" style="color: white;"><i class='bx bx-transfer-alt'></i></div>
+        <div style="font-weight: 900; font-size: 1.2rem;">سوابك عندي (Find Your Swap)</div>
+    </div>
+
+        <div data-action="show-island-conquest" class="tab-item"><div class="tab-icon"><i class='bx bxs-map-alt'></i></div><div>احتلال الجزر</div></div>
+    <div data-action="show-single-player" class="tab-item"><div class="tab-icon"><i class='bx bxs-user'></i></div><div>اللعب الفردي</div></div>
+    <div data-action="show-online-menu" class="tab-item"><div class="tab-icon"><i class='bx bxs-group'></i></div><div>مباريات حرة</div></div>
+    <div data-action="show-team-hub" class="tab-item"><div class="tab-icon"><i class='bx bxs-shield-alt-2'></i></div><div>الفريق</div></div>
+    <div data-action="show-leaderboards" class="tab-item"><div class="tab-icon"><i class='bx bxs-trophy'></i></div><div>الصدارة</div></div>
+    <div data-action="show-achievements" class="tab-item"><div class="tab-icon"><i class='bx bxs-medal'></i></div><div>الإنجازات</div></div>
+    <div data-action="show-chat" class="tab-item"><div class="tab-icon"><i class='bx bxs-message-square-dots'></i></div><div>الدردشة العامة</div></div>
+</div>
+
     </template>
 
     <template id="modal-template">
@@ -631,6 +825,10 @@
         <button data-action="back-to-main" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة للقائمة</button>
     </template>
 <template id="online-menu-screen-template">
+    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 2rem auto;">
+    <button data-action="create-vacancy-lobby" class="btn" style="background: linear-gradient(45deg, #ffd32a, #f97316); color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+        <i class='bx bxs-crown'></i> من سيربح الفاكنسي
+    </button>
         <h1 class="screen-title"><i class='bx bxs-group'></i> مباريات حرة</h1>
         <p class="screen-subtitle">اختر نوع المواجهة التي تريدها أو انضم إلى أصدقائك باستخدام كود.</p>
 <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 2rem auto;">
@@ -752,10 +950,127 @@
     <button data-action="show-island-conquest" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة للخريطة</button>
 </template>
 
+<template id="vacancy-match-screen-template">
+    <div class="vacancy-game-layout">
+        <div class="animation-overlay" id="animation-overlay">
+        <i id="animation-icon" class="ability-animation-icon"></i>
+    </div>
+        <div id="vacancy-ladder-container" class="vacancy-ladder-container">
+            </div>
+
+        <div class="vacancy-main-content">
+            <div id="turn-indicator" style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 700;"></div>
+            <div id="timer-container"><div id="timer-bar"></div></div>
+            <h3 id="question-text" style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; min-height: 100px;"></h3>
+            <div id="options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;"></div>
+            <div id="explanation-box" style="display: none;"></div>
+
+            <div id="player-abilities-container" class="player-abilities-container">
+                </div>
+
+            <button data-action="leave-lobby" class="btn back-btn" style="background-color:var(--accent-red);"><i class='bx bx-exit'></i> مغادرة المباراة</button>
+        </div>
+    </div>
+</template>
+
+<template id="swap-finder-screen-template">
+    <h1 class="screen-title"><i class='bx bx-transfer-alt'></i> سوابك عندي</h1>
+    <p class="screen-subtitle">تصفح طلبات تبديل الشيفتات المتاحة حالياً أو قم بعرض طلبك الخاص.</p>
+
+    <button data-action="show-select-swap-type" class="btn btn-primary" style="margin-bottom: 2rem;">
+        <i class='bx bx-plus-circle'></i> عرض طلب سواب جديد (التكلفة: 25 عملة)
+    </button>
+
+    <div id="swap-list-container" class="list-container" style="max-height: 50vh;">
+        <p style="text-align:center; color: var(--text-secondary);">لا توجد طلبات متاحة حالياً.</p>
+    </div>
+
+    <button data-action="back-to-main" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة للقائمة</button>
+</template>
+
+<template id="select-swap-type-screen-template">
+    <h1 class="screen-title"><i class='bx bx-git-compare'></i> اختر نوع المبادلة</h1>
+    <p class="screen-subtitle">هل تريد تبديل يوم إجازة أم شيفت عمل؟</p>
+    <div class="grid-container" style="grid-template-columns: 1fr 1fr;">
+
+        <div class="card" data-action="show-create-off-swap">
+            <div class="card-icon" style="color: var(--accent-green);"><i class='bx bx-calendar-off'></i></div>
+            <h3 class="card-title">تبديل يوم إجازة</h3>
+            <p class="screen-subtitle" style="font-size: 0.9rem;">عرض يوم إجازتك مقابل يوم آخر.</p>
+        </div>
+
+        <div class="card" data-action="show-create-shift-swap">
+            <div class="card-icon" style="color: var(--accent-blue);"><i class='bx bx-time'></i></div>
+            <h3 class="card-title">تبديل شيفت عمل</h3>
+            <p class="screen-subtitle" style="font-size: 0.9rem;">عرض شيفت معين في يوم معين مقابل شيفت آخر.</p>
+        </div>
+
+    </div>
+    <button data-action="show-swap-finder" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة للسوق</button>
+</template>
+
+<template id="create-off-swap-screen-template">
+    <h1 class="screen-title"><i class='bx bx-calendar-off'></i> طلب تبديل إجازة</h1>
+    <p class="screen-subtitle">سيتم عرض طلبك لمدة 24 ساعة بتكلفة 25 عملة.</p>
+
+    <div class="form-group">
+        <label class="form-label">يوم إجازتي هو:</label>
+        <input id="off-have-day" type="text" class="input-field" placeholder="مثال: يوم الأحد">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">أرغب في إجازة يوم:</label>
+        <input id="off-want-day" type="text" class="input-field" placeholder="مثال: يوم الخميس">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">الشيفت المطلوب (اختياري):</label>
+        <input id="off-want-shift-optional" type="text" class="input-field" placeholder="مثال: شيفت صباحي، مسائي، أو اتركه فارغاً">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">رقم الموبايل للتواصل (اختياري):</label>
+        <input id="off-poster-phone" type="tel" class="input-field" placeholder="لن يظهر إلا عند حدوث توافق">
+    </div>
+
+    <button data-action="post-off-swap" class="btn btn-primary"><i class='bx bxs-send'></i> نشر الطلب</button>
+    <button data-action="show-select-swap-type" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة</button>
+</template>
+
+<template id="create-shift-swap-screen-template">
+    <h1 class="screen-title"><i class='bx bx-time'></i> طلب تبديل شيفت</h1>
+    <p class="screen-subtitle">سيتم عرض طلبك لمدة 24 ساعة بتكلفة 25 عملة.</p>
+
+     <div class="form-group">
+        <label class="form-label">تاريخ الشيفت الذي أملكه:</label>
+        <input id="shift-have-date" type="text" class="input-field" placeholder="مثال: 15/07/2025">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">وقت الشيفت الذي أملكه:</label>
+        <input id="shift-have-time" type="text" class="input-field" placeholder="مثال: 7 مساءً">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">وقت الشيفت الذي أريده (في نفس اليوم):</label>
+        <input id="shift-want-time" type="text" class="input-field" placeholder="مثال: 9 صباحاً">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">رقم الموبايل للتواصل (اختياري):</label>
+        <input id="shift-poster-phone" type="tel" class="input-field" placeholder="لن يظهر إلا عند حدوث توافق">
+    </div>
+
+    <button data-action="post-shift-swap" class="btn btn-primary"><i class='bx bxs-send'></i> نشر الطلب</button>
+    <button data-action="show-select-swap-type" class="btn back-btn"><i class='bx bx-arrow-back'></i> العودة</button>
+</template>
+
+
     <!-- =================================
        ✨ JavaScript - الجزء السابع (Achievements) ✨
        ================================= -->
 <script type="module">
+    window.testMessage = "مرحباً من داخل لعبتي!";
         // --- استيراد دوال Firebase ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -770,63 +1085,103 @@
         const db = getFirestore(app);
 
         // --- عقل اللعبة (GAME_CONFIG) ---
-        const GAME_CONFIG = {
-            musicPlaylist: [ 
-    'https://v15mbanna3.github.io/my-sounds/Gna7%20felsama.mp3',
-    'https://v15mbanna3.github.io/my-sounds/Nocturne.mp3',
-    'https://v15mbanna3.github.io/my-sounds/Sadness-and-Sorrow.mp3'
-],
-            questionBanks: {
-                singlePlayer: [
-                    { id: 'sp_1', question: "ما هو أول إجراء يجب اتخاذه عند استلام شكوى من العميل؟", options: {"1": "الاعتذار", "2": "الاستماع الجيد", "3": "تقديم حل فوري", "4": "توثيق الشكوى"}, correct_answer: "2" },
-                    { id: 'sp_2', question: "ماذا يعني اختصار 'SLA'؟", options: {"1": "Service Level Agreement", "2": "Sales Lead Account", "3": "Service Line Access", "4": "System Logic Area"}, correct_answer: "1" }
-                ],
-                online_freeplay: [
-                    { id: 'on_1', question: "أي من التالي يعتبر من مهارات التواصل الفعال؟", options: {"1": "مقاطعة العميل", "2": "استخدام مصطلحات معقدة", "3": "إعادة صياغة كلام العميل للتأكد من الفهم", "4": "التحدث بسرعة"}, correct_answer: "3" },
-                    { id: 'on_2', question: "في نموذج GROW للتدريب، ماذا يمثل حرف 'R'؟", options: {"1": "Results", "2": "Reality", "3": "Respect", "4": "Review"}, correct_answer: "2" }
-                ],
-                islands: {
-                    tech_island: [{ id: 't_1', question: "ما هو البروتوكول المستخدم لإعطاء IP للأجهزة تلقائياً؟", options: {"1": "HTTP", "2": "FTP", "3": "DHCP", "4": "SMTP"}, correct_answer: "3" }],
-                    nontech_island: [{ id: 'nt_1', question: "ما هي المدة القياسية للرد على طلب فاتورة إلكترونية؟", options: {"1": "24 ساعة", "2": "48 ساعة", "3": "72 ساعة", "4": "5 أيام عمل"}, correct_answer: "2" }],
-                    quality_fort: [{ id: 'q_1', question: "ما هو الهدف من مكالمة المتابعة بعد حل الشكوى؟", options: {"1": "بيع خدمة جديدة", "2": "التأكد من رضا العميل التام", "3": "تحديث البيانات", "4": "إغلاق الشكوى فقط"}, correct_answer: "2" }],
-                    faulty_valley: [{ id: 'f_1', question: "لمبة DSL على الراوتر تومض باستمرار، ماذا يعني ذلك غالبًا؟", options: {"1": "مشكلة في كلمة سر الواي فاي", "2": "مشكلة في التزامن مع السنترال", "3": "الراوتر يحتاج تحديث", "4": "لا يوجد رصيد"}, correct_answer: "2" }],
-                    briefings_archipelago: [{ id: 'b_1', question: "حسب آخر تحديث، ما هي الباقة الإضافية الجديدة التي تم إطلاقها؟", options: {"1": "Nitro", "2": "Turbo", "3": "Gamerz", "4": "Plus"}, correct_answer: "1" }],
-                    citadel: [{ id: 'c_1', question: "من هو قائد فريق NC1 Eagles؟", options: {"1": "Botros", "2": "Peter", "3": "Mina", "4": "George"}, correct_answer: "1" }]
-                }
-            },
-            singlePlayerTiers: [
-                { id: 'tier-1', name: 'ايجنت عادي', levels: 3, questionsPerLevel: 5, timePerQuestion: 30, medal: '🥉', points: 10, awardPoints: 50, icon: 'bxs-shield-quarter', achievement: 'complete_tier1' },
-                { id: 'tier-2', name: 'ايجنت جامد', levels: 6, questionsPerLevel: 5, timePerQuestion: 25, medal: '🥈', points: 15, awardPoints: 75, icon: 'bxs-shield-alt-2', achievement: 'complete_tier2' },
-                { id: 'tier-3', name: 'ايجنت كوالتي', levels: 12, questionsPerLevel: 5, timePerQuestion: 20, medal: '🥇', points: 20, awardPoints: 100, icon: 'bxs-shield-x', achievement: 'complete_tier3' },
-                { id: 'tier-4', name: 'ايجنت سوبرفايزر', levels: 24, questionsPerLevel: 5, timePerQuestion: 15, medal: '🏆', points: 25, awardPoints: 150, icon: 'bxs-shield', achievement: 'complete_tier4' },
-                { id: 'tier-5', name: 'ايجنت خرافي', levels: 48, questionsPerLevel: 5, timePerQuestion: 10, medal: '💎', points: 30, awardPoints: 200, icon: 'bxs-diamond', achievement: 'complete_tier5' },
-                { id: 'tier-6', name: 'أسطورة النسور', levels: 96, questionsPerLevel: 5, timePerQuestion: 8, medal: '👑', points: 50, awardPoints: 500, icon: 'bxs-crown', achievement: 'complete_tier6' }
-            ],
-            achievements: {
-                'join_team': { name: "جزء من المجموعة", description: "انضم إلى فريق لأول مرة", icon: "<i class='bx bx-user-plus'></i>", target: 1, stat: 'joinedTeam', rewardPoints: 15 },
-                'create_team': { name: "القائد المؤسس", description: "قم بإنشاء فريقك الخاص", icon: "<i class='bx bxs-shield-plus'></i>", target: 1, stat: 'createdTeam', rewardPoints: 30 },
-                'complete_tier1': { name: "ايجنت طموح", description: "أكمل جميع مستويات فئة 'ايجنت عادي'", icon: "<i class='bx bx-shield-quarter'></i>", target: 1, stat: 'complete_tier1', rewardPoints: 50 },
-                'complete_tier3': { name: "خبير الجودة", description: "أكمل جميع مستويات فئة 'ايجنت كوالتي'", icon: "<i class='bx bx-shield-x'></i>", target: 1, stat: 'complete_tier3', rewardPoints: 150 },
-                'complete_all_sp': { name: "أسطورة فردية", description: "أكمل جميع مستويات اللعب الفردي", icon: "<i class='bx bxs-diamond'></i>", target: 1, stat: 'allSPCompleted', rewardPoints: 500 },
-                'reach_level_10': { name: "المستوى العاشر", description: "أوصل حسابك إلى المستوى 10", icon: "<i class='bx bxs-up-arrow-circle'></i>", target: 1, stat: 'level10Reached', rewardPoints: 40 },
-                'reach_level_25': { name: "المستوى 25", description: "أوصل حسابك إلى المستوى 25", icon: "<i class='bx bxs-chevrons-up'></i>", target: 1, stat: 'level25Reached', rewardPoints: 120 },
-                'first_conquest': { name: "الفاتح الأول", description: "سيطر على جزيرة لأول مرة مع فريقك", icon: "<i class='bx bxs-flag-alt'></i>", target: 1, stat: 'islandsConquered', rewardPoints: 100 },
-                'capital_owner': { name: "سيد القلعة", description: "سيطر على القلعة المركزية", icon: "<i class='bx bxs-chess'></i>", target: 1, stat: 'citadelConquered', rewardPoints: 250 },
-                'war_veteran': { name: "محارب قديم", description: "شارك في 50 مباراة احتلال", icon: "<i class='bx bxs-swords'></i>", target: 50, stat: 'conquestMatchesPlayed', rewardPoints: 75 }
-            },
-            // الخطوة 3.1: تحديث بيانات الجزر بالصور
+  const GAME_CONFIG = {
+    musicPlaylist: [ 
+        'https://v15mbanna3.github.io/my-sounds/Gna7%20felsama.mp3',
+        'https://v15mbanna3.github.io/my-sounds/Nocturne.mp3',
+        'https://v15mbanna3.github.io/my-sounds/Sadness-and-Sorrow.mp3'
+    ],
+    questionBanks: {
+        singlePlayer: [
+            { id: 'sp_1', question: "ما هو أول إجراء يجب اتخاذه عند استلام شكوى من العميل؟", options: {"1": "الاعتذار", "2": "الاستماع الجيد", "3": "تقديم حل فوري", "4": "توثيق الشكوى"}, correct_answer: "2" },
+            { id: 'sp_2', question: "ماذا يعني اختصار 'SLA'؟", options: {"1": "Service Level Agreement", "2": "Sales Lead Account", "3": "Service Line Access", "4": "System Logic Area"}, correct_answer: "1" }
+        ],
+        online_freeplay: [
+            { id: 'on_1', question: "أي من التالي يعتبر من مهارات التواصل الفعال؟", options: {"1": "مقاطعة العميل", "2": "استخدام مصطلحات معقدة", "3": "إعادة صياغة كلام العميل للتأكد من الفهم", "4": "التحدث بسرعة"}, correct_answer: "3" },
+            { id: 'on_2', question: "في نموذج GROW للتدريب، ماذا يمثل حرف 'R'؟", options: {"1": "Results", "2": "Reality", "3": "Respect", "4": "Review"}, correct_answer: "2" }
+        ],
+        islands: {
+            tech_island: [{ id: 't_1', question: "ما هو البروتوكول المستخدم لإعطاء IP للأجهزة تلقائياً؟", options: {"1": "HTTP", "2": "FTP", "3": "DHCP", "4": "SMTP"}, correct_answer: "3" }],
+            nontech_island: [{ id: 'nt_1', question: "ما هي المدة القياسية للرد على طلب فاتورة إلكترونية؟", options: {"1": "24 ساعة", "2": "48 ساعة", "3": "72 ساعة", "4": "5 أيام عمل"}, correct_answer: "2" }],
+            quality_fort: [{ id: 'q_1', question: "ما هو الهدف من مكالمة المتابعة بعد حل الشكوى؟", options: {"1": "بيع خدمة جديدة", "2": "التأكد من رضا العميل التام", "3": "تحديث البيانات", "4": "إغلاق الشكوى فقط"}, correct_answer: "2" }],
+            faulty_valley: [{ id: 'f_1', question: "لمبة DSL على الراوتر تومض باستمرار، ماذا يعني ذلك غالبًا؟", options: {"1": "مشكلة في كلمة سر الواي فاي", "2": "مشكلة في التزامن مع السنترال", "3": "الراوتر يحتاج تحديث", "4": "لا يوجد رصيد"}, correct_answer: "2" }],
+            briefings_archipelago: [{ id: 'b_1', question: "حسب آخر تحديث، ما هي الباقة الإضافية الجديدة التي تم إطلاقها؟", options: {"1": "Nitro", "2": "Turbo", "3": "Gamerz", "4": "Plus"}, correct_answer: "1" }],
+            citadel: [{ id: 'c_1', question: "من هو قائد فريق NC1 Eagles؟", options: {"1": "Botros", "2": "Peter", "3": "Mina", "4": "George"}, correct_answer: "1" }]
+        },
+        vacancy_questions: [
+            { id: 'vac_1_1', question: "ما هو الإجراء الأول عند بدء مكالمة مع عميل؟", options: {"1": "سؤاله عن اسمه", "2": "التحية والتعريف بنفسك", "3": "طلب رقم الحساب", "4": "سؤاله عن مشكلته"}, correct_answer: "2", level: 1 },
+        ],
+        trick_questions: [
+             { id: 'trick_1', question: "إذا كان القطار يسير بسرعة 80 كم/ساعة والرياح شمالية، إلى أي اتجاه يتجه دخانه؟", options: {"1": "شمال", "2": "جنوب", "3": "عكس اتجاه القطار", "4": "القطار كهربائي لا دخان له"}, correct_answer: "4" },
+        ]
+    },
+    singlePlayerTiers: [
+        { id: 'tier-1', name: 'ايجنت عادي', levels: 3, questionsPerLevel: 5, timePerQuestion: 30, medal: '🥉', points: 10, awardPoints: 50, icon: 'bxs-shield-quarter', achievement: 'complete_tier1' },
+        { id: 'tier-2', name: 'ايجنت جامد', levels: 6, questionsPerLevel: 5, timePerQuestion: 25, medal: '🥈', points: 15, awardPoints: 75, icon: 'bxs-shield-alt-2', achievement: 'complete_tier2' },
+        { id: 'tier-3', name: 'ايجنت كوالتي', levels: 12, questionsPerLevel: 5, timePerQuestion: 20, medal: '🥇', points: 20, awardPoints: 100, icon: 'bxs-shield-x', achievement: 'complete_tier3' },
+        { id: 'tier-4', name: 'ايجنت سوبرفايزر', levels: 24, questionsPerLevel: 5, timePerQuestion: 15, medal: '🏆', points: 25, awardPoints: 150, icon: 'bxs-shield', achievement: 'complete_tier4' },
+        { id: 'tier-5', name: 'ايجنت خرافي', levels: 48, questionsPerLevel: 5, timePerQuestion: 10, medal: '💎', points: 30, awardPoints: 200, icon: 'bxs-diamond', achievement: 'complete_tier5' },
+        { id: 'tier-6', name: 'أسطورة النسور', levels: 96, questionsPerLevel: 5, timePerQuestion: 8, medal: '👑', points: 50, awardPoints: 500, icon: 'bxs-crown', achievement: 'complete_tier6' }
+    ],
+    achievements: {
+        'join_team': { name: "جزء من المجموعة", description: "انضم إلى فريق لأول مرة", icon: "<i class='bx bx-user-plus'></i>", target: 1, stat: 'joinedTeam', rewardPoints: 15 },
+        'create_team': { name: "القائد المؤسس", description: "قم بإنشاء فريقك الخاص", icon: "<i class='bx bxs-shield-plus'></i>", target: 1, stat: 'createdTeam', rewardPoints: 30 },
+        'complete_tier1': { name: "ايجنت طموح", description: "أكمل جميع مستويات فئة 'ايجنت عادي'", icon: "<i class='bx bx-shield-quarter'></i>", target: 1, stat: 'complete_tier1', rewardPoints: 50 },
+        'complete_tier3': { name: "خبير الجودة", description: "أكمل جميع مستويات فئة 'ايجنت كوالتي'", icon: "<i class='bx bx-shield-x'></i>", target: 1, stat: 'complete_tier3', rewardPoints: 150 },
+        'complete_all_sp': { name: "أسطورة فردية", description: "أكمل جميع مستويات اللعب الفردي", icon: "<i class='bx bxs-diamond'></i>", target: 1, stat: 'allSPCompleted', rewardPoints: 500 },
+        'reach_level_10': { name: "المستوى العاشر", description: "أوصل حسابك إلى المستوى 10", icon: "<i class='bx bxs-up-arrow-circle'></i>", target: 1, stat: 'level10Reached', rewardPoints: 40 },
+        'reach_level_25': { name: "المستوى 25", description: "أوصل حسابك إلى المستوى 25", icon: "<i class='bx bxs-chevrons-up'></i>", target: 1, stat: 'level25Reached', rewardPoints: 120 },
+        'first_conquest': { name: "الفاتح الأول", description: "سيطر على جزيرة لأول مرة مع فريقك", icon: "<i class='bx bxs-flag-alt'></i>", target: 1, stat: 'islandsConquered', rewardPoints: 100 },
+        'capital_owner': { name: "سيد القلعة", description: "سيطر على القلعة المركزية", icon: "<i class='bx bxs-chess'></i>", target: 1, stat: 'citadelConquered', rewardPoints: 250 },
+        'war_veteran': { name: "محارب قديم", description: "شارك في 50 مباراة احتلال", icon: "<i class='bx bxs-swords'></i>", target: 50, stat: 'conquestMatchesPlayed', rewardPoints: 75 }
+    },
+    islands: [
+        { id: 'citadel', name: 'القلعة المركزية', icon: 'bxs-castle', category: 'General', style: { top: '50%', left: '50%', width: '120px', height: '120px', transform: 'translate(-50%, -50%)' } },
+        { id: 'tech_island', name: 'جزيرة التقنية', icon: 'bxs-chip', category: 'tech_island', style: { top: '10%', left: '50%', width: '95px', height: '95px', transform: 'translateX(-50%)' } },
+        { id: 'nontech_island', name: 'جزيرة الأنظمة', icon: 'bxs-file-doc', category: 'nontech_island', style: { top: '50%', left: '15%', width: '95px', height: '95px', transform: 'translateY(-50%)' } },
+        { id: 'quality_fort', name: 'حصن الجودة', icon: 'bxs-badge-check', category: 'quality_fort', style: { top: '50%', right: '15%', width: '95px', height: '95px', transform: 'translateY(-50%)' } },
+        { id: 'faulty_valley', name: 'وادي الأعطال', icon: 'bxs-wrench', category: 'faulty_valley', style: { bottom: '10%', left: '30%', width: '95px', height: '95px', transform: 'translateX(-50%)' } },
+        { id: 'briefings_archipelago', name: 'أرخبيل المستجدات', icon: 'bxs-megaphone', category: 'briefings_archipelago', style: { bottom: '10%', right: '30%', width: '95px', height: '95px', transform: 'translateX(50%)' } }
+    ],
+    vacancy_ladder: [
+        { name: 'موظف جديد', salary: '1,000' },
+        { name: 'موظف خبير', salary: '5,000' },
+        { name: 'مشرف فريق', salary: '10,000' },
+        { name: 'قائد فريق', salary: '50,000' },
+        { name: 'مدير قسم', salary: '100,000' },
+        { name: 'الفائز بالفاكنسي!', salary: '500,000' }
+    ],
+    special_abilities: {
+        '50_50': { name: "حذف إجابتين", type: 'lifeline', icon: 'bx-star' },
+        'swap_question': { name: "تغيير السؤال", type: 'lifeline', icon: 'bx-swap-horizontal' },
+        'skip_turn': { name: "تخطي الدور", type: 'attack', icon: 'bx-skip-next-circle' },
+        'reverse_turn': { name: "عكس الاتجاه", type: 'attack', icon: 'bx-reflect-vertical' },
+        'fiery_question': { name: "السؤال الناري", type: 'attack', icon: 'bxs-hot' },
+        'trick_question': { name: "سؤال خادع", type: 'attack', icon: 'bxs-magic-wand' },
+    },
+};
+    // =================================================
+// ✨ DEV TOOL: لإضافة عملات يدوياً للاختبار ✨
+// =================================================
+window.addMyCoins = async function(amount) {
+    if (!AppState.playerProfile || !AppState.playerProfile.id) {
+        console.log("يجب تسجيل الدخول أولاً لإضافة عملات.");
+        return;
+    }
+    if (typeof amount !== 'number' || amount <= 0) {
+         console.log("الرجاء إدخال رقم صحيح أكبر من صفر.");
+        return;
+    }
 
-// الصق هذا الكود الجديد بالكامل
-// استبدل مصفوفة الجزر الحالية بهذه المصفوفة الجديدة
-islands: [
-    { id: 'citadel', name: 'القلعة المركزية', icon: 'bxs-castle', category: 'General', style: { top: '50%', left: '50%', width: '120px', height: '120px', transform: 'translate(-50%, -50%)' } },
-    { id: 'tech_island', name: 'جزيرة التقنية', icon: 'bxs-chip', category: 'tech_island', style: { top: '10%', left: '50%', width: '95px', height: '95px', transform: 'translateX(-50%)' } },
-    { id: 'nontech_island', name: 'جزيرة الأنظمة', icon: 'bxs-file-doc', category: 'nontech_island', style: { top: '50%', left: '15%', width: '95px', height: '95px', transform: 'translateY(-50%)' } },
-    { id: 'quality_fort', name: 'حصن الجودة', icon: 'bxs-badge-check', category: 'quality_fort', style: { top: '50%', right: '15%', width: '95px', height: '95px', transform: 'translateY(-50%)' } },
-    { id: 'faulty_valley', name: 'وادي الأعطال', icon: 'bxs-wrench', category: 'faulty_valley', style: { bottom: '10%', left: '30%', width: '95px', height: '95px', transform: 'translateX(-50%)' } },
-    { id: 'briefings_archipelago', name: 'أرخبيل المستجدات', icon: 'bxs-megaphone', category: 'briefings_archipelago', style: { bottom: '10%', right: '30%', width: '95px', height: '95px', transform: 'translateX(50%)' } }
-],
-        };
+    const playerRef = doc(db, "players", AppState.playerProfile.id);
+    await updateDoc(playerRef, { coins: increment(amount) });
+
+    // تحديث البيانات فوراً في الواجهة
+    await loadPlayerProfile(AppState.playerProfile.id);
+
+    console.log(`تمت إضافة ${amount} عملة بنجاح!`);
+    showToast(`تمت إضافة ${amount} عملة إلى رصيدك!`);
+}
 
         // --- الحالة العامة للتطبيق ---
         let AppState = {
@@ -925,7 +1280,7 @@ islands: [
                     const playerDoc = await transaction.get(playerRef);
                     if (!playerDoc.exists()) {
                         const defaultStats = Object.values(GAME_CONFIG.achievements).reduce((acc, ach) => ({...acc, [ach.stat]: 0}), {});
-                        transaction.set(playerRef, { name, teleoptiId, uid: AppState.currentUser.uid, score: 0, awards: [], singlePlayerProgress: {}, stats: defaultStats, unlockedAchievements: [], teamId: null, createdAt: serverTimestamp(), lastLogin: serverTimestamp() });
+                        transaction.set(playerRef, { name, teleoptiId, uid: AppState.currentUser.uid, score: 0, coins: 0, awards: [], singlePlayerProgress: {}, stats: defaultStats, unlockedAchievements: [], teamId: null, createdAt: serverTimestamp(), lastLogin: serverTimestamp() });
                     } else {
                         transaction.update(playerRef, { name, uid: AppState.currentUser.uid, lastLogin: serverTimestamp() });
                     }
@@ -969,14 +1324,30 @@ listenForNotifications();
             }
         }
         
-        function updateMainMenu() {
-            if (!AppState.playerProfile) return;
-            const welcomeMsg = document.getElementById('welcome-message');
-            const awardsDisplay = document.getElementById('player-awards-display');
-            const teamTagDisplay = AppState.playerTeam ? `<span class="team-tag">[${AppState.playerTeam.tag}]</span>` : '';
-            if (welcomeMsg) { welcomeMsg.innerHTML = `أهلاً بك, ${teamTagDisplay} <span class="name">${AppState.playerProfile.name}</span>`; }
-            if (awardsDisplay) { const awards = AppState.playerProfile.awards || []; awardsDisplay.innerHTML = awards.join(' '); }
-        }
+function updateMainMenu() {
+    if (!AppState.playerProfile) return;
+    const welcomeMsg = document.getElementById('welcome-message');
+    const awardsDisplay = document.getElementById('player-awards-display');
+    const resourcesDisplay = document.getElementById('player-resources'); // <-- السطر الجديد
+
+    const teamTagDisplay = AppState.playerTeam ? `<span class="team-tag">[${AppState.playerTeam.tag}]</span>` : '';
+
+    if (welcomeMsg) { 
+        welcomeMsg.innerHTML = `أهلاً بك, ${teamTagDisplay} <span class="name">${AppState.playerProfile.name}</span>`; 
+    }
+
+    if (awardsDisplay) { 
+        const awards = AppState.playerProfile.awards || []; 
+        awardsDisplay.innerHTML = awards.join(' '); 
+    }
+
+    // ✨ --- START: NEW LOGIC TO DISPLAY COINS --- ✨
+    if (resourcesDisplay) {
+        const coins = AppState.playerProfile.coins || 0;
+        resourcesDisplay.innerHTML = `<i class='bx bxs-coin-stack' style="color: var(--accent-yellow);"></i> عملات النسور: <span style="color:var(--accent-yellow);">${coins}</span>`;
+    }
+    // ✨ --- END: NEW LOGIC TO DISPLAY COINS --- ✨
+}
 
         function handleLogout() {
             showModal('تسجيل الخروج', 'هل أنت متأكد؟', 'نعم', 'لا', async () => {
@@ -1003,6 +1374,9 @@ async function listenForBroadcast() {
             broadcastBar.classList.remove('active');
         }
     });
+
+
+
 }
 
 // الخطوة 6: إضافة دوال نظام الإشعارات
@@ -1188,210 +1562,246 @@ function showInboxScreen() {
             const wasAlreadyCompleted = AppState.playerProfile.singlePlayerProgress?.[tierId]?.includes(levelIndex);
             let message = `أحسنت! لقد أكملت هذا المستوى بنجاح.`;
             if (!wasAlreadyCompleted) {
-                message += ` +${points} نقاط.`;
-                await updateDoc(playerRef, { score: increment(points), [`singlePlayerProgress.${tierId}`]: arrayUnion(levelIndex) });
+                message += ` +${points} نقاط وخبرة +5 عملات!`;
+                await updateDoc(playerRef, { score: increment(points), coins: increment(5), [`singlePlayerProgress.${tierId}`]: arrayUnion(levelIndex) });
             }
             await loadPlayerProfile(AppState.playerProfile.id);
             const currentTierData = GAME_CONFIG.singlePlayerTiers.find(t => t.id === tierId);
             const completedLevelsInTier = AppState.playerProfile.singlePlayerProgress?.[tierId]?.length || 0;
             const wasTierAlreadyCompleted = AppState.playerProfile.awards?.includes(medal);
             if (completedLevelsInTier >= currentTierData.levels && !wasTierAlreadyCompleted) {
-                message = `🎉 تهانينا! 🎉\nلقد أكملت فئة ${name} وحصلت على الميدالية ${medal} ومكافأة ${awardPoints} نقطة!`;
-                await updateDoc(playerRef, { awards: arrayUnion(medal), score: increment(awardPoints) });
+                message = `🎉 تهانينا! 🎉\nلقد أكملت فئة ${name} وحصلت على الميدالية ${medal} ومكافأة ${awardPoints} نقطة و **50 عملة**!`;
+                await updateDoc(playerRef, { awards: arrayUnion(medal), score: increment(awardPoints), coins: increment(50) });
                 if (achievement) { await updatePlayerStat(achievement); } // Grant achievement for completing tier
                 await loadPlayerProfile(AppState.playerProfile.id);
             }
             showModal("مستوى مكتمل!", message, null, "متابعة", () => { displayTiers(); });
         }
 // =================================================
-        // ✨ دوال اللعب الجماعي (Online Multiplayer) ✨
-        // =================================================
+// ✨ دوال اللعب الجماعي (Online Multiplayer) ✨
+// =================================================
 
-        function getHighestMedal(playerProfile) {
-            if (!playerProfile || !playerProfile.awards || !Array.isArray(playerProfile.awards)) return '';
-            const tierOrder = ['💎', '🏆', '🥇', '🥈', '🥉'];
-            for (const medal of tierOrder) {
-                if (playerProfile.awards.includes(medal)) {
-                    return medal;
-                }
-            }
-            return '';
-        }
+function getHighestMedal(playerProfile) {
+    if (!playerProfile || !playerProfile.awards || !Array.isArray(playerProfile.awards)) return '';
+    const tierOrder = ['💎', '🏆', '🥇', '🥈', '🥉'];
+    for (const medal of tierOrder) {
+        if (playerProfile.awards.includes(medal)) {
+            return medal;
+        }
+    }
+    return '';
+}
 
-        async function createLobby(type) {
-            if (!AppState.currentUser || !AppState.playerProfile) return showModal("خطأ", "يجب تسجيل الدخول أولاً.", null, "حسنًا");
+// تم تصحيح الخطأ الإملائي هنا
+async function createLobby(type) {
+    if (!AppState.currentUser || !AppState.playerProfile) return showModal("خطأ", "يجب تسجيل الدخول أولاً.", null, "حسنًا");
 
-            let lobbyDetails = {};
-            // لو كانت مباراة احتلال، أضف تفاصيل الجزيرة
-            if (type === 'conquest') {
-                if (!AppState.playerTeam?.currentTarget) {
-                    return showModal("خطأ", "لم يحدد قائد فريقك جزيرة لاستهدافها بعد.", null, "حسنًا");
-                }
-                const islandId = AppState.playerTeam.currentTarget;
-                const islandData = GAME_CONFIG.islands.find(i => i.id === islandId);
-                lobbyDetails.type = 'conquest';
-                lobbyDetails.islandId = islandId;
-                lobbyDetails.islandCategory = islandData.category;
-            } else {
-                lobbyDetails.type = type; // '1v1' or 'massive'
+    let lobbyDetails = {
+        type: type
+    };
+
+    if (type === 'conquest') {
+        if (!AppState.playerTeam?.currentTarget) {
+            return showModal("خطأ", "لم يحدد قائد فريقك جزيرة لاستهدافها بعد.", null, "حسنًا");
+        }
+        const islandId = AppState.playerTeam.currentTarget;
+        const islandData = GAME_CONFIG.islands.find(i => i.id === islandId);
+        lobbyDetails.islandId = islandId;
+        lobbyDetails.islandCategory = islandData.category;
+    }
+
+    const lobbyCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const lobbyRef = doc(db, "lobbies", lobbyCode);
+    const medal = getHighestMedal(AppState.playerProfile);
+
+    const getRandomAbilities = (count = 3) => {
+        const allAbilities = Object.keys(GAME_CONFIG.special_abilities);
+        return allAbilities.sort(() => 0.5 - Math.random()).slice(0, count);
+    };
+
+    const hostPlayer = {
+        uid: AppState.currentUser.uid,
+        name: AppState.playerProfile.name,
+        teleoptiId: AppState.playerProfile.teleoptiId,
+        score: 0,
+        totalScore: AppState.playerProfile.score || 0,
+        medal: medal,
+        teamId: AppState.playerTeam?.id || null
+    };
+
+    if (type === 'vacancy') {
+        hostPlayer.rankIndex = 0;
+        hostPlayer.abilities = getRandomAbilities(3);
+    }
+
+    const newLobby = {
+        ...lobbyDetails,
+        lobbyCode,
+        hostUid: AppState.currentUser.uid,
+        createdAt: serverTimestamp(),
+        status: "waiting",
+        players: [hostPlayer],
+        currentQuestionIndex: -1,
+        answers: {},
+        turnIndex: 0,
+        playDirection: 1,
+    };
+
+    await setDoc(lobbyRef, newLobby);
+    joinLobby(lobbyCode);
+}
+
+function joinLobby(code) {
+    if (!AppState.currentUser || !AppState.playerProfile) return showModal("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
+    const lobbyCode = code.toUpperCase();
+    const lobbyRef = doc(db, "lobbies", lobbyCode);
+
+    if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+
+    AppState.unsubscribeLobby = onSnapshot(lobbyRef, async (docSnap) => {
+        if (!docSnap.exists()) {
+            showModal("خطأ", "الغرفة غير موجودة أو تم إغلاقها.");
+            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+            AppState.unsubscribeLobby = null;
+            return showScreen('online-menu-screen');
+        }
+
+        const lobbyData = docSnap.data();
+        const playerInLobby = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+
+        if (lobbyData.status !== 'waiting' && !playerInLobby) {
+            showModal("مغلق", "هذه المنافسة قد بدأت بالفعل أو انتهت.");
+            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+            return showScreen('online-menu-screen');
+        }
+
+        if (lobbyData.type === '1v1' && lobbyData.players.length >= 2 && !playerInLobby) {
+            showModal("ممتلئة", "هذه المواجهة ممتلئة بالفعل.");
+            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+            return showScreen('online-menu-screen');
+        }
+
+        if (!playerInLobby) {
+            const medal = getHighestMedal(AppState.playerProfile);
+            await updateDoc(lobbyRef, {
+                players: arrayUnion({
+                    uid: AppState.currentUser.uid,
+                    name: AppState.playerProfile.name,
+                    teleoptiId: AppState.playerProfile.teleoptiId,
+                    score: 0,
+                    totalScore: AppState.playerProfile.score || 0,
+                    medal: medal,
+                })
+            });
+        } else {
+            switch (lobbyData.status) {
+                case 'waiting':
+                case 'countdown':
+                    showScreen('online-lobby-screen');
+                    updateLobbyScreen(lobbyData);
+                    break;
+                case 'in-progress':
+                case 'finished':
+                    runGame(lobbyData);
+                    break;
             }
+        }
+    }, (error) => {
+        console.error("Lobby snapshot error:", error);
+        showModal("خطأ بالاتصال", "فقد الاتصال بغرفة اللعب.");
+        leaveLobby();
+    });
+}
 
-            const lobbyCode = Math.random().toString(36).substring(2, 6).toUpperCase();
-            const lobbyRef = doc(db, "lobbies", lobbyCode);
-            
-            const medal = getHighestMedal(AppState.playerProfile);
+function updateLobbyScreen(lobbyData) {
+    if (!lobbyData || !AppState.currentUser) return;
+    AppState.currentLobbyId = lobbyData.lobbyCode;
+    const isHost = lobbyData.hostUid === AppState.currentUser.uid;
 
-            const newLobby = {
-                ...lobbyDetails, // إضافة تفاصيل المباراة هنا
-                lobbyCode,
-                hostUid: AppState.currentUser.uid,
-                createdAt: serverTimestamp(),
-                status: "waiting",
-                players: [{ 
-                    uid: AppState.currentUser.uid, 
-                    name: AppState.playerProfile.name, 
-                    teleoptiId: AppState.playerProfile.teleoptiId, 
-                    score: 0,
-                    totalScore: AppState.playerProfile.score || 0,
-                    medal: medal,
-                    teamId: AppState.playerTeam?.id || null // إضافة هوية الفريق
-                }],
-                currentQuestionIndex: -1,
-                answers: {}
-            };
-            await setDoc(lobbyRef, newLobby);
-            joinLobby(lobbyCode);
-        }
+    let title = 'ردهة الانتظار';
+    if (lobbyData.type === '1v1') title = '⚔️ مواجهة 1 ضد 1 ⚔️';
+    else if (lobbyData.type === 'massive') title = '🏟️ منافسة حاشدة 🏟️';
+    else if (lobbyData.type === 'conquest') title = '⚔️ حــــرب الجــــزر ⚔️';
+    else if (lobbyData.type === 'vacancy') title = '👑 من سيربح الفاكنسي 👑';
 
-        function joinLobby(code) {
-            if (!AppState.currentUser || !AppState.playerProfile) return showModal("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
-            const lobbyCode = code.toUpperCase();
-            const lobbyRef = doc(db, "lobbies", lobbyCode);
-            
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+    document.getElementById('lobby-title').textContent = title;
+    document.getElementById('lobby-code-display').textContent = lobbyData.lobbyCode;
 
-            AppState.unsubscribeLobby = onSnapshot(lobbyRef, async (docSnap) => {
-                if (!docSnap.exists()) {
-                    showModal("خطأ", "الغرفة غير موجودة أو تم إغلاقها.");
-                    if(AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-                    AppState.unsubscribeLobby = null;
-                    return showScreen('online-menu-screen');
-                }
+    const playersList = document.getElementById('lobby-players-list');
+    playersList.innerHTML = '';
+    lobbyData.players.forEach(player => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
 
-                const lobbyData = docSnap.data();
-                const playerInLobby = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+        // منطق عرض اللاعبين: إما بالرتبة (للعبة الفاكنسي) أو بالليفل
+        if (lobbyData.type === 'vacancy') {
+            const rankName = GAME_CONFIG.vacancy_ladder[player.rankIndex || 0]?.name || 'Unknown Rank';
+            item.innerHTML = `<span class="item-name" style="font-weight:700;">${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span> <span class="item-value" style="color:var(--accent-cyan);">${rankName}</span>`;
+        } else {
+            const { level, color } = getPlayerLevelInfo(player.totalScore);
+            item.innerHTML = `<span class="player-level" style="background-color:${color}; margin-left: 8px;">Lvl ${level}</span> <span class="item-name" style="font-weight:700;">${player.medal || ''} ${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;
+        }
+        playersList.appendChild(item);
+    });
 
-                if (lobbyData.status !== 'waiting' && !playerInLobby) {
-                    showModal("مغلق", "هذه المنافسة قد بدأت بالفعل أو انتهت.");
-                    if(AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-                    return showScreen('online-menu-screen');
-                }
-                
-                if(lobbyData.type === '1v1' && lobbyData.players.length >= 2 && !playerInLobby) {
-                    showModal("ممتلئة", "هذه المواجهة ممتلئة بالفعل.");
-                     if(AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-                    return showScreen('online-menu-screen');
-                }
-                
-                if (!playerInLobby) {
-                    const medal = getHighestMedal(AppState.playerProfile);
-                    await updateDoc(lobbyRef, {
-                        players: arrayUnion({ 
-                            uid: AppState.currentUser.uid, 
-                            name: AppState.playerProfile.name, 
-                            teleoptiId: AppState.playerProfile.teleoptiId, 
-                            score: 0, // نقاط المباراة
-                        totalScore: AppState.playerProfile.score || 0, // النقاط الإجمالية
-                            medal: medal,
-                        })
-                    });
-                } else {
-                    switch (lobbyData.status) {
-                        case 'waiting':
-                        case 'countdown':
-                            showScreen('online-lobby-screen');
-                            updateLobbyScreen(lobbyData);
-                            break;
-                        case 'in-progress':
-                        case 'finished':
-                            runGame(lobbyData);
-                            break;
-                    }
-                }
-            }, (error) => {
-                console.error("Lobby snapshot error:", error);
-                showModal("خطأ بالاتصال", "فقد الاتصال بغرفة اللعب.");
-                leaveLobby();
-            });
-        }
-        
-        function updateLobbyScreen(lobbyData) {
-            if (!lobbyData || !AppState.currentUser) return;
-            AppState.currentLobbyId = lobbyData.lobbyCode;
-            const isHost = lobbyData.hostUid === AppState.currentUser.uid;
-            
-            let title = 'ردهة الانتظار';
-if (lobbyData.type === '1v1') title = '⚔️ مواجهة 1 ضد 1 ⚔️';
-else if (lobbyData.type === 'massive') title = '🏟️ منافسة حاشدة 🏟️';
-else if (lobbyData.type === 'conquest') title = '⚔️ حــــرب الجــــزر ⚔️';
-document.getElementById('lobby-title').textContent = title;
-            document.getElementById('lobby-code-display').textContent = lobbyData.lobbyCode;
-            
-            const playersList = document.getElementById('lobby-players-list');
-            playersList.innerHTML = '';
-            lobbyData.players.forEach(player => {
-                const item = document.createElement('div');
-                item.className = 'list-item';
-                const medalDisplay = player.medal || '';
-                const { level, color } = getPlayerLevelInfo(player.totalScore);
-item.innerHTML = `<span class="player-level" style="background-color:${color}; margin-left: 8px;">Lvl ${level}</span> <span class="item-name" style="font-weight:700;">${player.medal || ''} ${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;                playersList.appendChild(item);
-            });
+    const startGameBtn = document.getElementById('start-game-btn');
+    if (isHost) {
+        startGameBtn.style.display = 'block';
+        // هنا نحدد أن لعبة الفاكنسي يمكن أن تبدأ بلاعبين أو أكثر
+        const canStart = (lobbyData.type === 'vacancy' || lobbyData.type === 'massive') ? lobbyData.players.length >= 2 : lobbyData.players.length === 2;
+        startGameBtn.disabled = !canStart;
+    } else {
+        startGameBtn.style.display = 'none';
+    }
 
-            const startGameBtn = document.getElementById('start-game-btn');
-            if (isHost) {
-                startGameBtn.style.display = 'block';
-                const canStart = lobbyData.type === '1v1' ? lobbyData.players.length === 2 : lobbyData.players.length >= 2;
-                startGameBtn.disabled = !canStart;
-            } else {
-                startGameBtn.style.display = 'none';
-            }
-            
-            const lobbyStatus = document.getElementById('lobby-status');
-            if (lobbyData.status === 'countdown') {
-                lobbyStatus.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
-            } else if (lobbyData.status === 'waiting') {
-                 lobbyStatus.textContent = lobbyData.type === 'massive' ? `في انتظار لاعبين على الأقل (${lobbyData.players.length})` : `في انتظار اللاعب الثاني... (${lobbyData.players.length}/2)`;
-            }
-        }
+    const lobbyStatus = document.getElementById('lobby-status');
+    if (lobbyData.status === 'countdown') {
+        lobbyStatus.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
+    } else if (lobbyData.status === 'waiting') {
+        // هنا نعرض العدد المطلوب بشكل صحيح
+        let waitingText = `في انتظار لاعبين... (${lobbyData.players.length})`;
+        if (lobbyData.type === '1v1') {
+            waitingText = `في انتظار اللاعب الثاني... (${lobbyData.players.length}/2)`;
+        } else if (lobbyData.type === 'vacancy') {
+             // سيظهر للمستخدم: "في انتظار لاعبين (2 / 4)" وهكذا
+            waitingText = `في انتظار لاعبين... (${lobbyData.players.length} / 4)`;
+        }
+        lobbyStatus.textContent = waitingText;
+    }
+}
 
-        async function leaveLobby() {
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-            AppState.unsubscribeLobby = null;
-            AppState.currentLobbyId = null;
-            showScreen('online-menu-screen');
-        }
+async function leaveLobby() {
+    if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+    AppState.unsubscribeLobby = null;
+    AppState.currentLobbyId = null;
+    showScreen('online-menu-screen');
+}
 
 async function startGame() {
     if (!AppState.currentLobbyId) return;
     const lobbyRef = doc(db, "lobbies", AppState.currentLobbyId);
-
-    // --- الجزء المحدث ---
     const lobbyDoc = await getDoc(lobbyRef);
     if (!lobbyDoc.exists()) return;
     const lobbyData = lobbyDoc.data();
 
     let gameQuestions;
+    // --- ✨ START: LOGIC FOR VACANCY QUESTIONS ---
     if (lobbyData.type === 'conquest') {
-        // استخدم بنك أسئلة الجزيرة المستهدفة
-        gameQuestions = getQuestions('islands', lobbyData.islandCategory, 10); // 10 أسئلة لمعارك الجزر
+        gameQuestions = getQuestions('islands', lobbyData.islandCategory, 10);
+    } else if (lobbyData.type === 'vacancy') {
+        // لمود الفاكنسي، نحضر مجموعة كبيرة من الأسئلة المتنوعة
+        gameQuestions = getQuestions('vacancy_questions', null, 50); 
     } else {
-        // استخدم بنك الأسئلة العادي للمباريات الحرة
         gameQuestions = getQuestions('online_freeplay', null, 20);
     }
-    // -----------------
+    // --- ✨ END: LOGIC FOR VACANCY QUESTIONS ---
 
     try {
-        await updateDoc(lobbyRef, { questions: gameQuestions, status: 'countdown', countdown: 3 });
+        await updateDoc(lobbyRef, {
+            questions: gameQuestions,
+            status: 'countdown',
+            countdown: 3
+        });
 
         let count = 3;
         const countdownInterval = setInterval(async () => {
@@ -1400,7 +1810,12 @@ async function startGame() {
                 await updateDoc(lobbyRef, { countdown: count }).catch(err => clearInterval(countdownInterval));
             } else {
                 clearInterval(countdownInterval);
-                await updateDoc(lobbyRef, { status: 'in-progress', currentQuestionIndex: 0, questionStartTime: serverTimestamp() });
+                await updateDoc(lobbyRef, {
+                    status: 'in-progress',
+                    // في لعبة الفاكنسي، السؤال الأول يعتمد على الرتبة الأولى
+                    currentQuestionIndex: 0,
+                    questionStartTime: serverTimestamp()
+                });
             }
         }, 1000);
     } catch (error) {
@@ -1410,105 +1825,207 @@ async function startGame() {
 }
 
 function runGame(lobbyData) {
-            if (lobbyData.status === 'finished') {
-                displayGameOver(lobbyData);
-                return;
-            }
-            if (lobbyData.status === 'in-progress' && lobbyData.currentQuestionIndex >= 0) {
-                displayOnlineMatchScreen(lobbyData);
-            }
-        }
+    if (lobbyData.status === 'finished') {
+        displayGameOver(lobbyData);
+        return;
+    }
+    if (lobbyData.status === 'in-progress' && lobbyData.currentQuestionIndex >= 0) {
+        displayOnlineMatchScreen(lobbyData);
+    }
+}
 
-        function displayOnlineMatchScreen(lobbyData) {
-            showScreen('match-screen');
-            const questionIndex = lobbyData.currentQuestionIndex;
-            const question = lobbyData.questions[questionIndex];
-            if (!question) { return; }
+// أبقينا على تعريف واحد صحيح لهذه الدالة وحذفنا المكرر
+function displayOnlineMatchScreen(lobbyData) {
+    if (lobbyData.type === 'vacancy') {
+        showVacancyMatchScreen(lobbyData);
+        return;
+    }
 
-            const scoreboardEntries = document.getElementById('live-scoreboard-entries');
-            const sortedPlayers = [...lobbyData.players].sort((a, b) => b.score - a.score);
-            scoreboardEntries.innerHTML = sortedPlayers.map(p => {
-                const { level, color } = getPlayerLevelInfo(p.totalScore);
-                return `<div class="list-item" style="padding: 0.75rem;">
-                    <div style="flex-grow: 1; text-align: right; display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="player-level" style="background-color:${color};">Lvl ${level}</span>
-                        <div style="font-weight: 700;">${p.medal || ''} ${p.name}</div>
-                    </div>
-                    <div style="font-weight: 900; color: var(--accent-green); font-size: 1.2rem;">${p.score}</div>
-                </div>`;
-            }).join('');
-document.getElementById('match-header').textContent = lobbyData.type === 'conquest' ? `⚔️ الهجوم على ${GAME_CONFIG.islands.find(i => i.id === lobbyData.islandId).name} ⚔️` : (lobbyData.type === '1v1' ? '⚔️ مواجهة 1 ضد 1 ⚔️' : '🏟️ منافسة حاشدة 🏟️');
-            document.getElementById('match-header').textContent = lobbyData.type === '1v1' ? '⚔️ مواجهة 1 ضد 1 ⚔️' : '🏟️ منافسة حاشدة 🏟️';
-            document.getElementById('question-counter').textContent = `السؤال ${questionIndex + 1} / ${lobbyData.questions.length}`;
-            document.getElementById('question-text').innerHTML = question.question;
-            document.getElementById('explanation-box').style.display = 'none';
+    showScreen('match-screen');
+    const questionIndex = lobbyData.currentQuestionIndex;
+    const question = lobbyData.questions[questionIndex];
+    if (!question) {
+        return;
+    }
 
-            const optionsGrid = document.getElementById('options-grid');
-            optionsGrid.innerHTML = '';
-            const myAnswer = lobbyData.answers?.[questionIndex]?.[AppState.currentUser?.uid];
-            const isRevealPhase = lobbyData.revealAnswerForIndex === questionIndex;
+    const scoreboardEntries = document.getElementById('live-scoreboard-entries');
+    const sortedPlayers = [...lobbyData.players].sort((a, b) => b.score - a.score);
+    scoreboardEntries.innerHTML = sortedPlayers.map(p => {
+        const {
+            level,
+            color
+        } = getPlayerLevelInfo(p.totalScore);
+        return `<div class="list-item" style="padding: 0.75rem;">
+            <div style="flex-grow: 1; text-align: right; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="player-level" style="background-color:${color};">Lvl ${level}</span>
+                <div style="font-weight: 700;">${p.medal || ''} ${p.name}</div>
+            </div>
+            <div style="font-weight: 900; color: var(--accent-green); font-size: 1.2rem;">${p.score}</div>
+        </div>`;
+    }).join('');
+    document.getElementById('match-header').textContent = lobbyData.type === 'conquest' ? `⚔️ الهجوم على ${GAME_CONFIG.islands.find(i => i.id === lobbyData.islandId).name} ⚔️` : (lobbyData.type === '1v1' ? '⚔️ مواجهة 1 ضد 1 ⚔️' : '🏟️ منافسة حاشدة 🏟️');
+    document.getElementById('question-counter').textContent = `السؤال ${questionIndex + 1} / ${lobbyData.questions.length}`;
+    document.getElementById('question-text').innerHTML = question.question;
+    document.getElementById('explanation-box').style.display = 'none';
 
-            Object.entries(question.options).forEach(([key, optionText]) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn option-btn';
-                btn.textContent = optionText;
-                if (myAnswer || isRevealPhase) {
-                    btn.classList.add('disabled');
-                } else {
-                    btn.onclick = () => handleOnlineAnswer(lobbyData, questionIndex, key);
-                }
-                optionsGrid.appendChild(btn);
-            });
+    const optionsGrid = document.getElementById('options-grid');
+    optionsGrid.innerHTML = '';
+    const myAnswer = lobbyData.answers?.[questionIndex]?.[AppState.currentUser?.uid];
+    const isRevealPhase = lobbyData.revealAnswerForIndex === questionIndex;
 
-            if (isRevealPhase) {
-                showUniversalQuestionResult(lobbyData, questionIndex);
-            } else if (myAnswer) {
-                revealOnlineQuestionResult(lobbyData, questionIndex);
-            }
+    Object.entries(question.options).forEach(([key, optionText]) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn option-btn';
+        btn.textContent = optionText;
+        if (myAnswer || isRevealPhase) {
+            btn.classList.add('disabled');
+        } else {
+            btn.onclick = () => handleOnlineAnswer(lobbyData, questionIndex, key);
+        }
+        optionsGrid.appendChild(btn);
+    });
 
-            // --- الجزء الجديد: منطق المؤقت ---
-            const timerBar = document.getElementById('timer-bar');
-            const questionDuration = 20000; // 20 ثانية للسؤال
-            clearTimeout(AppState.questionTimer);
+    if (isRevealPhase) {
+        showUniversalQuestionResult(lobbyData, questionIndex);
+    } else if (myAnswer) {
+        revealOnlineQuestionResult(lobbyData, questionIndex);
+    }
 
-            if (isRevealPhase) {
-                timerBar.style.width = '0%';
-            } else {
-                const startTime = lobbyData.questionStartTime?.toDate();
-                if (startTime) {
-                    const elapsed = Date.now() - startTime.getTime();
-                    const remainingTime = Math.max(0, questionDuration - elapsed);
-                    timerBar.style.transition = 'none';
-                    timerBar.style.width = `${(remainingTime / questionDuration) * 100}%`;
-                    requestAnimationFrame(() => {
-                        timerBar.style.transition = `width ${remainingTime / 1000}s linear`;
-                        timerBar.style.width = '0%';
-                    });
-                }
-                // المضيف فقط هو من يقوم بطلب نقل السؤال التالي
-                if (lobbyData.hostUid === AppState.currentUser?.uid) {
-                    AppState.questionTimer = setTimeout(advanceOnlineQuestion, questionDuration);
-                }
-            }
-            // -------------------------------
-        }
+    const timerBar = document.getElementById('timer-bar');
+    const questionDuration = 20000;
+    clearTimeout(AppState.questionTimer);
+
+    if (isRevealPhase) {
+        timerBar.style.width = '0%';
+    } else {
+        const startTime = lobbyData.questionStartTime?.toDate();
+        if (startTime) {
+            const elapsed = Date.now() - startTime.getTime();
+            const remainingTime = Math.max(0, questionDuration - elapsed);
+            timerBar.style.transition = 'none';
+            timerBar.style.width = `${(remainingTime / questionDuration) * 100}%`;
+            requestAnimationFrame(() => {
+                timerBar.style.transition = `width ${remainingTime / 1000}s linear`;
+                timerBar.style.width = '0%';
+            });
+        }
+        if (lobbyData.hostUid === AppState.currentUser?.uid) {
+            AppState.questionTimer = setTimeout(advanceOnlineQuestion, questionDuration);
+        }
+    }
+}
+
+
+    
 
 async function handleOnlineAnswer(lobbyData, questionIndex, selectedKey) {
     if (!AppState.currentLobbyId || !AppState.currentUser) return;
     const lobbyRef = doc(db, "lobbies", AppState.currentLobbyId);
-    const answerPath = `answers.${questionIndex}.${AppState.currentUser.uid}`;
 
-    // حساب الوقت المستغرق بالمللي ثانية
+    // لا نسمح بالإجابة إذا لم يكن دور اللاعب في مود الفاكنسي
+    if (lobbyData.type === 'vacancy' && lobbyData.players[lobbyData.turnIndex].uid !== AppState.currentUser.uid) {
+        return showToast("ليس دورك!");
+    }
+
+    const answerPath = `answers.${questionIndex}.${AppState.currentUser.uid}`;
     const questionStartTime = lobbyData.questionStartTime?.toDate();
     const timeTaken = questionStartTime ? Date.now() - questionStartTime.getTime() : 99999;
 
     try {
         // إرسال الإجابة مع الوقت المستغرق
         await updateDoc(lobbyRef, { [answerPath]: { option: selectedKey, time: timeTaken } });
+
+        // ✨ --- START: NEW LOGIC FOR VACANCY --- ✨
+        // في مود الفاكنسي، يتم التقدم للدور التالي فوراً بعد الإجابة
+        if (lobbyData.type === 'vacancy') {
+            // نمرر كود اللوبي لضمان الحصول على أحدث البيانات
+            advanceVacancyTurn(lobbyData.lobbyCode);
+        }
+        // ✨ --- END: NEW LOGIC FOR VACANCY --- ✨
+
     } catch(error) {
         console.error("Failed to submit answer:", error);
     }
 }
+
+async function advanceVacancyTurn(lobbyCode) {
+    const lobbyRef = doc(db, "lobbies", lobbyCode);
+    try {
+        await runTransaction(db, async (transaction) => {
+            const lobbyDoc = await transaction.get(lobbyRef);
+            if (!lobbyDoc.exists()) return;
+
+            let lobbyData = lobbyDoc.data();
+            let players = [...lobbyData.players];
+            const turnIndex = lobbyData.turnIndex;
+            let currentPlayer = players[turnIndex];
+
+            // --- ✨ START: NEW LOGIC FOR ABILITIES ✨ ---
+            let question;
+            // إذا كان على اللاعب سؤال خادع، اختر من بنك الأسئلة الخادعة
+            if (currentPlayer.hasTrickQuestion) {
+                question = getQuestions('trick_questions', null, 1)[0];
+                currentPlayer.hasTrickQuestion = false; // إزالة العلامة بعد استخدامها
+            } else {
+                // وإلا، اختر سؤالاً عادياً بناءً على رتبته
+                question = lobbyData.questions.find(q => q.level === (currentPlayer.rankIndex + 1)) || lobbyData.questions[0];
+            }
+
+            const playerAnswer = lobbyData.answers?.[lobbyData.currentQuestionIndex]?.[currentPlayer.uid]?.option;
+
+            let rankChange = 0;
+            if (playerAnswer) {
+                if (playerAnswer === question.correct_answer) {
+                    rankChange = currentPlayer.hasFieryQuestion ? 2 : 1; // إجابة صحيحة: +2 للسؤال الناري، +1 للعادي
+                } else {
+                    rankChange = currentPlayer.hasFieryQuestion ? -2 : -1; // إجابة خاطئة: -2 للسؤال الناري، -1 للعادي
+                }
+            } else {
+                rankChange = -1; // لم يجاوب
+            }
+            currentPlayer.rankIndex += rankChange;
+
+            // إزالة علامة السؤال الناري بعد استخدامه
+            if (currentPlayer.hasFieryQuestion) {
+                currentPlayer.hasFieryQuestion = false;
+            }
+            // --- ✨ END: NEW LOGIC FOR ABILITIES ✨ ---
+
+            if (currentPlayer.rankIndex < 0) {
+                players.splice(turnIndex, 1);
+                showToast(`للأسف، ${currentPlayer.name} خرج من المنافسة!`);
+            } else if (currentPlayer.rankIndex >= GAME_CONFIG.vacancy_ladder.length -1) {
+                // اللاعب وصل للقمة وفاز!
+                transaction.update(lobbyRef, { status: 'finished', players: players });
+                return;
+            }
+
+            if (players.length <= 1) {
+                transaction.update(lobbyRef, { status: 'finished', players: players });
+                return;
+            }
+
+            const playDirection = lobbyData.playDirection || 1;
+            let nextTurnIndex = (turnIndex + playDirection) % players.length;
+            if (nextTurnIndex < 0) nextTurnIndex += players.length;
+
+            const nextPlayer = players[nextTurnIndex];
+            const nextQuestion = lobbyData.questions.find(q => q.level === (nextPlayer.rankIndex + 1)) || lobbyData.questions[0];
+
+            transaction.update(lobbyRef, {
+                players: players,
+                turnIndex: nextTurnIndex,
+                currentQuestionIndex: lobbyData.questions.indexOf(nextQuestion),
+                questionStartTime: serverTimestamp(),
+                answers: {}
+            });
+        });
+    } catch (error) {
+        console.error("Error advancing vacancy turn:", error);
+        showModal("خطأ فادح", "حدث خطأ في منطق اللعبة.");
+    }
+}
+
         
         function revealOnlineQuestionResult(lobbyData, questionIndex) {
             const question = lobbyData.questions[questionIndex];
@@ -1549,8 +2066,8 @@ async function handleOnlineAnswer(lobbyData, questionIndex, selectedKey) {
             }
         }
 
-  function scoreOnlineRound(lobbyData, questionIndex) {
-    if(questionIndex < 0) return lobbyData.players;
+function scoreOnlineRound(lobbyData, questionIndex) {
+    if (questionIndex < 0) return lobbyData.players;
 
     const question = lobbyData.questions[questionIndex];
     const answers = lobbyData.answers?.[questionIndex] || {};
@@ -1558,22 +2075,40 @@ async function handleOnlineAnswer(lobbyData, questionIndex, selectedKey) {
 
     const correctKey = question.correct_answer;
 
-    Object.keys(answers).forEach(uid => {
-        const answer = answers[uid];
-        if (answer.option === correctKey) {
-            const player = players.find(p => p.uid === uid);
-            if (player) {
-                if (lobbyData.type === 'conquest') {
-                    // 10 نقاط أساسية - (نقطة لكل 2 ثانية تأخير)
-                    const timePenalty = Math.floor(answer.time / 2000);
-                    const points = Math.max(1, 10 - timePenalty); // بحد أدنى نقطة واحدة
-                    player.score += points;
-                } else {
-                    player.score += 1; // نقطة ثابتة للمباريات الحرة
+    players.forEach(player => {
+        const playerAnswer = answers[player.uid];
+        
+        // التأكد من أن اللاعب لديه عداد كومبو، وإن لم يكن، نبدأه من صفر
+        if (player.combo === undefined) {
+            player.combo = 0;
+        }
+
+        if (playerAnswer && playerAnswer.option === correctKey) {
+            // === الجزء الخاص بالكومبو ===
+            player.combo += 1; // زيادة الكومبو عند الإجابة الصحيحة
+            
+            // حساب النقاط الأساسية بناءً على الوقت
+            const timePenalty = Math.floor(playerAnswer.time / 2000);
+            const basePoints = Math.max(1, 10 - timePenalty);
+            
+            // النقاط النهائية = النقاط الأساسية + نقاط الكومبو
+            const totalPoints = basePoints + player.combo;
+            player.score += totalPoints;
+            
+            // إظهار رسالة تشجيعية إذا كان الكومبو فعالاً
+            if (player.combo > 1) {
+                // فقط للاعب الحالي لكي لا تزعج الآخرين
+                if(player.uid === AppState.currentUser.uid) {
+                   showToast(`كومبو ${player.combo}x ! +${totalPoints} نقطة`);
                 }
             }
+
+        } else {
+            // إذا كانت الإجابة خاطئة أو لم يجاوب، يتم تصفير الكومبو
+            player.combo = 0;
         }
     });
+
     return players;
 }
 
@@ -1651,106 +2186,195 @@ async function surrenderGame() {
             });
         }
 
-       async function finalizeOnlineGameAwards(lobbyData) {
-            const batch = writeBatch(db);
-            const finalPlayers = lobbyData.players;
-            const sortedPlayers = [...finalPlayers].sort((a,b) => b.score - a.score);
+     async function finalizeOnlineGameAwards(lobbyData) {
+    const batch = writeBatch(db);
+    const finalPlayers = lobbyData.players;
+    const sortedPlayers = [...finalPlayers].sort((a, b) => b.score - a.score);
 
-            // منطق المباريات الحرة (1 ضد 1 أو حاشدة)
-            if (lobbyData.type === '1v1') {
-                const winner = lobbyData.surrendered ? sortedPlayers.find(p => p.uid !== lobbyData.surrendered.uid) : sortedPlayers[0];
-                const loser = lobbyData.surrendered ? sortedPlayers.find(p => p.uid === lobbyData.surrendered.uid) : sortedPlayers[1];
-                if (winner && (!loser || winner.score > loser.score || lobbyData.surrendered)) {
-                    const winnerRef = doc(db, "players", winner.teleoptiId);
-                    batch.update(winnerRef, { score: increment(25), awards: arrayUnion("Botros Race Cup 🏆") });
-                }
-            } else if (lobbyData.type === 'massive') {
-                const uniqueScores = [...new Set(sortedPlayers.map(p => p.score))].filter(s => s > 0).sort((a,b) => b-a);
-                if (uniqueScores.length > 0) {
-                    sortedPlayers.filter(p => p.score === uniqueScores[0]).forEach(p => {
-                        const playerRef = doc(db, "players", p.teleoptiId);
-                        batch.update(playerRef, { score: increment(150), awards: arrayUnion("Botros Ultimate Cup 🥇 (1)") });
-                    });
-                }
-                if (uniqueScores.length > 1) {
-                    sortedPlayers.filter(p => p.score === uniqueScores[1]).forEach(p => {
-                        const playerRef = doc(db, "players", p.teleoptiId);
-                        batch.update(playerRef, { score: increment(100), awards: arrayUnion("Botros Ultimate Cup 🥈 (2)") });
-                    });
-                }
-                if (uniqueScores.length > 2) {
-                    sortedPlayers.filter(p => p.score === uniqueScores[2]).forEach(p => {
-                        const playerRef = doc(db, "players", p.teleoptiId);
-                        batch.update(playerRef, { score: increment(50), awards: arrayUnion("Botros Ultimate Cup 🥉 (3)") });
-                    });
-                }
-            // --- الجزء الجديد: منطق مباريات الاحتلال ---
-            } else if (lobbyData.type === 'conquest') {
-                const islandRef = doc(db, "island_state", lobbyData.islandId);
-                const teams = {};
-                // تجميع نقاط كل فريق
-                finalPlayers.forEach(p => {
-                    if(p.teamId) {
-                        if (!teams[p.teamId]) teams[p.teamId] = 0;
-                        teams[p.teamId] += p.score;
-                    }
-                });
-                const sortedTeams = Object.entries(teams).sort((a, b) => b[1] - a[1]);
-                
-                if(sortedTeams.length > 0) {
-                    const winningTeamId = sortedTeams[0][0];
-                    // الفريق الفائز يحصل على 10 نقاط سيطرة
-                    const influencePath = `influence.${winningTeamId}`;
-                    batch.set(islandRef, { [influencePath]: increment(10) }, { merge: true });
-
-                    // باقي الفرق تحصل على 3 نقاط للمشاركة
-                    if (sortedTeams.length > 1) {
-                        const losingTeamId = sortedTeams[1][0];
-                        const losingInfluencePath = `influence.${losingTeamId}`;
-                        batch.set(islandRef, { [losingInfluencePath]: increment(3) }, { merge: true });
-                    }
-                }
-                // تحديث إنجاز "محارب قديم" لكل المشاركين
-                finalPlayers.forEach(p => {
-                    updatePlayerStat('conquestMatchesPlayed');
-                });
-            }
-            // ----------------------------------
-
-            try {
-                await batch.commit();
-            } catch(error) {
-                console.error("Failed to commit final awards:", error);
-            }
-        }
-
-        function displayGameOver(lobbyData) {
-            showScreen('game-over-screen');
-            const resultsContainer = document.getElementById('results-container');
-            const resultsList = document.getElementById('results-list');
-
-            const sortedPlayers = [...lobbyData.players].sort((a,b) => b.score - a.score);
-            let winnerText = '<h2>انتهت المباراة بالتعادل!</h2>';
-
-            if (lobbyData.surrendered?.name) {
-                const winner = sortedPlayers.find(p => p.uid !== lobbyData.surrendered.uid);
-                winnerText = winner ? `<h2>الفائز هو <span style="color:var(--accent-green);">${winner.name}</span> بعد استسلام ${lobbyData.surrendered.name}!</h2>` : '<h2>انتهت المباراة بالاستسلام.</h2>';
-            } else if (sortedPlayers.length > 0 && (sortedPlayers.length === 1 || sortedPlayers[0].score > (sortedPlayers[1]?.score || -1))) {
-                 winnerText = `<h2>الفائز هو: <span style="color:var(--accent-green);">${sortedPlayers[0].name}</span></h2>`;
-            }
-            resultsContainer.innerHTML = winnerText;
-            
-            resultsList.innerHTML = sortedPlayers.map((player, index) => {
-                return `<div class="list-item">
-                    <div class="item-info"><span class="item-rank">${index + 1}</span><span class="item-name">${player.medal || ''} ${player.name}</span></div>
-                    <span class="item-value">${player.score} نقطة</span>
-                </div>`;
-            }).join('');
-            
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-            AppState.unsubscribeLobby = null;
-            AppState.currentLobbyId = null;
+    // --- توزيع جوائز المباريات العادية (لم تتغير) ---
+    if (lobbyData.type === '1v1') {
+        const winner = lobbyData.surrendered ? sortedPlayers.find(p => p.uid !== lobbyData.surrendered.uid) : sortedPlayers[0];
+        const loser = lobbyData.surrendered ? sortedPlayers.find(p => p.uid === lobbyData.surrendered.uid) : sortedPlayers[1];
+        if (winner && (!loser || winner.score > loser.score || lobbyData.surrendered)) {
+            const winnerRef = doc(db, "players", winner.teleoptiId);
+            batch.update(winnerRef, { score: increment(25), coins: increment(20), awards: arrayUnion("Botros Race Cup 🏆") });
         }
+    } else if (lobbyData.type === 'massive') {
+         const uniqueScores = [...new Set(sortedPlayers.map(p => p.score))].filter(s => s > 0).sort((a,b) => b-a);
+         if (uniqueScores.length > 0) {
+             sortedPlayers.filter(p => p.score === uniqueScores[0]).forEach(p => {
+                 const playerRef = doc(db, "players", p.teleoptiId);
+                 batch.update(playerRef, { score: increment(150), coins: increment(100), awards: arrayUnion("Botros Ultimate Cup 🥇 (1)") });
+             });
+         }
+         if (uniqueScores.length > 1) {
+             sortedPlayers.filter(p => p.score === uniqueScores[1]).forEach(p => {
+                 const playerRef = doc(db, "players", p.teleoptiId);
+                 batch.update(playerRef, { score: increment(100), coins: increment(75), awards: arrayUnion("Botros Ultimate Cup 🥈 (2)") });
+             });
+         }
+         if (uniqueScores.length > 2) {
+             sortedPlayers.filter(p => p.score === uniqueScores[2]).forEach(p => {
+                 const playerRef = doc(db, "players", p.teleoptiId);
+                 batch.update(playerRef, { score: increment(50), coins: increment(50), awards: arrayUnion("Botros Ultimate Cup 🥉 (3)") });
+             });
+         }
+    }
+    // --- نهاية جوائز المباريات العادية ---
+
+    // ==========================================================
+    // ✨ --- الجزء الجديد والمهم: منطق مباريات الاحتلال --- ✨
+    // ==========================================================
+    else if (lobbyData.type === 'conquest') {
+        console.log("إنهاء مباراة احتلال...");
+        const islandRef = doc(db, "island_state", lobbyData.islandId);
+
+        // تجميع نقاط كل فريق
+        const teams = {};
+        finalPlayers.forEach(p => {
+            if (p.teamId) {
+                if (!teams[p.teamId]) teams[p.teamId] = 0;
+                teams[p.teamId] += p.score;
+            }
+        });
+
+        const sortedTeams = Object.entries(teams).sort((a, b) => b[1] - a[1]);
+
+        if (sortedTeams.length > 0) {
+            const winningTeamId = sortedTeams[0][0];
+            const damage = 35; // الفريق الفائز يسبب 35 ضرر
+
+            console.log(`الفريق الفائز ${winningTeamId} سبب ${damage} ضرر.`);
+            // تحديث صحة الجزيرة بدلاً من "النفوذ"
+            batch.update(islandRef, { hp: increment(-damage) });
+
+            // تحديث إنجاز "محارب قديم" لكل المشاركين في المباراة
+            finalPlayers.forEach(p => {
+                const playerRef = doc(db, "players", p.teleoptiId);
+                batch.update(playerRef, { "stats.conquestMatchesPlayed": increment(1) });
+            });
+        }
+    }
+    // --- نهاية منطق مباريات الاحتلال ---
+
+    try {
+        await batch.commit();
+        console.log("تم توزيع الجوائز النهائية بنجاح.");
+    } catch (error) {
+        console.error("Failed to commit final awards:", error);
+        
+    }
+}
+
+// ==========================================================
+// ✨ --- دالة الغارة الفردية الجديدة بالكامل --- ✨
+// ==========================================================
+async function startSoloRaid(target) {
+    const islandId = target.dataset.islandId;
+    if (!islandId) return;
+
+    const islandData = GAME_CONFIG.islands.find(i => i.id === islandId);
+    if (!islandData) return;
+
+    // إظهار نافذة تحميل بسيطة
+    showModal("تجهيز الغارة...", "جارِ تحميل الأسئلة، استعد!", null, "...");
+
+    const questions = getQuestions('islands', islandData.category, 3); // سنجلب 3 أسئلة للغارة
+    if (questions.length === 0) {
+        return showModal("خطأ", "لا توجد أسئلة متاحة لهذه الجزيرة حالياً.", null, "حسنًا");
+    }
+
+    let damageDealt = 0;
+
+    // سنستخدم حلقة (loop) لطرح الأسئلة واحداً تلو الآخر
+    for (const question of questions) {
+        // استخدام Promise لانتظار إجابة اللاعب
+        const userAnsweredCorrectly = await new Promise(resolve => {
+            let optionsHTML = '<div style="display:flex; flex-direction:column; gap:1rem;">';
+            Object.entries(question.options).forEach(([key, text]) => {
+                // key هو رقم الخيار, text هو نص الخيار
+                const isCorrect = key === question.correct_answer;
+                optionsHTML += `<button class="btn option-btn" onclick="this.closest('.modal').__resolve(${isCorrect})">${text}</button>`;
+            });
+            optionsHTML += '</div>';
+
+            showModal(question.question, optionsHTML, null, "تخطي");
+
+            // هذه خدعة بسيطة لربط دالة resolve بالنافذة المنبثقة
+            document.querySelector('.modal').__resolve = resolve;
+        });
+
+        // إخفاء النافذة بعد الإجابة
+        hideModal();
+
+        if (userAnsweredCorrectly) {
+            damageDealt += 2; // كل إجابة صحيحة تسبب 2 ضرر
+            const islandRef = doc(db, "island_state", islandId);
+            await updateDoc(islandRef, { hp: increment(-2) });
+            // ========================> الكود الجديد الذي ستضيفه <========================
+const islandDoc = await getDoc(islandRef);
+const islandState = islandDoc.data();
+if (islandState.hp <= 0) {
+    // احتلال الجزيرة!
+    await updateDoc(islandRef, {
+        ownerTeamId: AppState.playerTeam.id,
+        ownerTeamName: AppState.playerTeam.name,
+        hp: islandState.maxHp // إعادة صحة الجزيرة بالكامل للمالك الجديد
+    });
+    // إرسال إشعار للجميع
+    showModal("🎉 تم احتلال الجزيرة! 🎉", `فريق ${AppState.playerTeam.name} سيطر على ${islandData.name}!`, null, "رائع!");
+    // يمكنك إضافة مكافأة هنا للفريق إذا أردت
+    // await updateDoc(doc(db, "teams", AppState.playerTeam.id), { score: increment(100) });
+}
+// ========================> نهاية الكود الجديد <========================
+            showToast("إجابة صحيحة! +2 ضرر!");
+        } else {
+            showToast("إجابة خاطئة! انتهت الغارة.");
+            break; // إنهاء الغارة عند أول إجابة خاطئة
+        }
+         // انتظار بسيط بين الأسئلة
+        await new Promise(res => setTimeout(res, 1500));
+    }
+
+    // عرض النتيجة النهائية للغارة
+    showModal("اكتملت الغارة!", `لقد سببت ما مجموعه ${damageDealt} ضرر للجزيرة.`, null, "رائع!", () => {
+        displayIslandConquestScreen(); // تحديث الخريطة لإظهار الضرر الجديد
+    });
+}
+
+function displayGameOver(lobbyData) {
+    showScreen('game-over-screen');
+    // ✨ --- START: NEW LINE TO REFRESH PLAYER DATA --- ✨
+    if(AppState.playerProfile?.id) {
+        loadPlayerProfile(AppState.playerProfile.id); 
+    }
+    // ✨ --- END: NEW LINE TO REFRESH PLAYER DATA --- ✨
+
+    const resultsContainer = document.getElementById('results-container');
+    const resultsList = document.getElementById('results-list');
+
+    const sortedPlayers = [...lobbyData.players].sort((a,b) => b.score - a.score);
+    let winnerText = '<h2>انتهت المباراة بالتعادل!</h2>';
+
+    if (lobbyData.surrendered?.name) {
+        const winner = sortedPlayers.find(p => p.uid !== lobbyData.surrendered.uid);
+        winnerText = winner ? `<h2>الفائز هو <span style="color:var(--accent-green);">${winner.name}</span> بعد استسلام ${lobbyData.surrendered.name}!</h2>` : '<h2>انتهت المباراة بالاستسلام.</h2>';
+    } else if (sortedPlayers.length > 0 && (sortedPlayers.length === 1 || sortedPlayers[0].score > (sortedPlayers[1]?.score || -1))) {
+        winnerText = `<h2>الفائز هو: <span style="color:var(--accent-green);">${sortedPlayers[0].name}</span></h2>`;
+    }
+    resultsContainer.innerHTML = winnerText;
+
+    resultsList.innerHTML = sortedPlayers.map((player, index) => {
+        return `<div class="list-item">
+            <div class="item-info"><span class="item-rank">${index + 1}</span><span class="item-name">${player.medal || ''} ${player.name}</span></div>
+            <span class="item-value">${player.score} نقطة</span>
+        </div>`;
+    }).join('');
+
+    if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+    AppState.unsubscribeLobby = null;
+    AppState.currentLobbyId = null;
+}
 
 // =================================================
         // ✨ دوال نظام الفرق (Team System) ✨
@@ -2037,48 +2661,68 @@ async function displayIslandConquestScreen() {
     const mapContainer = document.querySelector('#island-conquest-screen .map-container');
     if (!mapContainer) return;
 
-    // إزالة أي كلاسات قديمة ومسح المحتوى
-    mapContainer.className = 'map-container';
+    // إزالة أي جزر قديمة قبل رسم الجديدة
     mapContainer.innerHTML = '';
 
     const islandsConfig = GAME_CONFIG.islands;
+    // جلب بيانات كل الجزر مرة واحدة من قاعدة البيانات
     const islandsStateSnapshot = await getDocs(collection(db, "island_state"));
     const islandsStates = {};
     islandsStateSnapshot.forEach(doc => {
         islandsStates[doc.id] = doc.data();
     });
 
-islandsConfig.forEach(islandData => {
-    const state = islandsStates[islandData.id] || {};
-    const islandDiv = document.createElement('div');
-    islandDiv.className = 'island';
+    islandsConfig.forEach(islandData => {
+        console.log(`[DEBUG] Checking Island ID: ${islandData.id}`, islandsStates[islandData.id]);
+        // الحصول على بيانات الجزيرة الحالية من البيانات التي جلبناها
+        const state = islandsStates[islandData.id] || { hp: 100, maxHp: 100, ownerTeamId: null, ownerTeamName: null };
+        const islandDiv = document.createElement('div');
+        islandDiv.className = 'island'; // الكلاس الأساسي
 
-    Object.assign(islandDiv.style, islandData.style);
-    islandDiv.style.animationDelay = `${Math.random() * 2.5}s`;
+        // --- الجزء الجديد لتحديد لون الجزيرة ---
+        if (state.ownerTeamId) {
+            if (state.ownerTeamId === AppState.playerTeam?.id) {
+                islandDiv.classList.add('owned-by-me'); // إضافة كلاس "ملكي"
+            } else {
+                islandDiv.classList.add('owned-by-enemy'); // إضافة كلاس "عدو"
+            }
+        } else {
+            islandDiv.classList.add('neutral'); // إضافة كلاس "محايد"
+        }
+        // --- نهاية الجزء الجديد ---
 
-    const ownerColor = state.ownerTeamId ? (state.ownerTeamId === AppState.playerTeam?.id ? 'var(--accent-green)' : 'var(--accent-red)') : 'var(--border-glass)';
+        // تطبيق الموقع والحركة العشوائية
+        Object.assign(islandDiv.style, islandData.style);
+        islandDiv.style.animationDelay = `${Math.random() * 2.5}s`;
 
-    // الخطوة 1: نُنشئ المحتوى الداخلي للجزيرة أولاً
-    islandDiv.innerHTML = `
-        <div class="island-icon"><i class='bx ${islandData.icon}'></i></div>
-        <div class="island-name">${islandData.name}</div>
-        ${state.ownerTeamName ? `<div class="island-owner">${state.ownerTeamName}</div>` : ''}
-    `;
+        // إضافة كلاس "مستهدف" إذا كانت هذه هي الجزيرة المستهدفة
+        if (AppState.playerTeam && AppState.playerTeam.currentTarget === islandData.id) {
+            islandDiv.classList.add('targeted-by-my-team');
+        }
 
-    // الخطوة 2: الآن بعد أن تم إنشاء الأيقونة، يمكننا العثور عليها وتلوين إطارها
-    const iconInIsland = islandDiv.querySelector('.island-icon');
-    if (iconInIsland) {
-        iconInIsland.style.borderColor = ownerColor;
-    }
+        // --- الجزء الجديد لحساب وعرض شريط الصحة ---
+        const hpPercent = (state.hp / (state.maxHp || 100)) * 100;
+        const hpBarHTML = `
+            <div class="island-hp-bar-container">
+                <div class="island-hp-bar" style="width: ${hpPercent}%;"></div>
+            </div>
+        `;
+        // --- نهاية جزء شريط الصحة ---
 
-    if (AppState.playerTeam && AppState.playerTeam.currentTarget === islandData.id) {
-        islandDiv.classList.add('targeted-by-my-team');
-    }
+        // بناء محتوى الجزيرة بالكامل
+        islandDiv.innerHTML = `
+            <div class="island-icon"><i class='bx ${islandData.icon}'></i></div>
+            <div class="island-name">${islandData.name}</div>
+            ${state.ownerTeamName ? `<div class="island-owner">${state.ownerTeamName}</div>` : ''}
+            ${hpBarHTML}
+        `;
 
-    islandDiv.dataset.action = "show-island-details";
-    islandDiv.dataset.islandId = islandData.id;
-    mapContainer.appendChild(islandDiv);
-});
+        // إضافة البيانات اللازمة للضغط على الجزيرة
+        islandDiv.dataset.action = "show-island-details";
+        islandDiv.dataset.islandId = islandData.id;
+
+        mapContainer.appendChild(islandDiv);
+    });
 }
 // === قم باستبدال الدالة الحالية بالكامل بهذا الكود الصحيح ===
 
@@ -2544,10 +3188,13 @@ const actions = {
     'show-achievements': showAchievementsScreen,
     'show-island-conquest': displayIslandConquestScreen,
     'show-island-details': (target) => showIslandDetails(target),
+    'start-solo-raid': (target) => startSoloRaid(target),
     'show-chat': showChatScreen,
     'show-online-menu': () => showScreen('online-menu-screen'),
     'create-1v1-lobby': () => createLobby('1v1'),
     'create-massive-lobby': () => createLobby('massive'),
+    'create-vacancy-lobby': () => createLobby('vacancy'),
+    'dev-add-coins': () => addMyCoins(500), // <-- أضف هذا السطر
     'show-join-lobby': () => showScreen('join-lobby-screen'),
     'submit-join-lobby': () => {
         const code = document.getElementById('lobby-code-input')?.value.trim();
@@ -2558,14 +3205,281 @@ const actions = {
     'surrender-game': surrenderGame,
     'send-chat-message': sendChatMessage,
     'start-conquest-match': () => createLobby('conquest'),
+    
+    // ✨ --- START: SWAP SYSTEM ACTIONS --- ✨
+    'show-swap-finder': () => showSwapFinderScreen(),
+    'show-select-swap-type': () => showScreen('select-swap-type-screen'),
+    'show-create-off-swap': () => showScreen('create-off-swap-screen'),
+    'show-create-shift-swap': () => showScreen('create-shift-swap-screen'),
+    'post-off-swap': () => handlePostSwap('off'),
+    'post-shift-swap': () => handlePostSwap('shift'),
+    
+    'contact-swapper': (target) => handleContactSwapper(target.dataset.posterId, target.dataset.swapId),
+    // ✨ --- END: SWAP SYSTEM ACTIONS --- ✨
+'use-ability': (target) => handleUseAbility(target.dataset.ability),
+
 };
-            document.body.addEventListener('click', (e) => {
-                const target = e.target.closest('[data-action]');
-                if (target && actions[target.dataset.action]) {
-                    actions[target.dataset.action](target);
-                }
-            });
+
+document.body.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-action]');
+    if (target && actions[target.dataset.action]) {
+        actions[target.dataset.action](target);
+    }
+});
+
+// =================================================
+// ✨ NEW: Swap Finder System Functions ✨
+// =================================================
+
+function showSwapFinderScreen() {
+    showScreen('swap-finder-screen');
+    // في الخطوة التالية سنقوم بجلب الطلبات من قاعدة البيانات وعرضها هنا
+    console.log("Showing the Swap Finder screen.");
+}
+
+async function handlePostSwap(type) {
+    if (type === 'off') {
+        console.log("Attempting to post an OFF DAY swap.");
+    } else if (type === 'shift') {
+        console.log("Attempting to post a SHIFT swap.");
+    }
+    showModal("قيد الإنشاء", "سيتم تفعيل منطق النشر في الخطوة التالية!");
+}
+
+async function handleContactSwapper(posterId, swapId) {
+    // سيتم برمجة هذا الجزء لاحقاً
+    console.log(`Player wants to contact poster ${posterId} about swap ${swapId}`);
+    showModal("بدء التواصل", "هل أنت متأكد أنك مهتم بهذا التبادل؟ سيتم إرسال إشعار لصاحب الطلب.", "نعم، أرسل اهتمامي", "إلغاء", () => {
+        showToast("تم إرسال اهتمامك بنجاح!");
+    });
+}
+
+// --- دالة لتشغيل الأنيميشن على الشاشة ---
+function playAbilityAnimation(abilityKey) {
+    const ability = GAME_CONFIG.special_abilities[abilityKey];
+    if (!ability) return;
+
+    const overlay = document.getElementById('animation-overlay');
+    const iconEl = document.getElementById('animation-icon');
+    if (!overlay || !iconEl) return;
+
+    iconEl.className = `ability-animation-icon bx ${ability.icon}`; // تغيير الأيقونة
+    overlay.classList.add('show'); // إظهار الحركة
+
+    // إخفاء الحركة بعد ثانيتين
+    setTimeout(() => {
+        overlay.classList.remove('show');
+    }, 2000);
+}
+
+// --- الدالة الرئيسية التي يتم استدعاؤها عند الضغط على زر القدرة ---
+async function handleUseAbility(abilityKey) {
+    if (!AppState.currentLobbyId || !AppState.playerProfile) return;
+
+    const lobbyDoc = await getDoc(doc(db, "lobbies", AppState.currentLobbyId));
+    if (!lobbyDoc.exists()) return;
+    const lobbyData = lobbyDoc.data();
+
+    // التأكد من أنه دور اللاعب
+    if (lobbyData.players[lobbyData.turnIndex].uid !== AppState.currentUser.uid) {
+        return showToast("ليس دورك لاستخدام قدرة!");
+    }
+
+    const ability = GAME_CONFIG.special_abilities[abilityKey];
+    if (!ability) return;
+
+    // إذا كانت القدرة هجومية، أظهر قائمة لاختيار الخصم
+    if (ability.type === 'attack') {
+        const opponents = lobbyData.players.filter(p => p.uid !== AppState.currentUser.uid);
+        if (opponents.length === 0) {
+            return showToast("لا يوجد خصوم لاستخدام القدرة عليهم.");
+        }
+
+        let opponentsHTML = '<div style="display:flex; flex-direction:column; gap:1rem;">';
+        opponents.forEach(opp => {
+            opponentsHTML += `<button class="btn option-btn" data-action="select-opponent" data-opponent-id="${opp.uid}">${opp.name}</button>`;
         });
+        opponentsHTML += '</div>';
+
+        showModal(`اختر الهدف لقدرة "${ability.name}"`, opponentsHTML, null, "إلغاء");
+
+        // إضافة معالج حدث مؤقت لاختيار الخصم
+        const modal = document.getElementById('modal');
+        modal.onclick = (e) => {
+            const target = e.target.closest('[data-action="select-opponent"]');
+            if (target) {
+                const opponentId = target.dataset.opponentId;
+                hideModal();
+                confirmAndApplyAbility(abilityKey, opponentId);
+            }
+        };
+
+    } else { // إذا كانت القدرة للمساعدة (lifeline)
+        confirmAndApplyAbility(abilityKey, null); // لا يوجد هدف
+    }
+}
+
+// دالة جديدة للتأكيد النهائي وتطبيق القدرة
+async function confirmAndApplyAbility(abilityKey, targetId) {
+    const ability = GAME_CONFIG.special_abilities[abilityKey];
+    const message = targetId 
+        ? `هل أنت متأكد أنك تريد استخدام قدرة "${ability.name}" على اللاعب المستهدف؟`
+        : `هل أنت متأكد أنك تريد استخدام قدرة "${ability.name}"؟`;
+
+    showModal("تأكيد استخدام القدرة", message, "نعم، استخدمها", "إلغاء", async () => {
+        // تشغيل الأنيميشن أولاً
+        playAbilityAnimation(abilityKey);
+
+        const lobbyRef = doc(db, "lobbies", AppState.currentLobbyId);
+        const lobbyDoc = await getDoc(lobbyRef);
+        if (!lobbyDoc.exists()) return;
+        let lobbyData = lobbyDoc.data();
+
+        // استدعاء الدالة المنطقية المناسبة بناءً على نوع القدرة
+        switch (abilityKey) {
+            case 'skip_turn':
+                await applySkipTurn(lobbyRef, lobbyData, targetId);
+                break;
+            case 'reverse_turn':
+                await applyReverseTurn(lobbyRef, lobbyData);
+                break;
+            case 'fiery_question':
+                await applyFieryQuestion(lobbyRef, lobbyData, targetId);
+                break;
+            case 'trick_question':
+                await applyTrickQuestion(lobbyRef, lobbyData, targetId);
+                break;
+            case '50_50':
+                await apply5050(lobbyRef, lobbyData);
+                break;
+            case 'swap_question':
+                 await applySwapQuestion(lobbyRef, lobbyData);
+                break;
+        }
+    });
+}
+// =================================================
+// ✨ Special Abilities Logic Functions ✨
+// =================================================
+
+// --- منطق حذف إجابتين ---
+async function apply5050(lobbyRef, lobbyData) {
+    const question = lobbyData.questions[lobbyData.currentQuestionIndex];
+    const optionsContainer = document.getElementById('options-grid');
+    if (!question || !optionsContainer) return;
+
+    let wrongAnswers = Object.keys(question.options).filter(key => key !== question.correct_answer);
+    wrongAnswers.sort(() => 0.5 - Math.random()); // خلط الإجابات الخاطئة
+
+    const answersToRemove = wrongAnswers.slice(0, 2);
+
+    optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+        const btnKey = Object.keys(question.options).find(key => question.options[key] === btn.textContent);
+        if (answersToRemove.includes(btnKey)) {
+            btn.classList.add('disabled');
+            btn.style.opacity = '0.3';
+        }
+    });
+
+    // إزالة القدرة من اللاعب في قاعدة البيانات
+    const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+    const myNewAbilities = me.abilities.filter(a => a !== '50_50');
+    const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
+    await updateDoc(lobbyRef, { players: updatedPlayers, lastAbilityUsed: '50_50' });
+}
+
+// --- منطق تبديل السؤال ---
+async function applySwapQuestion(lobbyRef, lobbyData) {
+    const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+    const currentLevel = me.rankIndex + 1;
+    const currentQuestionId = lobbyData.questions[lobbyData.currentQuestionIndex].id;
+
+    // البحث عن سؤال بديل من نفس المستوى لم يتم استخدامه
+    const newQuestion = lobbyData.questions.find(q => q.level === currentLevel && q.id !== currentQuestionId);
+
+    if (newQuestion) {
+        const myNewAbilities = me.abilities.filter(a => a !== 'swap_question');
+        const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
+
+        await updateDoc(lobbyRef, {
+            players: updatedPlayers,
+            currentQuestionIndex: lobbyData.questions.indexOf(newQuestion),
+            lastAbilityUsed: 'swap_question'
+        });
+        showToast("تم تبديل السؤال!");
+    } else {
+        showToast("عذراً، لا توجد أسئلة بديلة متاحة.");
+    }
+}
+// --- منطق تخطي دور لاعب معين ---
+async function applySkipTurn(lobbyRef, lobbyData, targetId) {
+    const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+    const myNewAbilities = me.abilities.filter(a => a !== 'skip_turn');
+
+    // العثور على اللاعب المستهدف
+    const targetPlayerIndex = lobbyData.players.findIndex(p => p.uid === targetId);
+
+    if (targetPlayerIndex === -1) {
+        return showToast("لم يتم العثور على اللاعب المستهدف.");
+    }
+
+    // تحديد الدور الجديد ليكون اللاعب الذي يلي اللاعب المستهدف
+    const nextTurnIndexAfterSkip = (targetPlayerIndex + lobbyData.playDirection + lobbyData.players.length) % lobbyData.players.length;
+
+    const updatedPlayers = lobbyData.players.map(p => {
+        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities }; // إزالة القدرة مني
+        return p;
+    });
+
+    await updateDoc(lobbyRef, {
+        players: updatedPlayers,
+        turnIndex: nextTurnIndexAfterSkip, // تحديث الدور ليتجاوز اللاعب المستهدف
+        lastAbilityUsed: 'skip_turn'
+    });
+
+    showToast(`تم استخدام "تخطي الدور"! الدور الآن عند اللاعب التالي.`);
+}
+
+// --- منطق عكس الدور ---
+async function applyReverseTurn(lobbyRef, lobbyData) {
+    const newDirection = lobbyData.playDirection * -1; // عكس الاتجاه
+    const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+    const myNewAbilities = me.abilities.filter(a => a !== 'reverse_turn');
+    const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
+
+    await updateDoc(lobbyRef, { 
+        players: updatedPlayers,
+        playDirection: newDirection,
+        lastAbilityUsed: 'reverse_turn' 
+    });
+    showToast("تم عكس اتجاه اللعب!");
+}
+
+// --- منطق تطبيق السؤال الناري / الخادع على لاعب آخر ---
+async function applyStatusToPlayer(lobbyRef, lobbyData, targetId, statusKey, abilityKey) {
+    const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+    const myNewAbilities = me.abilities.filter(a => a !== abilityKey);
+
+    const updatedPlayers = lobbyData.players.map(p => {
+        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities };
+        if (p.uid === targetId) return { ...p, [statusKey]: true }; // إضافة العلامة
+        return p;
+    });
+
+    await updateDoc(lobbyRef, { players: updatedPlayers, lastAbilityUsed: abilityKey });
+    showToast(`تم تفعيل قدرة "${GAME_CONFIG.special_abilities[abilityKey].name}" على اللاعب المستهدف!`);
+}
+
+async function applyFieryQuestion(lobbyRef, lobbyData, targetId) {
+    await applyStatusToPlayer(lobbyRef, lobbyData, targetId, 'hasFieryQuestion', 'fiery_question');
+}
+
+async function applyTrickQuestion(lobbyRef, lobbyData, targetId) {
+    await applyStatusToPlayer(lobbyRef, lobbyData, targetId, 'hasTrickQuestion', 'trick_question');
+}
+
+});
+        
 
     </script>
 </body>
