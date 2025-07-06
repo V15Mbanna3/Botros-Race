@@ -1159,6 +1159,7 @@
         'fiery_question': { name: "السؤال الناري", type: 'attack', icon: 'bxs-hot' },
         'trick_question': { name: "سؤال خادع", type: 'attack', icon: 'bxs-magic-wand' },
     },
+
 };
     // =================================================
 // ✨ DEV TOOL: لإضافة عملات يدوياً للاختبار ✨
@@ -3359,13 +3360,13 @@ async function confirmAndApplyAbility(abilityKey, targetId) {
     });
 }
 // =================================================
-// ✨ Special Abilities Logic Functions ✨
+// ✨ Special Abilities Logic Functions (النسخة الكاملة) ✨
 // =================================================
 
 // --- منطق حذف إجابتين ---
 async function apply5050(lobbyRef, lobbyData) {
     const question = lobbyData.questions[lobbyData.currentQuestionIndex];
-    const optionsContainer = document.getElementById('options-grid');
+    const optionsContainer = document.querySelector('#vacancy-match-screen #options-grid');
     if (!question || !optionsContainer) return;
 
     let wrongAnswers = Object.keys(question.options).filter(key => key !== question.correct_answer);
@@ -3376,7 +3377,7 @@ async function apply5050(lobbyRef, lobbyData) {
     optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
         const btnKey = Object.keys(question.options).find(key => question.options[key] === btn.textContent);
         if (answersToRemove.includes(btnKey)) {
-            btn.classList.add('disabled');
+            btn.disabled = true;
             btn.style.opacity = '0.3';
         }
     });
@@ -3386,6 +3387,7 @@ async function apply5050(lobbyRef, lobbyData) {
     const myNewAbilities = me.abilities.filter(a => a !== '50_50');
     const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
     await updateDoc(lobbyRef, { players: updatedPlayers, lastAbilityUsed: '50_50' });
+    showToast("تم حذف إجابتين!");
 }
 
 // --- منطق تبديل السؤال ---
@@ -3395,15 +3397,21 @@ async function applySwapQuestion(lobbyRef, lobbyData) {
     const currentQuestionId = lobbyData.questions[lobbyData.currentQuestionIndex].id;
 
     // البحث عن سؤال بديل من نفس المستوى لم يتم استخدامه
-    const newQuestion = lobbyData.questions.find(q => q.level === currentLevel && q.id !== currentQuestionId);
+    const newQuestion = GAME_CONFIG.vacancy_questions.find(q => q.level === currentLevel && q.id !== currentQuestionId);
 
     if (newQuestion) {
+        // إضافة السؤال الجديد إلى قائمة أسئلة اللوبي إذا لم يكن موجوداً
+        if (!lobbyData.questions.some(q => q.id === newQuestion.id)) {
+            lobbyData.questions.push(newQuestion);
+        }
+        
         const myNewAbilities = me.abilities.filter(a => a !== 'swap_question');
         const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
 
         await updateDoc(lobbyRef, {
             players: updatedPlayers,
-            currentQuestionIndex: lobbyData.questions.indexOf(newQuestion),
+            questions: lobbyData.questions, // تحديث قائمة الأسئلة
+            currentQuestionIndex: lobbyData.questions.findIndex(q => q.id === newQuestion.id),
             lastAbilityUsed: 'swap_question'
         });
         showToast("تم تبديل السؤال!");
@@ -3411,71 +3419,172 @@ async function applySwapQuestion(lobbyRef, lobbyData) {
         showToast("عذراً، لا توجد أسئلة بديلة متاحة.");
     }
 }
+
 // --- منطق تخطي دور لاعب معين ---
 async function applySkipTurn(lobbyRef, lobbyData, targetId) {
     const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
     const myNewAbilities = me.abilities.filter(a => a !== 'skip_turn');
+    const targetPlayer = lobbyData.players.find(p => p.uid === targetId);
 
-    // العثور على اللاعب المستهدف
-    const targetPlayerIndex = lobbyData.players.findIndex(p => p.uid === targetId);
+    if (!targetPlayer) return showToast("لم يتم العثور على اللاعب المستهدف.");
 
-    if (targetPlayerIndex === -1) {
-        return showToast("لم يتم العثور على اللاعب المستهدف.");
-    }
-
-    // تحديد الدور الجديد ليكون اللاعب الذي يلي اللاعب المستهدف
-    const nextTurnIndexAfterSkip = (targetPlayerIndex + lobbyData.playDirection + lobbyData.players.length) % lobbyData.players.length;
-
+    // إضافة علامة "تخطي الدور" على اللاعب المستهدف
     const updatedPlayers = lobbyData.players.map(p => {
-        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities }; // إزالة القدرة مني
+        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities };
+        if (p.uid === targetId) return { ...p, hasSkipTurn: true };
         return p;
     });
 
     await updateDoc(lobbyRef, {
         players: updatedPlayers,
-        turnIndex: nextTurnIndexAfterSkip, // تحديث الدور ليتجاوز اللاعب المستهدف
-        lastAbilityUsed: 'skip_turn'
+        lastAbilityUsed: `skip_turn_on_${targetPlayer.name}`
     });
 
-    showToast(`تم استخدام "تخطي الدور"! الدور الآن عند اللاعب التالي.`);
+    showToast(`تم استخدام "تخطي الدور"! سيتم تخطي دور ${targetPlayer.name} القادم.`);
+    // الدور لا يتغير الآن، سيتغير عند انتهاء دور اللاعب الحالي
 }
 
 // --- منطق عكس الدور ---
 async function applyReverseTurn(lobbyRef, lobbyData) {
-    const newDirection = lobbyData.playDirection * -1; // عكس الاتجاه
+    const newDirection = (lobbyData.playDirection || 1) * -1; // عكس الاتجاه
     const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
     const myNewAbilities = me.abilities.filter(a => a !== 'reverse_turn');
     const updatedPlayers = lobbyData.players.map(p => p.uid === me.uid ? { ...p, abilities: myNewAbilities } : p);
 
-    await updateDoc(lobbyRef, { 
+    await updateDoc(lobbyRef, {
         players: updatedPlayers,
         playDirection: newDirection,
-        lastAbilityUsed: 'reverse_turn' 
+        lastAbilityUsed: 'reverse_turn'
     });
     showToast("تم عكس اتجاه اللعب!");
 }
 
-// --- منطق تطبيق السؤال الناري / الخادع على لاعب آخر ---
+// --- دالة مساعدة لتطبيق الحالات على اللاعبين ---
 async function applyStatusToPlayer(lobbyRef, lobbyData, targetId, statusKey, abilityKey) {
     const me = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
     const myNewAbilities = me.abilities.filter(a => a !== abilityKey);
+    const targetPlayer = lobbyData.players.find(p => p.uid === targetId);
+
+    if (!targetPlayer) return showToast("لم يتم العثور على اللاعب المستهدف.");
 
     const updatedPlayers = lobbyData.players.map(p => {
-        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities };
-        if (p.uid === targetId) return { ...p, [statusKey]: true }; // إضافة العلامة
+        if (p.uid === me.uid) return { ...p, abilities: myNewAbilities }; // إزالة القدرة مني
+        if (p.uid === targetId) return { ...p, [statusKey]: true }; // إضافة العلامة للهدف
         return p;
     });
 
-    await updateDoc(lobbyRef, { players: updatedPlayers, lastAbilityUsed: abilityKey });
-    showToast(`تم تفعيل قدرة "${GAME_CONFIG.special_abilities[abilityKey].name}" على اللاعب المستهدف!`);
+    await updateDoc(lobbyRef, {
+        players: updatedPlayers,
+        lastAbilityUsed: `${abilityKey}_on_${targetPlayer.name}`
+    });
+    showToast(`تم تفعيل قدرة "${GAME_CONFIG.special_abilities[abilityKey].name}" على ${targetPlayer.name}!`);
 }
 
+// --- منطق تطبيق السؤال الناري ---
 async function applyFieryQuestion(lobbyRef, lobbyData, targetId) {
     await applyStatusToPlayer(lobbyRef, lobbyData, targetId, 'hasFieryQuestion', 'fiery_question');
 }
 
+// --- منطق تطبيق السؤال الخادع ---
 async function applyTrickQuestion(lobbyRef, lobbyData, targetId) {
     await applyStatusToPlayer(lobbyRef, lobbyData, targetId, 'hasTrickQuestion', 'trick_question');
+}
+
+// ==========================================================
+// ✨ NEW: دالة عرض شاشة "من سيربح الفاكنسي" الكاملة ✨
+// ==========================================================
+
+function showVacancyMatchScreen(lobbyData) {
+    // 1. عرض الشاشة الصحيحة
+    showScreen('vacancy-match-screen');
+
+    // 2. الحصول على العناصر الأساسية من الشاشة
+    const ladderContainer = document.getElementById('vacancy-ladder-container');
+    const questionTextEl = document.querySelector('#vacancy-match-screen #question-text');
+    const optionsGridEl = document.querySelector('#vacancy-match-screen #options-grid');
+    const turnIndicatorEl = document.getElementById('turn-indicator');
+    const abilitiesContainerEl = document.getElementById('player-abilities-container');
+    const explanationBoxEl = document.querySelector('#vacancy-match-screen #explanation-box');
+
+    // التأكد من وجود كل العناصر قبل المتابعة
+    if (!ladderContainer || !questionTextEl || !optionsGridEl || !turnIndicatorEl || !abilitiesContainerEl) {
+        console.error("أحد عناصر واجهة لعبة الفاكنسي مفقود!");
+        return;
+    }
+
+    // 3. تحديث سلم الرواتب
+    ladderContainer.innerHTML = GAME_CONFIG.vacancy_ladder.map((step, index) => {
+        // البحث عن اللاعبين الموجودين في هذه الدرجة
+        const playersOnStep = lobbyData.players.filter(p => p.rankIndex === index);
+        let playerAvatars = playersOnStep.map(p => {
+            const isMe = p.uid === AppState.currentUser.uid;
+            // عرض الحرف الأول من اسم اللاعب كأيقونة
+            return `<div class="player-avatar" title="${p.name}" style="background-color: ${isMe ? 'var(--accent-purple)' : 'var(--accent-red)'};">${p.name.charAt(0)}</div>`;
+        }).join('');
+
+        // تحديد إذا كان اللاعب الحالي في هذه الدرجة
+        const isCurrentPlayerStep = playersOnStep.some(p => p.uid === AppState.currentUser.uid);
+        const stepClass = isCurrentPlayerStep ? 'current-player' : (playersOnStep.length > 0 ? 'other-player' : '');
+
+        return `
+            <div class="ladder-step ${stepClass}">
+                <span>${step.salary} - ${step.name}</span>
+                <div class="step-players">${playerAvatars}</div>
+            </div>
+        `;
+    }).join('');
+
+    // 4. تحديد من عليه الدور وعرض السؤال
+    const currentPlayer = lobbyData.players[lobbyData.turnIndex];
+    const isMyTurn = currentPlayer.uid === AppState.currentUser.uid;
+
+    if (turnIndicatorEl) {
+        turnIndicatorEl.textContent = isMyTurn ? "انه دورك الآن!" : `في انتظار اللاعب: ${currentPlayer.name}`;
+        turnIndicatorEl.style.color = isMyTurn ? 'var(--accent-green)' : 'var(--accent-yellow)';
+    }
+
+    // 5. عرض السؤال والخيارات (فقط إذا كان دوري)
+    const question = lobbyData.questions[lobbyData.currentQuestionIndex];
+    if (question) {
+        questionTextEl.innerHTML = question.question;
+        optionsGridEl.innerHTML = ''; // مسح الخيارات القديمة
+
+        Object.entries(question.options).forEach(([key, optionText]) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn option-btn';
+            btn.textContent = optionText;
+            // تفعيل أزرار الخيارات فقط إذا كان دوري
+            if (isMyTurn) {
+                btn.onclick = () => handleOnlineAnswer(lobbyData, lobbyData.currentQuestionIndex, key);
+            } else {
+                btn.disabled = true;
+            }
+            optionsGridEl.appendChild(btn);
+        });
+    } else {
+        questionTextEl.innerHTML = "في انتظار السؤال...";
+        optionsGridEl.innerHTML = '';
+    }
+    
+    // إخفاء صندوق التفسير بشكل افتراضي
+    explanationBoxEl.style.display = 'none';
+
+    // 6. عرض القدرات الخاصة (فقط إذا كان دوري)
+    abilitiesContainerEl.innerHTML = '';
+    if (isMyTurn) {
+        const myAbilities = currentPlayer.abilities || [];
+        myAbilities.forEach(abilityKey => {
+            const ability = GAME_CONFIG.special_abilities[abilityKey];
+            if (ability) {
+                const abilityBtn = document.createElement('button');
+                abilityBtn.className = 'btn ability-btn';
+                abilityBtn.dataset.action = 'use-ability';
+                abilityBtn.dataset.ability = abilityKey;
+                abilityBtn.innerHTML = `<i class='bx ${ability.icon}'></i> ${ability.name}`;
+                abilitiesContainerEl.appendChild(abilityBtn);
+            }
+        });
+    }
 }
 
 });
