@@ -3514,15 +3514,12 @@ function showVacancyMatchScreen(lobbyData) {
 
     // 3. تحديث سلم الرواتب
     ladderContainer.innerHTML = GAME_CONFIG.vacancy_ladder.map((step, index) => {
-        // البحث عن اللاعبين الموجودين في هذه الدرجة
         const playersOnStep = lobbyData.players.filter(p => p.rankIndex === index);
         let playerAvatars = playersOnStep.map(p => {
             const isMe = p.uid === AppState.currentUser.uid;
-            // عرض الحرف الأول من اسم اللاعب كأيقونة
             return `<div class="player-avatar" title="${p.name}" style="background-color: ${isMe ? 'var(--accent-purple)' : 'var(--accent-red)'};">${p.name.charAt(0)}</div>`;
         }).join('');
 
-        // تحديد إذا كان اللاعب الحالي في هذه الدرجة
         const isCurrentPlayerStep = playersOnStep.some(p => p.uid === AppState.currentUser.uid);
         const stepClass = isCurrentPlayerStep ? 'current-player' : (playersOnStep.length > 0 ? 'other-player' : '');
 
@@ -3543,17 +3540,16 @@ function showVacancyMatchScreen(lobbyData) {
         turnIndicatorEl.style.color = isMyTurn ? 'var(--accent-green)' : 'var(--accent-yellow)';
     }
 
-    // 5. عرض السؤال والخيارات (فقط إذا كان دوري)
+    // 5. عرض السؤال والخيارات
     const question = lobbyData.questions[lobbyData.currentQuestionIndex];
     if (question) {
         questionTextEl.innerHTML = question.question;
-        optionsGridEl.innerHTML = ''; // مسح الخيارات القديمة
+        optionsGridEl.innerHTML = '';
 
         Object.entries(question.options).forEach(([key, optionText]) => {
             const btn = document.createElement('button');
             btn.className = 'btn option-btn';
             btn.textContent = optionText;
-            // تفعيل أزرار الخيارات فقط إذا كان دوري
             if (isMyTurn) {
                 btn.onclick = () => handleOnlineAnswer(lobbyData, lobbyData.currentQuestionIndex, key);
             } else {
@@ -3565,11 +3561,10 @@ function showVacancyMatchScreen(lobbyData) {
         questionTextEl.innerHTML = "في انتظار السؤال...";
         optionsGridEl.innerHTML = '';
     }
-    
-    // إخفاء صندوق التفسير بشكل افتراضي
-    explanationBoxEl.style.display = 'none';
 
-    // 6. عرض القدرات الخاصة (فقط إذا كان دوري)
+    if(explanationBoxEl) explanationBoxEl.style.display = 'none';
+
+    // 6. عرض القدرات الخاصة
     abilitiesContainerEl.innerHTML = '';
     if (isMyTurn) {
         const myAbilities = currentPlayer.abilities || [];
@@ -3586,7 +3581,6 @@ function showVacancyMatchScreen(lobbyData) {
         });
     }
 }
-
 });
         
 
