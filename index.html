@@ -22,6 +22,30 @@
             --brand-glow: rgba(0, 221, 255, 0.5); --text-primary: #f0f4f8; --text-secondary: #a3b3c8;
         }
 
+        /* === ✨ تحسين وضوح الخطوط (الإصلاح الجديد) ✨ === */
+#question-text, #match-header, #game-over-screen .screen-title, #results-container h2 {
+    color: #FFFFFF; /* أبيض ساطع */
+    font-weight: 700; /* خط عريض */
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7); /* ظل لتحسين الوضوح */
+}
+
+.option-btn, .btn {
+     font-weight: 700; /* جعل كل الأزرار بخط عريض */
+}
+
+.ladder-step, .vacancy-main-content #turn-indicator {
+    color: #FFFFFF;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.modal-content p, .screen-subtitle {
+     color: #e2e8f0; /* لون أفتح وأوضح من السابق */
+     font-size: 1.1rem;
+     line-height: 1.6;
+}
+/* === نهاية إصلاح الخطوط === */
+
 /* ✨ شريط بث مطور ✨ */
 .broadcast-container {
     position: fixed;
@@ -613,6 +637,29 @@
         opacity: 0;
     }
 }
+
+/* ======================================= */
+/* ✨ إصلاح وضوح خطوط شاشة المواجهة ✨ */
+/* ======================================= */
+
+#vacancy-match-screen #question-text,
+#vacancy-match-screen #turn-indicator {
+    color: #FFFFFF; /* لون أبيض ناصع */
+    font-weight: 700; /* خط عريض */
+    /* ظل أسود قوي جداً لتحسين الوضوح على الخلفيات المعقدة */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+#vacancy-match-screen .option-btn {
+    font-weight: 700;
+    color: #FFFFFF;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+#vacancy-ladder-container .ladder-step {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
 
     </style>
 </head>
@@ -1651,69 +1698,9 @@ async function createLobby(type) {
     await setDoc(lobbyRef, newLobby);
     joinLobby(lobbyCode);
 }
-
-function joinLobby(code) {
-    if (!AppState.currentUser || !AppState.playerProfile) return showModal("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
-    const lobbyCode = code.toUpperCase();
-    const lobbyRef = doc(db, "lobbies", lobbyCode);
-
-    if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-
-    AppState.unsubscribeLobby = onSnapshot(lobbyRef, async (docSnap) => {
-        if (!docSnap.exists()) {
-            showModal("خطأ", "الغرفة غير موجودة أو تم إغلاقها.");
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-            AppState.unsubscribeLobby = null;
-            return showScreen('online-menu-screen');
-        }
-
-        const lobbyData = docSnap.data();
-        const playerInLobby = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
-
-        if (lobbyData.status !== 'waiting' && !playerInLobby) {
-            showModal("مغلق", "هذه المنافسة قد بدأت بالفعل أو انتهت.");
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-            return showScreen('online-menu-screen');
-        }
-
-        if (lobbyData.type === '1v1' && lobbyData.players.length >= 2 && !playerInLobby) {
-            showModal("ممتلئة", "هذه المواجهة ممتلئة بالفعل.");
-            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
-            return showScreen('online-menu-screen');
-        }
-
-        if (!playerInLobby) {
-            const medal = getHighestMedal(AppState.playerProfile);
-            await updateDoc(lobbyRef, {
-                players: arrayUnion({
-                    uid: AppState.currentUser.uid,
-                    name: AppState.playerProfile.name,
-                    teleoptiId: AppState.playerProfile.teleoptiId,
-                    score: 0,
-                    totalScore: AppState.playerProfile.score || 0,
-                    medal: medal,
-                })
-            });
-        } else {
-            switch (lobbyData.status) {
-                case 'waiting':
-                case 'countdown':
-                    showScreen('online-lobby-screen');
-                    updateLobbyScreen(lobbyData);
-                    break;
-                case 'in-progress':
-                case 'finished':
-                    runGame(lobbyData);
-                    break;
-            }
-        }
-    }, (error) => {
-        console.error("Lobby snapshot error:", error);
-        showModal("خطأ بالاتصال", "فقد الاتصال بغرفة اللعب.");
-        leaveLobby();
-    });
-}
-
+// ==========================================================
+// ✨ دالة تحديث شاشة الانتظار (Lobby) المفقودة ✨
+// ==========================================================
 function updateLobbyScreen(lobbyData) {
     if (!lobbyData || !AppState.currentUser) return;
     AppState.currentLobbyId = lobbyData.lobbyCode;
@@ -1725,50 +1712,143 @@ function updateLobbyScreen(lobbyData) {
     else if (lobbyData.type === 'conquest') title = '⚔️ حــــرب الجــــزر ⚔️';
     else if (lobbyData.type === 'vacancy') title = '👑 من سيربح الفاكنسي 👑';
 
-    document.getElementById('lobby-title').textContent = title;
-    document.getElementById('lobby-code-display').textContent = lobbyData.lobbyCode;
+    const lobbyTitleEl = document.getElementById('lobby-title');
+    if (lobbyTitleEl) lobbyTitleEl.textContent = title;
 
-    const playersList = document.getElementById('lobby-players-list');
-    playersList.innerHTML = '';
-    lobbyData.players.forEach(player => {
-        const item = document.createElement('div');
-        item.className = 'list-item';
+    const lobbyCodeDisplayEl = document.getElementById('lobby-code-display');
+    if (lobbyCodeDisplayEl) lobbyCodeDisplayEl.textContent = lobbyData.lobbyCode;
 
-        // منطق عرض اللاعبين: إما بالرتبة (للعبة الفاكنسي) أو بالليفل
-        if (lobbyData.type === 'vacancy') {
-            const rankName = GAME_CONFIG.vacancy_ladder[player.rankIndex || 0]?.name || 'Unknown Rank';
-            item.innerHTML = `<span class="item-name" style="font-weight:700;">${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span> <span class="item-value" style="color:var(--accent-cyan);">${rankName}</span>`;
-        } else {
-            const { level, color } = getPlayerLevelInfo(player.totalScore);
-            item.innerHTML = `<span class="player-level" style="background-color:${color}; margin-left: 8px;">Lvl ${level}</span> <span class="item-name" style="font-weight:700;">${player.medal || ''} ${player.name} ${player.uid === lobbyData.hostUid ? '👑' : ''}</span>`;
-        }
-        playersList.appendChild(item);
-    });
+    const playersListEl = document.getElementById('lobby-players-list');
+    if (playersListEl) {
+        playersListEl.innerHTML = '';
+        lobbyData.players.forEach(player => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            const hostIcon = player.uid === lobbyData.hostUid ? '👑' : '';
+
+            if (lobbyData.type === 'vacancy') {
+                const rankName = GAME_CONFIG.vacancy_ladder[player.rankIndex || 0]?.name || 'مرتبة غير معروفة';
+                item.innerHTML = `<span class="item-name" style="font-weight:700;">${player.name} ${hostIcon}</span> <span class="item-value" style="color:var(--accent-cyan);">${rankName}</span>`;
+            } else {
+                const { level, color } = getPlayerLevelInfo(player.totalScore);
+                item.innerHTML = `<span class="player-level" style="background-color:${color}; margin-left: 8px;">Lvl ${level}</span> <span class="item-name" style="font-weight:700;">${player.medal || ''} ${player.name} ${hostIcon}</span>`;
+            }
+            playersListEl.appendChild(item);
+        });
+    }
 
     const startGameBtn = document.getElementById('start-game-btn');
+    const lobbyStatusEl = document.getElementById('lobby-status');
+
     if (isHost) {
-        startGameBtn.style.display = 'block';
-        // هنا نحدد أن لعبة الفاكنسي يمكن أن تبدأ بلاعبين أو أكثر
-        const canStart = (lobbyData.type === 'vacancy' || lobbyData.type === 'massive') ? lobbyData.players.length >= 2 : lobbyData.players.length === 2;
-        startGameBtn.disabled = !canStart;
+        if (startGameBtn) startGameBtn.style.display = 'block';
+        const canStart = (lobbyData.type === 'vacancy' || lobbyData.type === 'massive' || lobbyData.type === 'conquest') 
+                       ? lobbyData.players.length >= 2 
+                       : lobbyData.players.length === 2;
+        if (startGameBtn) startGameBtn.disabled = !canStart;
     } else {
-        startGameBtn.style.display = 'none';
+        if (startGameBtn) startGameBtn.style.display = 'none';
     }
 
-    const lobbyStatus = document.getElementById('lobby-status');
-    if (lobbyData.status === 'countdown') {
-        lobbyStatus.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
-    } else if (lobbyData.status === 'waiting') {
-        // هنا نعرض العدد المطلوب بشكل صحيح
-        let waitingText = `في انتظار لاعبين... (${lobbyData.players.length})`;
-        if (lobbyData.type === '1v1') {
-            waitingText = `في انتظار اللاعب الثاني... (${lobbyData.players.length}/2)`;
-        } else if (lobbyData.type === 'vacancy') {
-             // سيظهر للمستخدم: "في انتظار لاعبين (2 / 4)" وهكذا
-            waitingText = `في انتظار لاعبين... (${lobbyData.players.length} / 4)`;
+    if (lobbyStatusEl) {
+        if (lobbyData.status === 'countdown') {
+            lobbyStatusEl.textContent = `المباراة ستبدأ في ${lobbyData.countdown}...`;
+        } else { // 'waiting'
+            let waitingText = `في انتظار لاعبين... (${lobbyData.players.length})`;
+            if (lobbyData.type === '1v1') {
+                waitingText = `في انتظار اللاعب الثاني... (${lobbyData.players.length}/2)`;
+            } else if (lobbyData.type === 'vacancy') {
+                waitingText = `في انتظار لاعبين... (${lobbyData.players.length} / 4)`;
+            }
+            lobbyStatusEl.textContent = waitingText;
         }
-        lobbyStatus.textContent = waitingText;
     }
+}
+
+function joinLobby(code) {
+    if (!AppState.currentUser || !AppState.playerProfile) {
+        return showModal("خطأ", "يجب تسجيل الدخول أولاً للانضمام.");
+    }
+    const lobbyCode = code.toUpperCase();
+    const lobbyRef = doc(db, "lobbies", lobbyCode);
+
+    // إلغاء أي استماع قديم لضمان عدم وجود تكرار
+    if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+
+    AppState.unsubscribeLobby = onSnapshot(lobbyRef, async (docSnap) => {
+        // ✨ خطوة تشخيصية: اطبع أي تحديث يصل من قاعدة البيانات
+        console.log('[DEBUG] Lobby update received:', docSnap.data());
+
+        if (!docSnap.exists()) {
+            showModal("خطأ", "الغرفة لم تعد موجودة أو تم إغلاقها.");
+            if (AppState.unsubscribeLobby) AppState.unsubscribeLobby();
+            AppState.unsubscribeLobby = null;
+            return showScreen('online-menu-screen');
+        }
+
+        const lobbyData = docSnap.data();
+        const playerInLobby = lobbyData.players.find(p => p.uid === AppState.currentUser.uid);
+
+        // إذا كان اللاعب غير موجود في الردهة والحالة ما زالت انتظار، قم بإضافته
+        if (!playerInLobby && lobbyData.status === 'waiting') {
+            // تحقق من أن الردهة ليست ممتلئة (خاصة للـ 1 ضد 1)
+            if (lobbyData.type === '1v1' && lobbyData.players.length >= 2) {
+                return showModal("ممتلئة", "هذه المواجهة ممتلئة بالفعل.");
+            }
+            
+            const medal = getHighestMedal(AppState.playerProfile);
+            const newPlayerPayload = {
+                uid: AppState.currentUser.uid,
+                name: AppState.playerProfile.name,
+                teleoptiId: AppState.playerProfile.teleoptiId,
+                score: 0,
+                totalScore: AppState.playerProfile.score || 0,
+                medal: medal,
+                teamId: AppState.playerTeam?.id || null,
+            };
+
+            if (lobbyData.type === 'vacancy') {
+                newPlayerPayload.rankIndex = 0;
+                newPlayerPayload.abilities = ['50_50', 'swap_question', 'skip_turn'].sort(() => 0.5 - Math.random());
+            }
+
+            await updateDoc(lobbyRef, { players: arrayUnion(newPlayerPayload) });
+            // لا تفعل شيئاً آخر هنا، انتظر التحديث التالي من onSnapshot
+            return; 
+        }
+
+        // إذا كان اللاعب موجوداً، أو إذا بدأت اللعبة
+        if (playerInLobby) {
+            // ✨ خطوة تشخيصية: اطبع الحالة التي يراها اللاعب
+            console.log(`[DEBUG] Player ${AppState.playerProfile.name} sees lobby status: ${lobbyData.status}`);
+
+            switch (lobbyData.status) {
+                case 'waiting':
+                case 'countdown':
+                    showScreen('online-lobby-screen');
+                    updateLobbyScreen(lobbyData);
+                    break;
+                case 'in-progress':
+                    // هذا هو الجزء الأهم للاعب الثاني
+                    runGame(lobbyData);
+                    break;
+                case 'finished':
+                    displayGameOver(lobbyData);
+                    break;
+                default:
+                    console.error("Unknown lobby status:", lobbyData.status);
+                    leaveLobby();
+            }
+        } else if (lobbyData.status !== 'waiting') {
+             showModal("مغلق", "هذه المنافسة قد بدأت بالفعل أو انتهت.");
+             leaveLobby();
+        }
+
+    }, (error) => {
+        console.error("Lobby snapshot error:", error);
+        showModal("خطأ بالاتصال", "فقد الاتصال بغرفة اللعب.");
+        leaveLobby();
+    });
 }
 
 async function leaveLobby() {
@@ -1781,62 +1861,161 @@ async function leaveLobby() {
 async function startGame() {
     if (!AppState.currentLobbyId) return;
     const lobbyRef = doc(db, "lobbies", AppState.currentLobbyId);
-    const lobbyDoc = await getDoc(lobbyRef);
-    if (!lobbyDoc.exists()) return;
-    const lobbyData = lobbyDoc.data();
-
-    let gameQuestions;
-    // --- ✨ START: LOGIC FOR VACANCY QUESTIONS ---
-    if (lobbyData.type === 'conquest') {
-        gameQuestions = getQuestions('islands', lobbyData.islandCategory, 10);
-    } else if (lobbyData.type === 'vacancy') {
-        // لمود الفاكنسي، نحضر مجموعة كبيرة من الأسئلة المتنوعة
-        gameQuestions = getQuestions('vacancy_questions', null, 50); 
-    } else {
-        gameQuestions = getQuestions('online_freeplay', null, 20);
-    }
-    // --- ✨ END: LOGIC FOR VACANCY QUESTIONS ---
 
     try {
+        const lobbyDoc = await getDoc(lobbyRef);
+        if (!lobbyDoc.exists()) throw new Error("Lobby not found");
+
+        const lobbyData = lobbyDoc.data();
+        let gameQuestions;
+
+        if (lobbyData.type === 'conquest') {
+            gameQuestions = getQuestions('islands', lobbyData.islandCategory, 10);
+        } else if (lobbyData.type === 'vacancy') {
+            gameQuestions = getQuestions('vacancy_questions', null, 50);
+        } else {
+            gameQuestions = getQuestions('online_freeplay', null, 20);
+        }
+
+        if (!gameQuestions || gameQuestions.length === 0) {
+            return showModal("خطأ فادح", "لا يمكن بدء اللعبة لعدم وجود أسئلة في بنك الأسئلة لهذا الوضع.");
+        }
+
+        // 1. التحديث الأول: تغيير الحالة إلى العد التنازلي
         await updateDoc(lobbyRef, {
             questions: gameQuestions,
             status: 'countdown',
             countdown: 3
         });
 
+        // 2. بدء العد التنازلي
         let count = 3;
         const countdownInterval = setInterval(async () => {
             count--;
             if (count > 0) {
-                await updateDoc(lobbyRef, { countdown: count }).catch(err => clearInterval(countdownInterval));
+                await updateDoc(lobbyRef, { countdown: count });
             } else {
+                // انتهاء العد التنازلي
                 clearInterval(countdownInterval);
+                
+                // 3. التحديث الأخير: تغيير الحالة لبدء اللعب
                 await updateDoc(lobbyRef, {
                     status: 'in-progress',
-                    // في لعبة الفاكنسي، السؤال الأول يعتمد على الرتبة الأولى
                     currentQuestionIndex: 0,
                     questionStartTime: serverTimestamp()
                 });
+
+                // ✨ --- الحل المباشر والنهائي للمضيف --- ✨
+                // بعد إرسال التحديث الأخير، نقوم بجلب أحدث بيانات للردهة
+                // ونبدأ اللعبة يدوياً عند المضيف لضمان استجابته الفورية.
+                console.log("[DEBUG] Host is now manually starting the game.");
+                const finalLobbyDoc = await getDoc(lobbyRef);
+                if (finalLobbyDoc.exists()) {
+                    runGame(finalLobbyDoc.data());
+                }
+                // ✨ --- نهاية الحل المباشر --- ✨
             }
         }, 1000);
+
     } catch (error) {
         console.error("Failed to start game:", error);
-        showModal("خطأ", "لا يمكن بدء اللعبة.");
+        showModal("خطأ", "فشلت عملية بدء اللعبة: " + error.message);
     }
 }
 
-function runGame(lobbyData) {
-    if (lobbyData.status === 'finished') {
-        displayGameOver(lobbyData);
+
+function showVacancyMatchScreen(lobbyData) {
+    // هذه هي الدالة المتخصصة فقط في عرض شاشة "من سيربح الفاكنسي"
+    showScreen('vacancy-match-screen');
+
+    const ladderContainer = document.getElementById('vacancy-ladder-container');
+    const questionTextEl = document.querySelector('#vacancy-match-screen #question-text');
+    const optionsGridEl = document.querySelector('#vacancy-match-screen #options-grid');
+    const turnIndicatorEl = document.getElementById('turn-indicator');
+    const abilitiesContainerEl = document.getElementById('player-abilities-container');
+    const explanationBoxEl = document.querySelector('#vacancy-match-screen #explanation-box');
+
+    if (!ladderContainer || !questionTextEl || !optionsGridEl || !turnIndicatorEl || !abilitiesContainerEl) {
+        console.error("أحد عناصر واجهة لعبة الفاكنسي مفقود!");
         return;
     }
-    if (lobbyData.status === 'in-progress' && lobbyData.currentQuestionIndex >= 0) {
-        displayOnlineMatchScreen(lobbyData);
+    
+    // شبكة أمان لمنع الخروج المفاجئ
+    const currentPlayer = lobbyData.players[lobbyData.turnIndex];
+    if (!currentPlayer) {
+        console.error("Crash prevented: Current player not found!", lobbyData);
+        showModal("خطأ في المباراة", "حدث خطأ في تحديد اللاعب الحالي. سيتم إعادتك للقائمة.", null, "موافق", leaveLobby);
+        return;
+    }
+
+    ladderContainer.innerHTML = GAME_CONFIG.vacancy_ladder.map((step, index) => {
+        const playersOnStep = lobbyData.players.filter(p => p.rankIndex === index);
+        let playerAvatars = playersOnStep.map(p => {
+            const isMe = p.uid === AppState.currentUser.uid;
+            return `<div class="player-avatar" title="${p.name}" style="background-color: ${isMe ? 'var(--accent-purple)' : 'var(--accent-red)'};">${p.name.charAt(0)}</div>`;
+        }).join('');
+
+        const isCurrentPlayerStep = playersOnStep.some(p => p.uid === AppState.currentUser.uid);
+        const stepClass = isCurrentPlayerStep ? 'current-player' : (playersOnStep.length > 0 ? 'other-player' : '');
+
+        return `
+            <div class="ladder-step ${stepClass}">
+                <span>${step.salary} - ${step.name}</span>
+                <div class="step-players">${playerAvatars}</div>
+            </div>
+        `;
+    }).join('');
+
+    const isMyTurn = currentPlayer.uid === AppState.currentUser.uid;
+
+    if (turnIndicatorEl) {
+        turnIndicatorEl.textContent = isMyTurn ? "انه دورك الآن!" : `في انتظار اللاعب: ${currentPlayer.name}`;
+        turnIndicatorEl.style.color = isMyTurn ? 'var(--accent-green)' : 'var(--accent-yellow)';
+    }
+
+    const question = lobbyData.questions[lobbyData.currentQuestionIndex];
+    if (question) {
+        questionTextEl.innerHTML = question.question;
+        optionsGridEl.innerHTML = '';
+
+        Object.entries(question.options).forEach(([key, optionText]) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn option-btn';
+            btn.textContent = optionText;
+            if (isMyTurn) {
+                btn.onclick = () => handleOnlineAnswer(lobbyData, lobbyData.currentQuestionIndex, key);
+            } else {
+                btn.disabled = true;
+            }
+            optionsGridEl.appendChild(btn);
+        });
+    } else {
+        questionTextEl.innerHTML = "في انتظار السؤال...";
+        optionsGridEl.innerHTML = '';
+    }
+
+    if(explanationBoxEl) explanationBoxEl.style.display = 'none';
+
+    abilitiesContainerEl.innerHTML = '';
+    if (isMyTurn) {
+        const myAbilities = currentPlayer.abilities || [];
+        myAbilities.forEach(abilityKey => {
+            const ability = GAME_CONFIG.special_abilities[abilityKey];
+            if (ability) {
+                const abilityBtn = document.createElement('button');
+                abilityBtn.className = 'btn ability-btn';
+                abilityBtn.dataset.action = 'use-ability';
+                abilityBtn.dataset.ability = abilityKey;
+                abilityBtn.innerHTML = `<i class='bx ${ability.icon}'></i> ${ability.name}`;
+                abilitiesContainerEl.appendChild(abilityBtn);
+            }
+        });
     }
 }
 
-// أبقينا على تعريف واحد صحيح لهذه الدالة وحذفنا المكرر
 function displayOnlineMatchScreen(lobbyData) {
+    // هذه الدالة هي "الموزع" الرئيسي
+    // تتأكد من نوع المباراة ثم تستدعي الدالة المناسبة لعرضها
     if (lobbyData.type === 'vacancy') {
         showVacancyMatchScreen(lobbyData);
         return;
@@ -1846,16 +2025,15 @@ function displayOnlineMatchScreen(lobbyData) {
     const questionIndex = lobbyData.currentQuestionIndex;
     const question = lobbyData.questions[questionIndex];
     if (!question) {
+        console.error("Crash prevented: Question not found for index:", questionIndex);
+        showModal("خطأ في اللعبة", "لم يتم العثور على السؤال الحالي.", null, "العودة للقائمة", leaveLobby);
         return;
     }
 
     const scoreboardEntries = document.getElementById('live-scoreboard-entries');
     const sortedPlayers = [...lobbyData.players].sort((a, b) => b.score - a.score);
     scoreboardEntries.innerHTML = sortedPlayers.map(p => {
-        const {
-            level,
-            color
-        } = getPlayerLevelInfo(p.totalScore);
+        const { level, color } = getPlayerLevelInfo(p.totalScore);
         return `<div class="list-item" style="padding: 0.75rem;">
             <div style="flex-grow: 1; text-align: right; display: flex; align-items: center; gap: 0.5rem;">
                 <span class="player-level" style="background-color:${color};">Lvl ${level}</span>
@@ -1864,6 +2042,7 @@ function displayOnlineMatchScreen(lobbyData) {
             <div style="font-weight: 900; color: var(--accent-green); font-size: 1.2rem;">${p.score}</div>
         </div>`;
     }).join('');
+
     document.getElementById('match-header').textContent = lobbyData.type === 'conquest' ? `⚔️ الهجوم على ${GAME_CONFIG.islands.find(i => i.id === lobbyData.islandId).name} ⚔️` : (lobbyData.type === '1v1' ? '⚔️ مواجهة 1 ضد 1 ⚔️' : '🏟️ منافسة حاشدة 🏟️');
     document.getElementById('question-counter').textContent = `السؤال ${questionIndex + 1} / ${lobbyData.questions.length}`;
     document.getElementById('question-text').innerHTML = question.question;
@@ -1911,10 +2090,21 @@ function displayOnlineMatchScreen(lobbyData) {
             });
         }
         if (lobbyData.hostUid === AppState.currentUser?.uid) {
-            AppState.questionTimer = setTimeout(advanceOnlineQuestion, questionDuration);
+            AppState.questionTimer = setTimeout(advanceOnlineQuestion, 20000);
         }
     }
 }
+
+function runGame(lobbyData) {
+    if (lobbyData.status === 'finished') {
+        displayGameOver(lobbyData);
+        return;
+    }
+    if (lobbyData.status === 'in-progress' && lobbyData.currentQuestionIndex >= 0) {
+        displayOnlineMatchScreen(lobbyData);
+    }
+}
+
 
 
     
@@ -1961,57 +2151,88 @@ async function advanceVacancyTurn(lobbyCode) {
             const turnIndex = lobbyData.turnIndex;
             let currentPlayer = players[turnIndex];
 
-            // --- ✨ START: NEW LOGIC FOR ABILITIES ✨ ---
-            let question;
-            // إذا كان على اللاعب سؤال خادع، اختر من بنك الأسئلة الخادعة
-            if (currentPlayer.hasTrickQuestion) {
-                question = getQuestions('trick_questions', null, 1)[0];
-                currentPlayer.hasTrickQuestion = false; // إزالة العلامة بعد استخدامها
-            } else {
-                // وإلا، اختر سؤالاً عادياً بناءً على رتبته
-                question = lobbyData.questions.find(q => q.level === (currentPlayer.rankIndex + 1)) || lobbyData.questions[0];
+            if (!currentPlayer) {
+                console.error("Could not find current player at turn index:", turnIndex);
+                return;
             }
 
+            // --- منطق تحديد السؤال والإجابة ---
+            let question = lobbyData.questions[lobbyData.currentQuestionIndex];
+            if (currentPlayer.hasTrickQuestion) {
+                question = getQuestions('trick_questions', null, 1)[0];
+                currentPlayer.hasTrickQuestion = false;
+            }
+            
+            // playerAnswer سيكون فارغاً (undefined) إذا لم يجاوب اللاعب
             const playerAnswer = lobbyData.answers?.[lobbyData.currentQuestionIndex]?.[currentPlayer.uid]?.option;
 
             let rankChange = 0;
-            if (playerAnswer) {
+            // التحقق من وجود إجابة وسؤال
+            if (playerAnswer && question) {
+                // جاوب بالفعل
                 if (playerAnswer === question.correct_answer) {
-                    rankChange = currentPlayer.hasFieryQuestion ? 2 : 1; // إجابة صحيحة: +2 للسؤال الناري، +1 للعادي
+                    rankChange = currentPlayer.hasFieryQuestion ? 2 : 1; // +1 أو +2 للإجابة الصحيحة
                 } else {
-                    rankChange = currentPlayer.hasFieryQuestion ? -2 : -1; // إجابة خاطئة: -2 للسؤال الناري، -1 للعادي
+                    rankChange = currentPlayer.hasFieryQuestion ? -2 : -1; // -1 أو -2 للإجابة الخاطئة
                 }
             } else {
-                rankChange = -1; // لم يجاوب
+                // ✨ لم يجاوب اللاعب (انتهى الوقت) ✨
+                // يعامل كأنه إجابة خاطئة
+                rankChange = -1;
             }
-            currentPlayer.rankIndex += rankChange;
-
-            // إزالة علامة السؤال الناري بعد استخدامه
+            
             if (currentPlayer.hasFieryQuestion) {
                 currentPlayer.hasFieryQuestion = false;
             }
-            // --- ✨ END: NEW LOGIC FOR ABILITIES ✨ ---
+            
+            currentPlayer.rankIndex += rankChange;
 
+            // --- التحقق من الخروج من المنافسة ---
             if (currentPlayer.rankIndex < 0) {
-                players.splice(turnIndex, 1);
-                showToast(`للأسف، ${currentPlayer.name} خرج من المنافسة!`);
-            } else if (currentPlayer.rankIndex >= GAME_CONFIG.vacancy_ladder.length -1) {
+                const eliminatedPlayerName = currentPlayer.name;
+                players.splice(turnIndex, 1); // إزالة اللاعب من القائمة
+                
+                // مكافأة اللاعبين الباقين
+                if (players.length > 0) {
+                    showToast(`${eliminatedPlayerName} خرج من المنافسة! اللاعبون الباقون يتقدمون مرتبة!`);
+                    let gameHasAWinner = false;
+                    players.forEach(p => {
+                        p.rankIndex = Math.min(p.rankIndex + 1, GAME_CONFIG.vacancy_ladder.length - 1);
+                        if (p.rankIndex >= GAME_CONFIG.vacancy_ladder.length - 1) {
+                            gameHasAWinner = true;
+                        }
+                    });
+
+                    if (gameHasAWinner) {
+                        transaction.update(lobbyRef, { status: 'finished', players: players });
+                        return;
+                    }
+                }
+            } else if (currentPlayer.rankIndex >= GAME_CONFIG.vacancy_ladder.length - 1) {
                 // اللاعب وصل للقمة وفاز!
                 transaction.update(lobbyRef, { status: 'finished', players: players });
                 return;
             }
 
+            // إذا لم يتبق سوى لاعب واحد، فهو الفائز
             if (players.length <= 1) {
                 transaction.update(lobbyRef, { status: 'finished', players: players });
                 return;
             }
 
+            // --- منطق تحديد الدور القادم ---
             const playDirection = lobbyData.playDirection || 1;
-            let nextTurnIndex = (turnIndex + playDirection) % players.length;
-            if (nextTurnIndex < 0) nextTurnIndex += players.length;
+            let nextTurnIndex = (turnIndex % players.length);
+
+            if (players.length > turnIndex) {
+                 nextTurnIndex = (turnIndex + playDirection) % players.length;
+                 if (nextTurnIndex < 0) nextTurnIndex += players.length;
+            } else {
+                 nextTurnIndex = 0;
+            }
 
             const nextPlayer = players[nextTurnIndex];
-            const nextQuestion = lobbyData.questions.find(q => q.level === (nextPlayer.rankIndex + 1)) || lobbyData.questions[0];
+            const nextQuestion = lobbyData.questions.find(q => q.level === (nextPlayer.rankIndex + 1)) || lobbyData.questions[Math.floor(Math.random() * lobbyData.questions.length)];
 
             transaction.update(lobbyRef, {
                 players: players,
@@ -3217,7 +3438,14 @@ const actions = {
     
     'contact-swapper': (target) => handleContactSwapper(target.dataset.posterId, target.dataset.swapId),
     // ✨ --- END: SWAP SYSTEM ACTIONS --- ✨
-'use-ability': (target) => handleUseAbility(target.dataset.ability),
+'use-ability': (target) => handleUseAbility(target.dataset.ability, target),
+
+'select-opponent': (target) => {
+    const opponentId = target.dataset.opponentId;
+    const abilityKey = target.dataset.abilityKey;
+    hideModal();
+    confirmAndApplyAbility(abilityKey, opponentId);
+}
 
 };
 
@@ -3274,14 +3502,14 @@ function playAbilityAnimation(abilityKey) {
 }
 
 // --- الدالة الرئيسية التي يتم استدعاؤها عند الضغط على زر القدرة ---
-async function handleUseAbility(abilityKey) {
-    if (!AppState.currentLobbyId || !AppState.playerProfile) return;
+// --- الدالة الرئيسية التي يتم استدعاؤها عند الضغط على زر القدرة (النسخة المُصلحة) ---
+async function handleUseAbility(abilityKey, abilityButton) {
+    if (!AppState.currentLobbyId || !AppState.playerProfile || abilityButton.disabled) return;
 
     const lobbyDoc = await getDoc(doc(db, "lobbies", AppState.currentLobbyId));
     if (!lobbyDoc.exists()) return;
     const lobbyData = lobbyDoc.data();
 
-    // التأكد من أنه دور اللاعب
     if (lobbyData.players[lobbyData.turnIndex].uid !== AppState.currentUser.uid) {
         return showToast("ليس دورك لاستخدام قدرة!");
     }
@@ -3289,38 +3517,34 @@ async function handleUseAbility(abilityKey) {
     const ability = GAME_CONFIG.special_abilities[abilityKey];
     if (!ability) return;
 
-    // إذا كانت القدرة هجومية، أظهر قائمة لاختيار الخصم
+    // تعطيل الزر مؤقتاً لمنع الضغطات المتكررة
+    abilityButton.disabled = true;
+
     if (ability.type === 'attack') {
         const opponents = lobbyData.players.filter(p => p.uid !== AppState.currentUser.uid);
         if (opponents.length === 0) {
+            abilityButton.disabled = false; // إعادة تفعيل الزر
             return showToast("لا يوجد خصوم لاستخدام القدرة عليهم.");
         }
 
         let opponentsHTML = '<div style="display:flex; flex-direction:column; gap:1rem;">';
         opponents.forEach(opp => {
-            opponentsHTML += `<button class="btn option-btn" data-action="select-opponent" data-opponent-id="${opp.uid}">${opp.name}</button>`;
+            // لاحظ إضافة data-ability-key هنا
+            opponentsHTML += `<button class="btn option-btn" data-action="select-opponent" data-opponent-id="${opp.uid}" data-ability-key="${abilityKey}">${opp.name}</button>`;
         });
         opponentsHTML += '</div>';
 
-        showModal(`اختر الهدف لقدرة "${ability.name}"`, opponentsHTML, null, "إلغاء");
+        showModal(`اختر الهدف لقدرة "${ability.name}"`, opponentsHTML, null, "إلغاء", () => {
+            abilityButton.disabled = false; // أعد تفعيل الزر إذا ألغى المستخدم
+        });
 
-        // إضافة معالج حدث مؤقت لاختيار الخصم
-        const modal = document.getElementById('modal');
-        modal.onclick = (e) => {
-            const target = e.target.closest('[data-action="select-opponent"]');
-            if (target) {
-                const opponentId = target.dataset.opponentId;
-                hideModal();
-                confirmAndApplyAbility(abilityKey, opponentId);
-            }
-        };
-
-    } else { // إذا كانت القدرة للمساعدة (lifeline)
-        confirmAndApplyAbility(abilityKey, null); // لا يوجد هدف
+    } else { // إذا كانت قدرة مساعدة (lifeline)
+        confirmAndApplyAbility(abilityKey, null);
     }
 }
 
 // دالة جديدة للتأكيد النهائي وتطبيق القدرة
+// دالة جديدة للتأكيد النهائي وتطبيق القدرة (النسخة المُصلحة)
 async function confirmAndApplyAbility(abilityKey, targetId) {
     const ability = GAME_CONFIG.special_abilities[abilityKey];
     const message = targetId 
@@ -3328,7 +3552,6 @@ async function confirmAndApplyAbility(abilityKey, targetId) {
         : `هل أنت متأكد أنك تريد استخدام قدرة "${ability.name}"؟`;
 
     showModal("تأكيد استخدام القدرة", message, "نعم، استخدمها", "إلغاء", async () => {
-        // تشغيل الأنيميشن أولاً
         playAbilityAnimation(abilityKey);
 
         const lobbyRef = doc(db, "lobbies", AppState.currentLobbyId);
@@ -3354,7 +3577,7 @@ async function confirmAndApplyAbility(abilityKey, targetId) {
                 await apply5050(lobbyRef, lobbyData);
                 break;
             case 'swap_question':
-                 await applySwapQuestion(lobbyRef, lobbyData);
+                await applySwapQuestion(lobbyRef, lobbyData);
                 break;
         }
     });
@@ -3490,97 +3713,7 @@ async function applyTrickQuestion(lobbyRef, lobbyData, targetId) {
     await applyStatusToPlayer(lobbyRef, lobbyData, targetId, 'hasTrickQuestion', 'trick_question');
 }
 
-// ==========================================================
-// ✨ NEW: دالة عرض شاشة "من سيربح الفاكنسي" الكاملة ✨
-// ==========================================================
 
-function showVacancyMatchScreen(lobbyData) {
-    // 1. عرض الشاشة الصحيحة
-    showScreen('vacancy-match-screen');
-
-    // 2. الحصول على العناصر الأساسية من الشاشة
-    const ladderContainer = document.getElementById('vacancy-ladder-container');
-    const questionTextEl = document.querySelector('#vacancy-match-screen #question-text');
-    const optionsGridEl = document.querySelector('#vacancy-match-screen #options-grid');
-    const turnIndicatorEl = document.getElementById('turn-indicator');
-    const abilitiesContainerEl = document.getElementById('player-abilities-container');
-    const explanationBoxEl = document.querySelector('#vacancy-match-screen #explanation-box');
-
-    // التأكد من وجود كل العناصر قبل المتابعة
-    if (!ladderContainer || !questionTextEl || !optionsGridEl || !turnIndicatorEl || !abilitiesContainerEl) {
-        console.error("أحد عناصر واجهة لعبة الفاكنسي مفقود!");
-        return;
-    }
-
-    // 3. تحديث سلم الرواتب
-    ladderContainer.innerHTML = GAME_CONFIG.vacancy_ladder.map((step, index) => {
-        const playersOnStep = lobbyData.players.filter(p => p.rankIndex === index);
-        let playerAvatars = playersOnStep.map(p => {
-            const isMe = p.uid === AppState.currentUser.uid;
-            return `<div class="player-avatar" title="${p.name}" style="background-color: ${isMe ? 'var(--accent-purple)' : 'var(--accent-red)'};">${p.name.charAt(0)}</div>`;
-        }).join('');
-
-        const isCurrentPlayerStep = playersOnStep.some(p => p.uid === AppState.currentUser.uid);
-        const stepClass = isCurrentPlayerStep ? 'current-player' : (playersOnStep.length > 0 ? 'other-player' : '');
-
-        return `
-            <div class="ladder-step ${stepClass}">
-                <span>${step.salary} - ${step.name}</span>
-                <div class="step-players">${playerAvatars}</div>
-            </div>
-        `;
-    }).join('');
-
-    // 4. تحديد من عليه الدور وعرض السؤال
-    const currentPlayer = lobbyData.players[lobbyData.turnIndex];
-    const isMyTurn = currentPlayer.uid === AppState.currentUser.uid;
-
-    if (turnIndicatorEl) {
-        turnIndicatorEl.textContent = isMyTurn ? "انه دورك الآن!" : `في انتظار اللاعب: ${currentPlayer.name}`;
-        turnIndicatorEl.style.color = isMyTurn ? 'var(--accent-green)' : 'var(--accent-yellow)';
-    }
-
-    // 5. عرض السؤال والخيارات
-    const question = lobbyData.questions[lobbyData.currentQuestionIndex];
-    if (question) {
-        questionTextEl.innerHTML = question.question;
-        optionsGridEl.innerHTML = '';
-
-        Object.entries(question.options).forEach(([key, optionText]) => {
-            const btn = document.createElement('button');
-            btn.className = 'btn option-btn';
-            btn.textContent = optionText;
-            if (isMyTurn) {
-                btn.onclick = () => handleOnlineAnswer(lobbyData, lobbyData.currentQuestionIndex, key);
-            } else {
-                btn.disabled = true;
-            }
-            optionsGridEl.appendChild(btn);
-        });
-    } else {
-        questionTextEl.innerHTML = "في انتظار السؤال...";
-        optionsGridEl.innerHTML = '';
-    }
-
-    if(explanationBoxEl) explanationBoxEl.style.display = 'none';
-
-    // 6. عرض القدرات الخاصة
-    abilitiesContainerEl.innerHTML = '';
-    if (isMyTurn) {
-        const myAbilities = currentPlayer.abilities || [];
-        myAbilities.forEach(abilityKey => {
-            const ability = GAME_CONFIG.special_abilities[abilityKey];
-            if (ability) {
-                const abilityBtn = document.createElement('button');
-                abilityBtn.className = 'btn ability-btn';
-                abilityBtn.dataset.action = 'use-ability';
-                abilityBtn.dataset.ability = abilityKey;
-                abilityBtn.innerHTML = `<i class='bx ${ability.icon}'></i> ${ability.name}`;
-                abilitiesContainerEl.appendChild(abilityBtn);
-            }
-        });
-    }
-}
 });
         
 
