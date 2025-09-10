@@ -2310,8 +2310,17 @@ async function advanceVacancyTurn(lobbyCode) {
             }
 
             const nextPlayer = players[nextTurnIndex];
-            const nextQuestion = lobbyData.questions.find(q => q.level === (nextPlayer.rankIndex + 1)) || lobbyData.questions[Math.floor(Math.random() * lobbyData.questions.length)];
+// الخطوة 1: ابحث عن كل الأسئلة التي تناسب مستوى اللاعب القادم
+const suitableQuestions = lobbyData.questions.filter(q => q.level === (nextPlayer.rankIndex + 1));
 
+let nextQuestion;
+// الخطوة 2: إذا وجدنا أسئلة مناسبة، اختر واحداً منها عشوائياً
+if (suitableQuestions.length > 0) {
+    nextQuestion = suitableQuestions[Math.floor(Math.random() * suitableQuestions.length)];
+} else {
+    // الخطوة 3: (كإجراء احتياطي) إذا لم نجد أي سؤال مناسب، اختر سؤالاً عشوائياً من القائمة كلها
+    nextQuestion = lobbyData.questions[Math.floor(Math.random() * lobbyData.questions.length)];
+}
             transaction.update(lobbyRef, {
                 players: players,
                 turnIndex: nextTurnIndex,
